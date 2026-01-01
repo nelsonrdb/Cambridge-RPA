@@ -4,8 +4,9 @@ from zoneinfo import ZoneInfo
 from playwright.sync_api import TimeoutError as PWTimeoutError
 
 
-
-
+APPLY_FILTER_BTN = "button.fApp[onclick='fVa();'], button.fApp[title*='Appliquer le filtre']"
+DATE_INF_SEL = "input[id^='sel_dt_creation_borne_inf']"
+DATE_SUP_SEL = "input[id^='sel_dt_creation_borne_sup']"
 PARIS = ZoneInfo("Europe/Paris")
 ORDERS_URL = "https://xnet-apps.com/xa/victorias/"  # ou URL directe "Commandes" si tu l'as
 
@@ -45,12 +46,13 @@ def ensure_logged(page):
 
 def fill_date_filter(page, target_day):
     # on filtre "Date-heure création ≥" au début de la journée cible
-    value = target_day.strftime("%d/%m/%y") + " 00:00" 
+    print("Target day de la fonction fill_date_filter: ",target_day)
+    value = target_day.strftime("%d/%m/%y") 
     label = page.locator("text=Date-heure création ≥").first
     start_input = label.locator("xpath=following::input[1]").first
     start_input.click()
     start_input.fill(value)
-    start_input.press("Enter")
+    apply_filters(page)
 
 
     # idéalement remplacer par un wait sur un loader / refresh si tu as un sélecteur
@@ -90,6 +92,42 @@ def extract_order_url_from_row(row) -> str | None:
         f"%26id%3D{itemid}%26fdo%3D1%26vueDest%3Dvlt%26o%3Do1"
     )
     return url
+
+def _force_clear_input(locator):
+    locator.wait_for(state="visible", timeout=10_000)
+    locator.click(force=True)
+
+    locator.press("ControlOrMeta+A")
+    locator.press("Backspace")
+    locator.press("Delete")
+
+    # Double sécurité : force la value côté DOM + events
+    locator.evaluate(
+        """el => {
+            el.value = '';
+            el.dispatchEvent(new Event('input', { bubbles: true }));
+            el.dispatchEvent(new Event('change', { bubbles: true }));
+        }"""
+    )
+
+def apply_filters(page):
+    btn = page.locator(APPLY_FILTER_BTN).first
+    btn.wait_for(state="visible", timeout=10_000)
+    btn.click()
+    # Attendre que le rafraîchissement soit fini (adaptable selon ton appli)
+    page.wait_for_load_state("networkidle")
+
+def clear_prefilled_creation_date(page):
+    inf = page.locator(DATE_INF_SEL).first
+    if inf.count() > 0:
+        _force_clear_input(inf)
+
+    sup = page.locator(DATE_SUP_SEL).first
+    if sup.count() > 0:
+        _force_clear_input(sup)
+    
+    apply_filters(page)
+
 
 
 
@@ -139,17 +177,22 @@ def get_today_order_urls(context, date_str) -> list[str]:
     page.get_by_text("Commandes", exact=True).first.wait_for(state="visible", timeout=30_000)
     print("Page Commandes ouverte | URL =", page.url)
 
+    page.wait_for_timeout(2000)
+
+    clear_prefilled_creation_date(page)
 
     #fill_date_filter(page, target_day)
-    fill_date_filter(page, target_day)
+    fill_date_filter(page, target_day) #PROBLEME DANS CETTE FONCTION PARFOIS IL ME SEMBLE 
     rows = get_row_locators(page)
 
     urls = []
     print("Nombre de lignes trouvées : ", rows.count())
     for i in range(rows.count()):
         row = rows.nth(i)
+
         try:
             dt = parse_dt(row.inner_text())
+            print(dt.date())
         except Exception:
             continue
 

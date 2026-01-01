@@ -111,7 +111,7 @@ def parse_password_block(text: str):
     return {"candidate_password": password_line[-10:]}
 
 
-def extract_order_data(driver, timeout=0.1):
+def extract_order_data(driver, timeout=0.5):
     print("[INFO] Début de l'extraction des données...")
     t0 = time.time()
     wait = WebDriverWait(driver, timeout)
