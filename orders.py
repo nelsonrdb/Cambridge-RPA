@@ -45,8 +45,6 @@ def ensure_logged(page):
 
 
 def fill_date_filter(page, target_day):
-    # on filtre "Date-heure création ≥" au début de la journée cible
-    print("Target day de la fonction fill_date_filter: ",target_day)
     value = target_day.strftime("%d/%m/%y") 
     label = page.locator("text=Date-heure création ≥").first
     start_input = label.locator("xpath=following::input[1]").first
@@ -165,7 +163,6 @@ def get_today_order_urls(context, date_str) -> list[str]:
     - sinon -> aujourd'hui (Europe/Paris)
     """
     target_day = parse_day(date_str) 
-    print("Target day =", target_day)
 
     page = context.new_page()
     page.goto(ORDERS_URL, wait_until="domcontentloaded")
@@ -192,7 +189,6 @@ def get_today_order_urls(context, date_str) -> list[str]:
 
         try:
             dt = parse_dt(row.inner_text())
-            print(dt.date())
         except Exception:
             continue
 
