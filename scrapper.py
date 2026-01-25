@@ -33,7 +33,7 @@ XPATHS = {
     "EXAM_ID": "//*[@id='champ_detail']/td[2]/div[2]/table/tbody/tr[5]/td[2]",
     "EXAM_TYPE": "//*[@id='champ_detail']/td[2]/div[2]/table/tbody/tr[3]/td[2]",
     "LINGUASKILL_TYPE": '//*[@id="champ_detail"]/td[2]/div[2]/table/tbody/tr[4]/td[2]',
-    "CANDIDATE_PASSWORD": '//*[@id="champ_wfs"]/td[2]/div[2]/table/tbody/tr[2]/td[4]'
+    "CANDIDATE_PASSWORD": '//*[@id="champ_wfs"]/td[2]/div[2]/table/tbody/tr[2]/td[4]',
 }
 
 USERNAME = "Examens"
@@ -65,32 +65,40 @@ def name_parsing(full_name):
 def parse_exam_id_block(text: str):
     if not text:
         return {"exam_date": None, "exam_hour": None}
-    # TODO: adapter si besoin selon le format réel du bloc
     return {"exam_date": text[27:37], "exam_hour": text[-3:]}
 
 
 def parse_identity_block(text: str):
     """
     Prend le bloc brut :
-    'Nom, prénom\\nPOUSSIN Ruth-Charlene\\nDate de naissance\\n  Pièce d'identité\\n ?'
+    'Nom, prénom\\nPOUSSIN Ruth-Charlene\\nDate de naissance\\n01/01/2001\\nPièce d'identité\\nN° d'identité\\n0101'
     et renvoie un dict propre.
     """
     if not text:
-        return {"surname": None, "name": None, "date_of_birth": None}
+        return {"surname": None, "name": None, "date_of_birth": None, "id_number": None}
 
     lines = [l.strip() for l in text.splitlines() if l.strip()]
 
     full_name = None
     date_of_birth = None
+    id_number = None
 
     for i, line in enumerate(lines):
         if line.startswith("Nom, prénom") and i + 1 < len(lines):
             full_name = lines[i + 1]
-        elif line.startswith("Date de naissance") and i + 1 < len(lines):
-            date_of_birth = lines[i + 1] if "Pièce d'identité" not in lines[i + 1] else None
 
-    name = None
+        elif line.startswith("Date de naissance") and i + 1 < len(lines):
+            nxt = lines[i + 1]
+            if "Pièce d'identité" not in nxt and "N°" not in nxt:
+                date_of_birth = nxt
+
+        elif (line.startswith("N° d'identité") or line.startswith("N° pièce d'identité")) and i + 1 < len(lines):
+            nxt = lines[i + 1]
+            if not (nxt.startswith("Pièce d'identité") or nxt.startswith("Nom, prénom") or nxt.startswith("Date de naissance")):
+                id_number = nxt
+
     surname = None
+    name = None
     if full_name:
         surname, name = name_parsing(full_name)
 
@@ -98,7 +106,9 @@ def parse_identity_block(text: str):
         "surname": surname,
         "name": name,
         "date_of_birth": date_of_birth,
+        "id_number": id_number,
     }
+
 
 
 def parse_password_block(text: str):
