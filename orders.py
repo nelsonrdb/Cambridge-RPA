@@ -37,6 +37,9 @@ def ensure_logged(page):
     # garde-fou simple : si on retombe sur login, state expiré
     if page.locator("input[type='password']").count() > 0:
         raise RuntimeError("Session expirée → régénère state.json (save_state.py).")
+    
+def clear_all_filters(page): 
+    page.get_by_title("Effacer le filtre (et afficher tous les éléments)").first.click()
 
 def fill_status_filter(page): 
     sel = page.locator("#sel_etat_id_1choix_0")
@@ -137,20 +140,19 @@ def extract_data(context, date_str) -> list[str]:
     page = context.new_page()
     page.goto(ORDERS_URL, wait_until="domcontentloaded")
     ensure_logged(page)
-    page.wait_for_timeout(2000)  
+    page.wait_for_timeout(500)  
     page.locator("#btnVN").first.click()
-    page.wait_for_timeout(2000) 
+    page.wait_for_timeout(500)  
     page.keyboard.type("Commandes", delay=30)
-    page.wait_for_timeout(2000)
+    page.wait_for_timeout(500)
 
     page.keyboard.press("Enter")
-    print("Page Commandes ouverte | URL =", page.url)
-    page.wait_for_timeout(2000)
+    page.wait_for_timeout(500)
 
-    clear_prefilled_creation_date(page) 
 
-    fill_date_filter(page, target_day) 
+    clear_all_filters(page)
     fill_status_filter(page)
+    fill_date_filter(page, target_day) 
 
     result = get_data(page)
 

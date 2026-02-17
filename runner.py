@@ -16,8 +16,7 @@ def main():
     parser.add_argument("--date", "-d", default=None)
     args = parser.parse_args()
 
-    csv_path = Path("/Users/nelsonrouxdebezieux/Desktop/Cambridge_automation/shared/orders.csv")
-    outdir = csv_path.parent
+    csv_path = Path("/Users/nelsonrouxdebezieux/Documents/Cambridge-RPA/shared/orders.csv")
 
     print("\n ===== Extracting data =====")
     with sync_playwright() as p:
@@ -25,7 +24,8 @@ def main():
 
         try:
             data = extract_data(context, args.date)
-            extract_passwords(context)
+            emails = [x["email"] for x in data] #gérer le cas ou data est vide 
+            passwords = extract_passwords(context, emails)
 
                 
         finally:
@@ -35,9 +35,10 @@ def main():
     print("\n ===== Export =====")
 
     # remove_done_flag(outdir)          
-    write_csv_same_columns(data, csv_path)
-    write_done_flag(outdir)
+    write_csv_same_columns(data, passwords, csv_path)
+    # write_done_flag(outdir)
     add_sessionname(csv_path) 
+
 
 if __name__ == "__main__":
     main()
