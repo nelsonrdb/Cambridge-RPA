@@ -10,6 +10,8 @@ import sys
 import os
 import subprocess
 import time
+import urllib.parse as up
+
 
 CRM_URL = "https://xnet-apps.com/vs/commun/imprimer.php?ca=victorias&p=detail.php%3Fmode%3DC%26cat%3Dvelcmd%26id%3DCMD1504%26vueDest%3DI%26o%3Do0"
 
@@ -109,7 +111,10 @@ def parse_identity_block(text: str):
         "id_number": id_number,
     }
 
-
+def imprimer_to_detail(imprimer_url: str) -> str:
+    params = up.parse_qs(up.urlparse(imprimer_url).query)
+    detail_path = up.unquote(params["p"][0])  # "detail.php?mode=C&cat=velcmd&id=..."
+    return "https://xnet-apps.com/vs/commun/" + detail_path
 
 def parse_password_block(text: str):
     if not text:
@@ -160,9 +165,10 @@ def extract_order_data(driver, timeout=0.5):
     data["email"] = raw_data.get("EMAIL")
     data["exam_type"] = raw_data.get("EXAM_TYPE")
     data["linguaskill_type"] = raw_data.get("LINGUASKILL_TYPE")
-    print("[INFO] Données extraites et parsées :")
-    return data
 
+    print("[INFO] Données extraites et parsées :")
+    
+    return data
 
 def main(target_url: str = TARGET_URL):
     print(f"[INFO] Lancement du scrapper sur URL : {target_url}")
@@ -195,7 +201,7 @@ def main(target_url: str = TARGET_URL):
 
         print("[INFO] Page de commande chargée, extraction des données...")
         order_data = extract_order_data(driver)
-
+    
     finally:
         print("[INFO] Fermeture du driver...")
         driver.quit()
