@@ -110,23 +110,22 @@ def scrape(page, timeout=0.5):
 def main(page):
     page.set_default_timeout(3000)
 
-    ROWS_SEL = ".bc tr:visible"  # adapte si besoin
+    ROWS_SEL = ".bc tbody tr[itemlb]:visible"  # adapte si besoin
     BACK_BTN = 'button.btnListe[title*="Aller à la liste"]'
 
     total = page.locator(ROWS_SEL).count()
-    print(total)
     data = []
-    for i in range(2, total-1):
+    for i in range(total):
         try:
             rows = page.locator(ROWS_SEL)
             row = rows.nth(i)
             row.wait_for(state="visible")
-            row.click()
-
-            info = scrape(page)
-            data.append(info)
-            page.locator(BACK_BTN).click()
-            page.locator(ROWS_SEL).first.wait_for(state="visible")
+            if row.locator("td[data-p='velart_id']").inner_text() == "LINGUASKILL Anywhere":
+                row.click()
+                info = scrape(page) #traiter le cas ou c'est pas des PAS un LINGUASKILL GENERAL
+                data.append(info)
+                page.locator(BACK_BTN).click()
+                page.locator(ROWS_SEL).first.wait_for(state="visible")
 
         except PWTimeoutError as e:
             print(f"[{i}] Timeout: {e}")
@@ -139,4 +138,4 @@ def main(page):
         except Exception as e:
             print(f"[{i}] Error: {e}")
 
-    return data 
+    return data

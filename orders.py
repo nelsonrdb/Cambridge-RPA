@@ -23,14 +23,16 @@ def parse_dt(text: str) -> datetime:
 
 
 def parse_day(date_str: str) -> date:
-    s = date_str.strip()
-    for fmt in ("%d/%m/%y", "%d/%m/%Y", "%Y-%m-%d"):
-        try:
-            return datetime.strptime(s, fmt).date()
-        
-        except ValueError:
-            pass
-    raise ValueError(f"Format de date invalide: {date_str!r} (attendu: DD/MM/YY, DD/MM/YYYY ou YYYY-MM-DD)")
+    if date_str:
+        s = date_str.strip()
+        for fmt in ("%d/%m/%y", "%d/%m/%Y", "%Y-%m-%d"):
+            try:
+                return datetime.strptime(s, fmt).date()
+            
+            except ValueError:
+                pass
+        raise ValueError(f"Format de date invalide: {date_str!r} (attendu: DD/MM/YY, DD/MM/YYYY ou YYYY-MM-DD)")
+    return None
 
 
 def ensure_logged(page):
@@ -47,9 +49,8 @@ def fill_status_filter(page):
     sel.select_option(label="Réglée")
 
 
-def fill_date_filter(page, target_day):
-    value = target_day.strftime("%d/%m/%Y") 
-    print(value)
+def fill_date_filter(page, start_day, end_day):
+    value = start_day.strftime("%d/%m/%Y") #on veut toutes les commandes après une certaine date
     try:
         label = page.locator("text=Date-heure création ≥").first
         label.wait_for(state="visible", timeout=1500)
@@ -60,19 +61,18 @@ def fill_date_filter(page, target_day):
     start_input = label.locator("xpath=following::input[1]").first
     start_input.click()
     start_input.fill(value)
-
-    try:
-        labell = page.locator("text=Date-heure création ≤").first
-        labell.wait_for(state="visible", timeout=1500)
-    except PWTimeoutError:
-        labell = page.locator("text=≤").first
-        labell.wait_for(state="visible", timeout=1500)
-        
-    start_input = labell.locator("xpath=following::input[1]").first
-    start_input.click()
-    start_input.fill(value)
+    if end_day: 
+        try:
+            labell = page.locator("text=Date-heure création ≤").first
+            labell.wait_for(state="visible", timeout=1500)
+        except PWTimeoutError:
+            labell = page.locator("text=≤").first
+            labell.wait_for(state="visible", timeout=1500)
+            
+        start_input = labell.locator("xpath=following::input[1]").first
+        start_input.click()
+        start_input.fill(value)
     apply_filters(page)
-
     page.wait_for_timeout(2000)
 
 
@@ -129,13 +129,9 @@ def clear_prefilled_creation_date(page):
     apply_filters(page)
 
 
-def extract_data(context, date_str) -> list[str]:
-    """
-    Retourne les URLs des commandes pour une journée donnée.
-    - si date_str est fourni -> cette journée
-    - sinon -> aujourd'hui (Europe/Paris)
-    """
-    target_day = parse_day(date_str) 
+def extract_data(context, start_str, end_str) -> list[str]:
+    start_day = parse_day(start_str) 
+    end_day = parse_day(end_str)
 
     page = context.new_page()
     page.goto(ORDERS_URL, wait_until="domcontentloaded")
@@ -144,16 +140,13 @@ def extract_data(context, date_str) -> list[str]:
     page.locator("#btnVN").first.click()
     page.wait_for_timeout(500)  
     page.keyboard.type("Commandes", delay=30)
-    page.wait_for_timeout(500)
-
     page.keyboard.press("Enter")
     page.wait_for_timeout(500)
 
 
     clear_all_filters(page)
     fill_status_filter(page)
-    fill_date_filter(page, target_day) 
-
+    fill_date_filter(page, start_day, end_day) 
     result = get_data(page)
 
     page.close()

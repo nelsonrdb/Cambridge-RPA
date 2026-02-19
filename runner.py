@@ -13,7 +13,9 @@ from export_csv import write_csv_same_columns, write_done_flag, remove_done_flag
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--date", "-d", default=None)
+    parser.add_argument("--start_date", "-s", required=True)
+    parser.add_argument("--end_date", "-e", required=False)
+
     args = parser.parse_args()
 
     csv_path = Path("/Users/nelsonrouxdebezieux/Documents/Cambridge-RPA/shared/orders.csv")
@@ -23,7 +25,7 @@ def main():
         browser, context, page = ensure_logged_with_state(p, headless=False)
 
         try:
-            data = extract_data(context, args.date)
+            data = extract_data(context, args.start_date, args.end_date)
             emails = [x["email"] for x in data] #gérer le cas ou data est vide 
             passwords = extract_passwords(context, emails)
 
