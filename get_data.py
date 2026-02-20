@@ -1,24 +1,14 @@
-import re
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from playwright.sync_api import TimeoutError as PWTimeoutError
 
-
-BACK_BTN_XPATH = '//button[contains(@class,"btnListe") and contains(@title,"Aller à la liste")]'
-ROWS_SEL = '.bc:visible table[cat="velcmd"] tbody tr.la'
-
-import time
-from playwright.sync_api import TimeoutError as PWTimeoutError
-
+BACK_BTN = 'button.btnListe[title*="Aller à la liste"]'
+ROWS_SEL = ".bc tbody tr[itemlb]:visible"  
 XPATHS = {
     "ID": '//*[@id="champ_cdtnom"]',
     "EMAIL": "//*[@id='champ_cmsmb_id']/td[2]/div[2]/a",
     "EXAM_ID": "//*[@id='champ_detail']/td[2]/div[2]/table/tbody/tr[5]/td[2]",
     "EXAM_TYPE": "//*[@id='champ_detail']/td[2]/div[2]/table/tbody/tr[3]/td[2]",
-    "LINGUASKILL_TYPE": '//*[@id="champ_detail"]/td[2]/div[2]/table/tbody/tr[4]/td[2]',
-    "CANDIDATE_PASSWORD": '//*[@id="champ_wfs"]/td[2]/div[2]/table/tbody/tr[2]/td[4]',
-}
+    "LINGUASKILL_TYPE": '//*[@id="champ_detail"]/td[2]/div[2]/table/tbody/tr[4]/td[2]', 
+    "XPATH_ONLINE_TUTOR": "//*[@id='champ_detail']/td[2]/div[2]/table/tbody/tr[last()]/td[2]"}
 
 def parse_id(value, key):
     if value is None:
@@ -32,7 +22,6 @@ def parse_id(value, key):
         return value.upper()
 
     return " ".join(w[:1].upper() + w[1:].lower() for w in value.split())
-
 
 def parse_exam_id_block(text: str):
     if not text:
@@ -86,12 +75,13 @@ def scrape(page, timeout=0.5):
     for field, xpath in XPATHS.items():
         try:
             loc = page.locator(f"xpath={xpath}").first
-            loc.wait_for(state="visible", timeout=10000)
-            raw_data[field] = loc.inner_text(timeout=timeout_ms).strip()
-            
-        except PWTimeoutError:
+            loc.wait_for(state="visible", timeout=2000)
+            raw_data[field] = loc.inner_text(timeout=timeout_ms).strip()   
+        except PWTimeoutError as e:
+            print(str(e))
             raw_data[field] = None
         except Exception as e:
+            print(str(e))
             raw_data[field] = None
 
 
@@ -103,19 +93,25 @@ def scrape(page, timeout=0.5):
     data["email"] = raw_data.get("EMAIL")
     data["exam_type"] = raw_data.get("EXAM_TYPE")
     data["linguaskill_type"] = raw_data.get("LINGUASKILL_TYPE")
+    data["online_tutor"] = is_online_tutor(raw_data.get("XPATH_ONLINE_TUTOR"))
     return data
 
-
-
+def is_online_tutor(string): 
+    if string: 
+        if string == "Non merci, je n'ai pas besoin de la préparation": 
+            return False
+        elif string == 'J\'ai besoin de la préparation "Linguaskill Course" Online Tutor':
+            return True
+        else : 
+            print("Problème dans la récupération du online_tutor")
+            return None
+    else:
+        return None
+    
 def main(page):
-    page.set_default_timeout(3000)
-
-    ROWS_SEL = ".bc tbody tr[itemlb]:visible"  # adapte si besoin
-    BACK_BTN = 'button.btnListe[title*="Aller à la liste"]'
-
-    total = page.locator(ROWS_SEL).count()
+    page.set_default_timeout(500)
     data = []
-    for i in range(total):
+    for i in range(page.locator(ROWS_SEL).count()):
         try:
             rows = page.locator(ROWS_SEL)
             row = rows.nth(i)

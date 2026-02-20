@@ -17,9 +17,7 @@ name_dic = {
 def add_sessionname(csv_path):
     df = pd.read_csv(csv_path)
     session_letter = df["linguaskill_type"].str.split().str[1].str[0]
-    pattern = df["exam_type"].map(name_dic)  # ATTENTION: ton dict correspond à exam_type, pas linguaskill_type
-
-    #df["skill_code"] = np.where(    
+    pattern = df["exam_type"].map(name_dic) 
     skill_code = np.where(
         pattern.notna() & session_letter.notna(),
         pattern.str.split("S", n=1).str[0] + "S" + session_letter + pattern.str.split("S", n=1).str[1],

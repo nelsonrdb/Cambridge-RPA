@@ -5,7 +5,7 @@ import pandas as pd
 def write_csv_same_columns(data, passwords, csv_path):
     df = pd.DataFrame(data)  
     pw = pd.DataFrame.from_dict(passwords, orient="index")
-    pw.columns= ["password_cms", "password_generated", "password"]
+    pw.columns= ["password_cms", "password_generated", "password", "is_entry_code"]
     df = df.merge(pw, left_on="email", left_index=False, right_index=True, how="left")
     df = df.dropna(subset=["email"])
     df.to_csv(csv_path, index=False, encoding="utf-8", mode = "w")

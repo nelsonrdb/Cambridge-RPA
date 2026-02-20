@@ -1,14 +1,15 @@
-import re
-from playwright.sync_api import TimeoutError as PWTimeoutError
 import pandas as pd
 import secrets
 import string
+import re
+
+
+ORDERS_URL = "https://xnet-apps.com/xa/victorias/" 
+
 
 def generate_password_7() -> str:
     alphabet = string.ascii_uppercase + string.digits
     return "".join(secrets.choice(alphabet) for _ in range(7))
-
-ORDERS_URL = "https://xnet-apps.com/xa/victorias/" 
 
 def main(context, mail_list): 
     page = context.new_page()
@@ -21,17 +22,19 @@ def main(context, mail_list):
     res = {}
     try:
         for email in mail_list:
-            pwd = get_password_for_email(page, email)
+            pwd, is_entry_code = get_password_for_email(page, email)
             if pwd:
-                res[email] = [pwd, pd.NA, pwd]
+                res[email] = [pwd, pd.NA, pwd, is_entry_code]
             else: 
                 pwd = generate_password_7()
-                res[email] = [pd.NA, pwd, pwd]             
+                res[email] = [pd.NA, pwd, pwd, is_entry_code]             
     finally: 
         page.close()
     return res
 
 def get_password_for_email(page, email):
+    print("--------------")
+    print(email)
     try:
         page.get_by_title("Effacer le filtre (et afficher tous les éléments)").first.click()
 
@@ -48,27 +51,35 @@ def get_password_for_email(page, email):
         rows = page.locator('table.zL[cat="velcmd"] tbody > tr')
         page.wait_for_timeout(500)
         if rows.count() < 2:
-            return None
+            password =  None
+        else:
+            row2 = rows.nth(1) 
+            row2.click()
+            page.wait_for_timeout(500)
 
-        row2 = rows.nth(1) 
-        row2.click()
-        page.wait_for_timeout(500)
+            n = page.locator('xpath=//*[@id="champ_wfs"]/td[2]/div[2]/table/tbody/tr').count()
+            print("Nombre de tr trouvés : ", n)
 
-        password_paths = [
-            'xpath=//*[@id="champ_wfs"]/td[2]/div[2]/table/tbody/tr[2]/td[4]',
-            'xpath=//*[@id="champ_wfs"]/td[2]/div[2]/table/tbody/tr[3]/td[4]',
-        ]
-
-        try : 
-            for path in password_paths:
-                text = page.locator(path).inner_text(timeout=500)
-                lines = text.splitlines()
-                if len(lines) == 3:
-                    return lines[1].split()[-1].strip()
+            password = None 
+            try : 
+                for i in range(2, n+1):
+                    text = page.locator(f'xpath=//*[@id="champ_wfs"]/td[2]/div[2]/table/tbody/tr[{i}]/td[4]').inner_text(timeout=500)
+                    temp = return_password(text)
+                    print(text)
+                    print(temp)
+                    if temp: 
+                        password = temp
+                        break 
+            except Exception as e: 
+                print(str(e))
+        try: 
+            entry_code_detected_bool = entry_code_detected(page)
         except Exception as e: 
-            print("Ligne 1 : ", lines[1])
             print(str(e))
-        return None
+
+        return (password, entry_code_detected_bool)
+    except Exception as e:
+        print(str(e))
 
     finally:
         try : 
@@ -77,6 +88,31 @@ def get_password_for_email(page, email):
             print(str(e))
 
 
+def entry_code_detected(page): 
+    table = page.locator("table.zzList")
+    fourth_col_texts = table.locator("tbody > tr > td:nth-child(4)").all_inner_texts()
 
+    CODE_RE = re.compile(r"(?i)\b([A-Z0-9]{5}-[A-Z0-9]{5})\b")
 
+    for s in fourth_col_texts:
+        s = s.replace("\xa0", " ")  
+        if "entrypoints" in re.sub(r"\s+", "", s).lower():
+            return True
+        if CODE_RE.search(s):
+            return True
+    return False
 
+def return_password(txt):
+    if not isinstance(txt, str) or not txt.strip():
+        return None
+
+    for raw in txt.replace("\xa0", " ").splitlines():
+        line = raw.strip()
+        if not line:
+            continue
+        tokens = [t for t in line.replace(":", " ").split() if t]
+
+        if tokens and tokens[0].lower() == "password":
+            return tokens[-1] if len(tokens) >= 2 else None
+
+    return None
