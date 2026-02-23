@@ -111,7 +111,7 @@ def is_online_tutor(string):
         return None
     
 def main(page):
-    page.set_default_timeout(500)
+    page.set_default_timeout(5000)
     data = []
     for i in range(page.locator(ROWS_SEL).count()):
         try:
