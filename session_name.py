@@ -14,6 +14,19 @@ name_dic = {
     "Reading & Listening + Writing": "3S RLW",
 }
 
+letter_dic = {
+    "2 SKILLS - READING & LISTENING (Grandes Ecoles, Universités, etc.)": "RL",
+    "3 SKILLS - READING & LISTENING + SPEAKING (Compagnies Aériennes, etc.)": "RLS",
+    "4 SKILLS - READING & LISTENING + SPEAKING + WRITING (Candidats Internationaux, ParcoursSup, Masters, Etranger, etc.)": "RLSW",
+    "Listening Seul": "L",
+    "Reading Seul": "R",
+    "Writing Seul": "W",
+    "Speaking Seul": "S",
+    "Reading & Speaking": "RS",
+    "Speaking & Writing": "SW",
+    "Reading & Listening + Writing": "RLW",
+}
+
 def add_sessionname(df):
     session_letter = df["linguaskill_type"].str.split().str[1].str[0]
     pattern = df["exam_type"].map(name_dic) 
@@ -23,5 +36,6 @@ def add_sessionname(df):
         np.nan
     )
     df["session_name"] = df["exam_date"] + ' ' + skill_code + " " + df["email"]
+    df["skills_code"] = df["linguaskill_type"].map(letter_dic)
     return df
 
