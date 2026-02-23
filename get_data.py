@@ -8,7 +8,8 @@ XPATHS = {
     "EXAM_ID": "//*[@id='champ_detail']/td[2]/div[2]/table/tbody/tr[5]/td[2]",
     "EXAM_TYPE": "//*[@id='champ_detail']/td[2]/div[2]/table/tbody/tr[3]/td[2]",
     "LINGUASKILL_TYPE": '//*[@id="champ_detail"]/td[2]/div[2]/table/tbody/tr[4]/td[2]', 
-    "XPATH_ONLINE_TUTOR": "//*[@id='champ_detail']/td[2]/div[2]/table/tbody/tr[last()]/td[2]"}
+    "XPATH_ONLINE_TUTOR": "//*[@id='champ_detail']/td[2]/div[2]/table/tbody/tr[last()]/td[2]", 
+    "DT_CREATION": "//tr[@id='champ_dt_creation']//div[contains(@class,'affVal') and @p='dt_creation']"}
 
 def parse_id(value, key):
     if value is None:
@@ -92,6 +93,7 @@ def scrape(page, timeout=0.5):
     data.update(exam_detail)
     data["email"] = raw_data.get("EMAIL")
     data["exam_type"] = raw_data.get("EXAM_TYPE")
+    data["dt_creation"] = raw_data.get("DT_CREATION")
     data["linguaskill_type"] = raw_data.get("LINGUASKILL_TYPE")
     data["online_tutor"] = is_online_tutor(raw_data.get("XPATH_ONLINE_TUTOR"))
     return data

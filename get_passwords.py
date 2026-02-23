@@ -58,15 +58,11 @@ def get_password_for_email(page, email):
             page.wait_for_timeout(500)
 
             n = page.locator('xpath=//*[@id="champ_wfs"]/td[2]/div[2]/table/tbody/tr').count()
-            print("Nombre de tr trouvés : ", n)
-
             password = None 
             try : 
                 for i in range(2, n+1):
                     text = page.locator(f'xpath=//*[@id="champ_wfs"]/td[2]/div[2]/table/tbody/tr[{i}]/td[4]').inner_text(timeout=500)
                     temp = return_password(text)
-                    print(text)
-                    print(temp)
                     if temp: 
                         password = temp
                         break 
@@ -74,6 +70,8 @@ def get_password_for_email(page, email):
                 print(str(e))
         try: 
             entry_code_detected_bool = entry_code_detected(page)
+            if entry_code_detected_bool:
+                print("Entry code detected")
         except Exception as e: 
             print(str(e))
 

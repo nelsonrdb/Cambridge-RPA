@@ -56,7 +56,7 @@ def apply_filters(page):
     btn.click()
     page.wait_for_load_state("networkidle")
 
-def extract_data(context, start_str, end_str) -> list[str]:
+def extract_data(context):#, start_str, end_str) -> list[str]:
     page = context.new_page()
     page.goto(ORDERS_URL, wait_until="domcontentloaded")
     ensure_logged(page)
@@ -70,8 +70,9 @@ def extract_data(context, start_str, end_str) -> list[str]:
 
     clear_all_filters(page)
     fill_status_filter(page)
-    # fill_status_workflow_filter(page)
-    fill_date_filter(page, start_str, end_str) 
+    fill_status_workflow_filter(page)
+    #fill_date_filter(page, start_str, end_str) 
+    apply_filters(page)
     result = get_data(page)
 
     page.close()
