@@ -17,12 +17,12 @@ def clear_all_filters(page):
 
 def fill_status_filter(page): 
     sel = page.locator("#sel_etat_id_1choix_0")
-    sel.wait_for(state="attached", timeout=3000)
+    sel.wait_for(state="visible", timeout=15000)
     sel.select_option(label="Réglée")
 
 def fill_status_workflow_filter(page): 
     sel = page.locator('#sel_velcmdwft_id_1choix_13')
-    sel.wait_for(state="attached", timeout=3000)
+    sel.wait_for(state="visible", timeout=15000)
     sel.select_option(label="Code accès à envoyer")
 
 def fill_date_filter(page, start_day, end_day):
