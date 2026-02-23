@@ -14,8 +14,7 @@ name_dic = {
     "Reading & Listening + Writing": "3S RLW",
 }
 
-def add_sessionname(csv_path):
-    df = pd.read_csv(csv_path)
+def add_sessionname(df):
     session_letter = df["linguaskill_type"].str.split().str[1].str[0]
     pattern = df["exam_type"].map(name_dic) 
     skill_code = np.where(
@@ -24,4 +23,5 @@ def add_sessionname(csv_path):
         np.nan
     )
     df["session_name"] = df["exam_date"] + ' ' + skill_code + " " + df["email"]
-    df.to_csv(csv_path, index = False)
+    return df
+

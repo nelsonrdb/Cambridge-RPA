@@ -9,13 +9,12 @@ STATE_PATH = os.getenv("STATE_PATH", "/tmp/state.json")
 
 USERNAME = "Examens"
 PASSWORD = "7Lin8gua!"
-
-HEADLESS = os.getenv("HEADLESS", "true").lower() in ("1", "true", "yes")
-
-
-def open_context(p, headless: bool = False):
+def open_context(p, headless: bool = True):
     browser = p.chromium.launch(headless=headless)
-    context = browser.new_context(storage_state=STATE_PATH)
+    if os.path.exists(STATE_PATH):
+        context = browser.new_context(storage_state=STATE_PATH)
+    else:
+        context = browser.new_context()
     page = context.new_page()
     return browser, context, page
 
@@ -36,7 +35,7 @@ def login_and_refresh_state(page, context):
 
     context.storage_state(path=STATE_PATH)
 
-def ensure_logged_with_state(p, headless = HEADLESS):
+def ensure_logged_with_state(p, headless = True):
     browser, context, page = open_context(p, headless=headless)
 
     page.goto(BASE_URL, wait_until="domcontentloaded")

@@ -1,6 +1,17 @@
 from __future__ import annotations
 from pathlib import Path
 import pandas as pd
+from session_name import add_sessionname
+
+def create_dataframe(data, passwords):
+    df = pd.DataFrame(data)  
+    pw = pd.DataFrame.from_dict(passwords, orient="index")
+    pw.columns= ["password_cms", "password_generated", "password", "is_entry_code"]
+    df = df.dropna(subset=["email"])
+    df = df.merge(pw, left_on="email", right_index=True, how="left")
+    return add_sessionname(df)
+
+
 
 def write_csv_same_columns(data, passwords, csv_path):
     df = pd.DataFrame(data)  
