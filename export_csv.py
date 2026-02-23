@@ -11,8 +11,6 @@ def create_dataframe(data, passwords):
     df = df.merge(pw, left_on="email", right_index=True, how="left")
     return add_sessionname(df)
 
-
-
 def write_csv_same_columns(data, passwords, csv_path):
     df = pd.DataFrame(data)  
     pw = pd.DataFrame.from_dict(passwords, orient="index")

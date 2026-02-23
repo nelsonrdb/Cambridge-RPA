@@ -1,4 +1,3 @@
-import pandas as pd 
 import numpy as np
 
 name_dic = {
@@ -36,6 +35,7 @@ def add_sessionname(df):
         np.nan
     )
     df["session_name"] = df["exam_date"] + ' ' + skill_code + " " + df["email"]
-    df["skills_code"] = df["linguaskill_type"].map(letter_dic)
+    print(df["linguaskill_type"].map(letter_dic))
+    df["skills_code"] = df["exam_type"].map(letter_dic)
     return df
 
