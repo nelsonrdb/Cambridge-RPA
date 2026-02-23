@@ -33,8 +33,6 @@ def main(context, mail_list):
     return res
 
 def get_password_for_email(page, email):
-    print("--------------")
-    print(email)
     try:
         page.get_by_title("Effacer le filtre (et afficher tous les éléments)").first.click()
 
@@ -50,9 +48,9 @@ def get_password_for_email(page, email):
 
         rows = page.locator('table.zL[cat="velcmd"] tbody > tr')
         page.wait_for_timeout(500)
-        if rows.count() < 2:
-            password =  None
-        else:
+        password = None
+        entry_code_detected_bool = False 
+        if rows.count() >= 2:
             row2 = rows.nth(1) 
             row2.click()
             page.wait_for_timeout(500)
@@ -69,12 +67,11 @@ def get_password_for_email(page, email):
             except Exception as e: 
                 print(str(e))
         try: 
-            entry_code_detected_bool = entry_code_detected(page)
-            if entry_code_detected_bool:
+            if entry_code_detected(page):
+                entry_code_detected_bool = True 
                 print("Entry code detected")
         except Exception as e: 
             print(str(e))
-
         return (password, entry_code_detected_bool)
     except Exception as e:
         print(str(e))
