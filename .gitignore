@@ -1,0 +1,15 @@
+__pycache__/
+
+*.py[cod]
+*$py.class
+
+.ipynb_checkpoints/
+
+shared/*.csv
+shared/*.flag
+
+
+state.json
+
+
+.DS_Store
