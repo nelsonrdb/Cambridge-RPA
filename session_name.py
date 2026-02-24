@@ -1,22 +1,10 @@
 import numpy as np
 
-name_dic = {
-    "2 SKILLS - READING & LISTENING (Grandes Ecoles, Universités, etc.)": "2S",
-    "3 SKILLS - READING & LISTENING + SPEAKING (Compagnies Aériennes, etc.)": "3S",
-    "4 SKILLS - READING & LISTENING + SPEAKING + WRITING (Candidats Internationaux, ParcoursSup, Masters, Etranger, etc.)": "4S",
-    "Listening Seul": "1S L",
-    "Reading Seul": "1S R",
-    "Writing Seul": "1S W",
-    "Speaking Seul": "1S S",
-    "Reading & Speaking": "2S RS",
-    "Speaking & Writing": "2S SW",
-    "Reading & Listening + Writing": "3S RLW",
-}
-
 letter_dic = {
     "2 SKILLS - READING & LISTENING (Grandes Ecoles, Universités, etc.)": "RL",
     "3 SKILLS - READING & LISTENING + SPEAKING (Compagnies Aériennes, etc.)": "RLS",
     "4 SKILLS - READING & LISTENING + SPEAKING + WRITING (Candidats Internationaux, ParcoursSup, Masters, Etranger, etc.)": "RLSW",
+    "4 SKILLS - READING & LISTENING + SPEAKING + WRITING (Candidats Internationaux, ParcoursSup, Masters, Etranger, certaines compagnies aériennes, etc.)": 'RLSW',
     "Listening Seul": "L",
     "Reading Seul": "R",
     "Writing Seul": "W",
@@ -24,6 +12,19 @@ letter_dic = {
     "Reading & Speaking": "RS",
     "Speaking & Writing": "SW",
     "Reading & Listening + Writing": "RLW",
+}
+name_dic = {
+    "2 SKILLS - READING & LISTENING (Grandes Ecoles, Universités, etc.)": "2S",
+    "3 SKILLS - READING & LISTENING + SPEAKING (Compagnies Aériennes, etc.)": "3S",
+    "4 SKILLS - READING & LISTENING + SPEAKING + WRITING (Candidats Internationaux, ParcoursSup, Masters, Etranger, etc.)": "4S",
+    "4 SKILLS - READING & LISTENING + SPEAKING + WRITING (Candidats Internationaux, ParcoursSup, Masters, Etranger, certaines compagnies aériennes, etc.)": '4S',
+    "Listening Seul": "1S L",
+    "Reading Seul": "1S R",
+    "Writing Seul": "1S W",
+    "Speaking Seul": "1S S",
+    "Reading & Speaking": "2S RS",
+    "Speaking & Writing": "2S SW",
+    "Reading & Listening + Writing": "3S RLW",
 }
 
 def add_sessionname(df):
