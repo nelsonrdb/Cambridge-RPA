@@ -56,22 +56,18 @@ def get_password_for_email(page, email):
     entry_code_detected_bool = False
 
     try:
-        # reset filtre
         page.get_by_title("Effacer le filtre (et afficher tous les éléments)").first.click(timeout=15000)
 
-        # filtre email
         page.locator("#sel_email_contient_0").click(timeout=15000)
         page.locator("#sel_email_contient_0").fill(email, timeout=15000)
 
         btn = page.get_by_title("Appliquer le filtre")
         btn.click(timeout=15000, no_wait_after=True)
 
-        # clic sur la ligne correspondante (ton sélecteur est très strict, ça peut timeout)
         page.locator(
             f'table.zL tbody tr:has(td[data-p="email"] span:text("{email}"))'
         ).first.click(timeout=15000)
 
-        # ouvrir la section
         page.locator('a.drAff[zzrelsid="617"]').click(timeout=15000)
 
         rows = page.locator('table.zL[cat="velcmd"] tbody > tr')
