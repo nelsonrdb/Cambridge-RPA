@@ -37,11 +37,20 @@ def login_and_refresh_state(page, context):
 
 def ensure_logged_with_state(p, headless = True):
     browser, context, page = open_context(p, headless=headless)
-
-    page.goto(BASE_URL, wait_until="domcontentloaded")
+    safe_goto(page, BASE_URL)
 
     if is_login_page(page):
         print("⚠️ state.json expiré → login auto + refresh state.json")
         login_and_refresh_state(page, context)
 
     return browser, context, page
+
+def safe_goto(page, url):
+    for attempt in range(3):
+        try:
+            page.goto(url, wait_until="domcontentloaded", timeout=90000)
+            return
+        except Exception:
+            if attempt == 2:
+                raise
+            page.wait_for_timeout(1000)
