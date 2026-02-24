@@ -7,9 +7,26 @@ import re
 ORDERS_URL = "https://xnet-apps.com/xa/victorias/" 
 
 
-def generate_password_7() -> str:
-    alphabet = string.ascii_uppercase + string.digits
-    return "".join(secrets.choice(alphabet) for _ in range(7))
+import string
+import secrets
+
+def generate_password_8() -> str:
+    lower = string.ascii_lowercase
+    upper = string.ascii_uppercase
+    digits = string.digits
+    
+    password_chars = [
+        secrets.choice(lower),
+        secrets.choice(upper),
+        secrets.choice(digits),
+    ]
+    
+    all_chars = lower + upper + digits
+    password_chars += [secrets.choice(all_chars) for _ in range(5)]
+    
+    secrets.SystemRandom().shuffle(password_chars)
+    
+    return "".join(password_chars)
 
 def main(context, mail_list): 
     page = context.new_page()
@@ -26,7 +43,7 @@ def main(context, mail_list):
             if pwd:
                 res[email] = [pwd, pd.NA, pwd, is_entry_code]
             else: 
-                pwd = generate_password_7()
+                pwd = generate_password_8()
                 res[email] = [pd.NA, pwd, pwd, is_entry_code]             
     finally: 
         page.close()
