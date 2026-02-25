@@ -2,13 +2,9 @@ import pandas as pd
 import secrets
 import string
 import re
-
+from playwright.sync_api import TimeoutError as PWTimeout
 
 ORDERS_URL = "https://xnet-apps.com/xa/victorias/" 
-
-
-import string
-import secrets
 
 def generate_password_8() -> str:
     lower = string.ascii_lowercase
@@ -49,9 +45,9 @@ def main(context, mail_list):
         page.close()
     return res
 
-from playwright.sync_api import TimeoutError as PWTimeout
-
 def get_password_for_email(page, email):
+    print("---------")
+    print("Email : ", email)
     password = None
     entry_code_detected_bool = False
 
@@ -74,13 +70,11 @@ def get_password_for_email(page, email):
         rows.first.wait_for(state="visible", timeout=15000)  # plus fiable que wait_for_timeout(500)
 
         if rows.count() >= 2:
+            password = None 
+            entry_code_detected_bool = False
             row2 = rows.nth(1)
             row2.click(timeout=15000)
 
-            # lecture du tableau wfs
-            # wfs_rows = page.locator('xpath=//*[@id="champ_wfs"]/td[2]/div[2]/table/tbody/tr')
-            # n = wfs_rows.count()
-            # print("Nombres de lignes trouvées : ", n)
             page.locator('#champ_wfs td.champ table.zzList').wait_for(state="visible", timeout=15000)
 
             wfs_rows = page.locator(
@@ -89,37 +83,59 @@ def get_password_for_email(page, email):
             )
 
             n = wfs_rows.count()
+            print("Nombre de lignes trouvées : ", n)
 
-            for i in range(2, n + 1):
+            # for i in range(2, n + 2):
+            #     try:
+            #         text = page.locator(
+            #             f'xpath=//*[@id="champ_wfs"]/td[2]/div[2]/table/tbody/tr[{i}]/td[4]'
+            #         ).inner_text(timeout=15000).strip()
+            #     except PWTimeout:
+            #         continue
+            #     print("Ligne i : ", i)
+            #     print(text)
+            #     temp = return_password(text)
+            #     print("temp : ", temp)
+            #     print("-------------")
+            #     if temp:
+            #         password = temp
+            #         break
+            n = wfs_rows.count()
+            print("Nombre de lignes WFS :", n)
+
+            password = None
+            for idx in range(n):
+                row = wfs_rows.nth(idx)
+
                 try:
-                    text = page.locator(
-                        f'xpath=//*[@id="champ_wfs"]/td[2]/div[2]/table/tbody/tr[{i}]/td[4]'
-                    ).inner_text(timeout=15000).strip()
+                    text = row.locator("td").nth(3).inner_text(timeout=15000).strip()
                 except PWTimeout:
                     continue
+
+                print("Ligne idx:", idx, "|", text)
                 temp = return_password(text)
                 if temp:
                     password = temp
                     break
 
-        try:
-            if entry_code_detected(page):
-                entry_code_detected_bool = True
-                print("Entry code detected")
-        except Exception as e:
-            print(f"entry_code_detected() error: {e}")
+                try:
+                    if entry_code_detected(page):
+                        entry_code_detected_bool = True
+                        print("Entry code detected")
+                except Exception as e:
+                    print(f"entry_code_detected() error: {e}")
 
-        return (password, entry_code_detected_bool)
 
     except Exception as e:
         print(f"get_password_for_email error for {email}: {e}")
         return (None, False)
-
+    
     finally:
         try:
             page.get_by_title("Aller à la liste [←]").first.click(timeout=15000, no_wait_after=True)
         except Exception as e:
             print(f"back to list failed: {e}")
+    return (password, entry_code_detected_bool)
 
 def entry_code_detected(page): 
     table = page.locator("table.zzList")

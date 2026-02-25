@@ -71,7 +71,6 @@ def extract_data(context):#, start_str, end_str) -> list[str]:
     clear_all_filters(page)
     fill_status_filter(page)
     fill_status_workflow_filter(page)
-    #fill_date_filter(page, start_str, end_str) 
     apply_filters(page)
     result = get_data(page)
 

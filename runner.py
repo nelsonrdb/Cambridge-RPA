@@ -1,8 +1,6 @@
 from playwright.sync_api import sync_playwright
-from pathlib import Path
 from auth import ensure_logged_with_state
 from orders import extract_data
-from session_name import add_sessionname
 from get_passwords import main as extract_passwords
 from export_csv import create_dataframe
 import argparse

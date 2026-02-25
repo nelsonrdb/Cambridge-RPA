@@ -2,13 +2,12 @@ from playwright.sync_api import sync_playwright
 from playwright.sync_api import TimeoutError as PWTimeoutError
 import os
 
-
-
 BASE_URL = "https://xnet-apps.com/xa/victorias/"
-STATE_PATH = os.getenv("STATE_PATH", "/tmp/state.json")
-
+# STATE_PATH = os.getenv("STATE_PATH", "/tmp/state.json")
+STATE_PATH = os.getenv("STATE_PATH", "state.json")
 USERNAME = "Examens"
 PASSWORD = "7Lin8gua!"
+
 def open_context(p, headless: bool = True):
     browser = p.chromium.launch(headless=headless)
     if os.path.exists(STATE_PATH):
