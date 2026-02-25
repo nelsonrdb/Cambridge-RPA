@@ -46,8 +46,6 @@ def main(context, mail_list):
     return res
 
 def get_password_for_email(page, email):
-    print("---------")
-    print("Email : ", email)
     password = None
     entry_code_detected_bool = False
 
@@ -74,34 +72,12 @@ def get_password_for_email(page, email):
             entry_code_detected_bool = False
             row2 = rows.nth(1)
             row2.click(timeout=15000)
-
             page.locator('#champ_wfs td.champ table.zzList').wait_for(state="visible", timeout=15000)
-
             wfs_rows = page.locator(
                 'xpath=//*[@id="champ_wfs"]//td[contains(@class,"champ")]'
                 '//table[contains(@class,"zzList")]//tbody/tr[td]'
             )
-
             n = wfs_rows.count()
-            print("Nombre de lignes trouvées : ", n)
-
-            # for i in range(2, n + 2):
-            #     try:
-            #         text = page.locator(
-            #             f'xpath=//*[@id="champ_wfs"]/td[2]/div[2]/table/tbody/tr[{i}]/td[4]'
-            #         ).inner_text(timeout=15000).strip()
-            #     except PWTimeout:
-            #         continue
-            #     print("Ligne i : ", i)
-            #     print(text)
-            #     temp = return_password(text)
-            #     print("temp : ", temp)
-            #     print("-------------")
-            #     if temp:
-            #         password = temp
-            #         break
-            n = wfs_rows.count()
-            print("Nombre de lignes WFS :", n)
 
             password = None
             for idx in range(n):
@@ -112,7 +88,6 @@ def get_password_for_email(page, email):
                 except PWTimeout:
                     continue
 
-                print("Ligne idx:", idx, "|", text)
                 temp = return_password(text)
                 if temp:
                     password = temp
