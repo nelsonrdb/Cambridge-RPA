@@ -37,9 +37,7 @@ def add_sessionname(df):
         np.nan
     )
     df["session_name"] = df["exam_date"] + ' ' + skill_code + " " + df["email"]
-    print(df)
-    print("---------------------")
-    print(df["linguaskill_type"].map(letter_dic))
     df["skills_code"] = df["exam_type"].map(letter_dic)
+    print(df)
     return df
 

@@ -78,7 +78,16 @@ def get_password_for_email(page, email):
             row2.click(timeout=15000)
 
             # lecture du tableau wfs
-            wfs_rows = page.locator('xpath=//*[@id="champ_wfs"]/td[2]/div[2]/table/tbody/tr')
+            # wfs_rows = page.locator('xpath=//*[@id="champ_wfs"]/td[2]/div[2]/table/tbody/tr')
+            # n = wfs_rows.count()
+            # print("Nombres de lignes trouvées : ", n)
+            page.locator('#champ_wfs td.champ table.zzList').wait_for(state="visible", timeout=15000)
+
+            wfs_rows = page.locator(
+                'xpath=//*[@id="champ_wfs"]//td[contains(@class,"champ")]'
+                '//table[contains(@class,"zzList")]//tbody/tr[td]'
+            )
+
             n = wfs_rows.count()
 
             for i in range(2, n + 1):
@@ -88,7 +97,6 @@ def get_password_for_email(page, email):
                     ).inner_text(timeout=15000).strip()
                 except PWTimeout:
                     continue
-
                 temp = return_password(text)
                 if temp:
                     password = temp
@@ -112,57 +120,6 @@ def get_password_for_email(page, email):
             page.get_by_title("Aller à la liste [←]").first.click(timeout=15000, no_wait_after=True)
         except Exception as e:
             print(f"back to list failed: {e}")
-
-# def get_password_for_email(page, email):
-#     try:
-#         page.get_by_title("Effacer le filtre (et afficher tous les éléments)").first.click()
-
-#         page.locator("#sel_email_contient_0").click()
-#         page.locator("#sel_email_contient_0").fill(email)
-#         btn = page.get_by_title("Appliquer le filtre")
-#         btn.click(timeout=15000, no_wait_after=True)
-#         page.locator(
-#             f'table.zL tbody tr:has(td[data-p="email"] span:text("{email}"))'
-#         ).first.click()
-
-#         page.locator('a.drAff[zzrelsid="617"]').click()
-
-#         rows = page.locator('table.zL[cat="velcmd"] tbody > tr')
-#         page.wait_for_timeout(500)
-#         password = None
-#         entry_code_detected_bool = False 
-#         if rows.count() >= 2:
-#             row2 = rows.nth(1) 
-#             row2.click()
-#             page.wait_for_timeout(500)
-
-#             n = page.locator('xpath=//*[@id="champ_wfs"]/td[2]/div[2]/table/tbody/tr').count()
-#             password = None 
-#             try : 
-#                 for i in range(2, n+1):
-#                     text = page.locator(f'xpath=//*[@id="champ_wfs"]/td[2]/div[2]/table/tbody/tr[{i}]/td[4]').inner_text(timeout=500)
-#                     temp = return_password(text)
-#                     if temp: 
-#                         password = temp
-#                         break 
-#             except Exception as e: 
-#                 print(str(e))
-#         try: 
-#             if entry_code_detected(page):
-#                 entry_code_detected_bool = True 
-#                 print("Entry code detected")
-#         except Exception as e: 
-#             print(str(e))
-#         return (password, entry_code_detected_bool)
-#     except Exception as e:
-#         print(str(e))
-
-#     finally:
-#         try : 
-#             page.get_by_title("Aller à la liste [←]").first.click()
-#         except Exception as e : 
-#             print(str(e))
-
 
 def entry_code_detected(page): 
     table = page.locator("table.zzList")
