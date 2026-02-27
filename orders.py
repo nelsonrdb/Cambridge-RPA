@@ -12,8 +12,20 @@ def ensure_logged(page):
     if page.locator("input[type='password']").count() > 0:
         raise RuntimeError("Session expirée → régénère state.json (save_state.py).")
     
-def clear_all_filters(page): 
-    page.get_by_title("Effacer le filtre (et afficher tous les éléments)").first.click()
+def clear_all_filters(page, timeout= 10_000):
+    locator = page.get_by_title("Effacer le filtre (et afficher tous les éléments)")
+    if locator.count() == 0:
+        return False
+
+    btn = locator.first
+    try:
+        btn.wait_for(state="visible", timeout=timeout)
+    except Exception:
+        return False
+
+    btn.scroll_into_view_if_needed()
+    btn.click(timeout=timeout)
+    return True
 
 def fill_status_filter(page): 
     sel = page.locator("#sel_etat_id_1choix_0")

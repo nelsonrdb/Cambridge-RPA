@@ -28,7 +28,6 @@ name_dic = {
 }
 
 def add_sessionname(df):
-    print(df)
     session_letter = df["linguaskill_type"].str.split().str[1].str[0]
     pattern = df["exam_type"].map(name_dic) 
     skill_code = np.where(
@@ -38,6 +37,5 @@ def add_sessionname(df):
     )
     df["session_name"] = df["exam_date"] + ' ' + skill_code + " " + df["email"]
     df["skills_code"] = df["exam_type"].map(letter_dic)
-    print(df)
     return df
 

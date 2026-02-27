@@ -39,33 +39,46 @@ def parse_identity_block(text: str):
     name = None
     date_of_birth = None
     id_number = None
+    gender = None
 
     for i, line in enumerate(lines):
         if line.startswith("Nom") and i + 1 < len(lines):
             nxt = lines[i + 1]
-            if nxt not in ("Prénom", "Date de naissance", "Pièce d'identité", "N° pièce d'identité", "N° d'identité"):
+            if nxt not in ("Prénom", "Date de naissance", "Genre", "Pièce d'identité", "N° pièce d'identité", "N° d'identité"):
                 surname = parse_id(nxt, "surname")
 
         elif (line.startswith("Prénom") or line.startswith("Prenom")) and i + 1 < len(lines):
             nxt = lines[i + 1]
-            if nxt not in ("Nom", "Date de naissance", "Pièce d'identité", "N° pièce d'identité", "N° d'identité"):
+            if nxt not in ("Nom", "Date de naissance", "Genre", "Pièce d'identité", "N° pièce d'identité", "N° d'identité"):
                 name = parse_id(nxt, "name")
+
+        elif (line.startswith("Genre")) and i + 1 < len(lines):
+            nxt = lines[i + 1]
+            if nxt not in ("Nom", "Date de naissance", "Genre", "Pièce d'identité", "N° pièce d'identité", "N° d'identité"):
+                gender = nxt
 
         elif line.startswith("Date de naissance") and i + 1 < len(lines):
             nxt = lines[i + 1]
-            if nxt not in ("Pièce d'identité", "N° pièce d'identité", "N° d'identité", "Nom", "Prénom"):
+            if nxt not in ("Pièce d'identité", "Genre", "N° pièce d'identité", "N° d'identité", "Nom", "Prénom"):
                 date_of_birth = nxt
 
         elif (line.startswith("N° d'identité") or line.startswith("N° pièce d'identité")) and i + 1 < len(lines):
             nxt = lines[i + 1]
-            if nxt not in ("Pièce d'identité", "Nom", "Prénom", "Date de naissance"):
+            if nxt not in ("Pièce d'identité", "Genre", "Nom", "Prénom", "Date de naissance"):
                 id_number = nxt
-            
+
+        elif (line.startswith("Nationalité") or line.startswith("Nationalite") and i+1 < len(lines)): 
+            nxt = lines[i+1]
+            if nxt not in ("Pièce d'identité", "Genre", "Nom", "Prénom", "Date de naissance", "N° d'identité"):
+                nationality = nxt
+
     res = {
         "surname": surname,
         "name": name,
         "date_of_birth": date_of_birth,
         "id_number": id_number,
+        "gender" : gender, 
+        "nationality" : nationality
     }
     return res 
 
