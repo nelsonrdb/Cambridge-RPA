@@ -4,6 +4,7 @@ from orders import extract_data
 from get_passwords import main as extract_passwords
 from export_csv import create_dataframe
 import argparse
+import pandas as pd
 
 def main(headless=True):
 
@@ -11,15 +12,20 @@ def main(headless=True):
         browser, context, _ = ensure_logged_with_state(p, headless=headless)
         try:
             data = extract_data(context)
-            emails = [x["email"] for x in data] #gérer le cas ou data est vide 
-            passwords = extract_passwords(context, emails)
+            if len(data)>0: 
+                emails = [x["email"] for x in data] #gérer le cas ou data est vide 
+                passwords = extract_passwords(context, emails)
+                return create_dataframe(data, passwords)
+            else : 
+                print("Aucune nouvelle commande à été trouvée dans le CMS")
+                return pd.DataFrame(columns = ['surname', 'name', 'date_of_birth', 'id_number', 'exam_date', 'exam_hour', 'email', 'exam_type', 'dt_creation', 'linguaskill_type', 'online_tutor', 'password_cms', 'password_generated', 'password', 'is_entry_code', 'session_name'])
+            
+            
        
         finally:
             context.close()
             browser.close()
 
-    # remove_done_flag(outdir)          
-    # write_done_flag(outdir)
     return create_dataframe(data, passwords)
 
 if __name__ == "__main__":
