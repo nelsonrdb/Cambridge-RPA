@@ -21,6 +21,10 @@ def run():
     df = generate_csv()
     return {"ok": True, "rows": len(df)}
 
+@app.get("/")
+def root():
+    return {"ok": True, "message": "API is running"}
+
 @app.get("/output")
 def output():
     generate_csv()
