@@ -10,7 +10,6 @@ def create_dataframe(data, passwords):
     df = df.dropna(subset=["email"])
     df = df.merge(pw, left_on="email", right_index=True, how="left")
     df = add_sessionname(df)
-    df.to_csv("shared/orders.csv", index=False)
     return df
 
 def write_csv_same_columns(data, passwords, csv_path):
