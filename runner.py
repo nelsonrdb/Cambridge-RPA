@@ -7,7 +7,6 @@ import argparse
 import pandas as pd
 
 def main(headless=True):
-
     with sync_playwright() as p:
         browser, context, _ = ensure_logged_with_state(p, headless=headless)
         try:

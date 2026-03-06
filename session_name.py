@@ -2,7 +2,7 @@ import numpy as np
 
 letter_dic = {
     "2 SKILLS - READING & LISTENING (Grandes Ecoles, Universités, etc.)": "RL",
-    "3 SKILLS - READING & LISTENING + SPEAKING (Compagnies Aériennes, etc.)": "RLS",
+    "3 SKILLS - READING & LISTENING + SPEAKING (Air France, etc.)": "RLS",
     "4 SKILLS - READING & LISTENING + SPEAKING + WRITING (Candidats Internationaux, ParcoursSup, Masters, Etranger, etc.)": "RLSW",
     "4 SKILLS - READING & LISTENING + SPEAKING + WRITING (Candidats Internationaux, ParcoursSup, Masters, Etranger, certaines compagnies aériennes, etc.)": 'RLSW',
     "Listening Seul": "L",
@@ -15,7 +15,7 @@ letter_dic = {
 }
 name_dic = {
     "2 SKILLS - READING & LISTENING (Grandes Ecoles, Universités, etc.)": "2S",
-    "3 SKILLS - READING & LISTENING + SPEAKING (Compagnies Aériennes, etc.)": "3S",
+    "3 SKILLS - READING & LISTENING + SPEAKING (Air France, etc.)": "3S",
     "4 SKILLS - READING & LISTENING + SPEAKING + WRITING (Candidats Internationaux, ParcoursSup, Masters, Etranger, etc.)": "4S",
     "4 SKILLS - READING & LISTENING + SPEAKING + WRITING (Candidats Internationaux, ParcoursSup, Masters, Etranger, certaines compagnies aériennes, etc.)": '4S',
     "Listening Seul": "1S L",

@@ -10,15 +10,18 @@ app = FastAPI()
 DATA_DIR = Path(os.getenv("DATA_DIR", "/var/data"))  # mount path Render Disk
 CSV_PATH = DATA_DIR / "orders.csv"
 
-@app.post("/run")
-def run():
+def generate_csv():
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     df = main()
     df.to_csv(CSV_PATH, index=False)
+    return df
+
+@app.post("/run")
+def run():
+    df = generate_csv()
     return {"ok": True, "rows": len(df)}
 
 @app.get("/output")
 def output():
-    if not CSV_PATH.exists():
-        raise HTTPException(status_code=404, detail="No CSV yet. Call POST /run first.")
+    generate_csv()
     return FileResponse(str(CSV_PATH), media_type="text/csv", filename="orders.csv")
