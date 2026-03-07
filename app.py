@@ -2,6 +2,8 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
 from pathlib import Path
 import os
+import time
+
 
 from runner import main
 
@@ -11,14 +13,34 @@ DATA_DIR = Path(os.getenv("DATA_DIR", "/var/data"))  # mount path Render Disk
 CSV_PATH = DATA_DIR / "orders.csv"
 
 def generate_csv():
+    print("Generating csv file")
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     df = main()
     df.to_csv(CSV_PATH, index=False)
     return df
 
+def generate_timed_csv():
+    t0 = time.perf_counter()
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    t1 = time.perf_counter()
+
+    df = main()
+    t2 = time.perf_counter()
+
+    df.to_csv(CSV_PATH, index=False)
+    t3 = time.perf_counter()
+
+    print({
+        "mkdir": round(t1 - t0, 2),
+        "main": round(t2 - t1, 2),
+        "to_csv": round(t3 - t2, 2),
+        "total": round(t3 - t0, 2),
+    })
+    return df
+
 @app.post("/run")
 def run():
-    df = generate_csv()
+    df = generate_timed_csv()
     return {"ok": True, "rows": len(df)}
 
 @app.get("/")
