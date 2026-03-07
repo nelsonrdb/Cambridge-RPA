@@ -49,5 +49,5 @@ def root():
 
 @app.get("/output")
 def output():
-    generate_csv()
+    generate_timed_csv()
     return FileResponse(str(CSV_PATH), media_type="text/csv", filename="orders.csv")
