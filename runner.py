@@ -14,6 +14,7 @@ def main(headless=True):
             if len(data)>0: 
                 emails = [x["email"] for x in data]
                 passwords = extract_passwords(context, emails)
+                #create_dataframe(data, passwords).to_csv("shared/orders.csv", index=False)
                 return create_dataframe(data, passwords)
             else : 
                 print("Aucune nouvelle commande à été trouvée dans le CMS")

@@ -89,7 +89,7 @@ def scrape(page, timeout=0.5):
     for field, xpath in XPATHS.items():
         try:
             loc = page.locator(f"xpath={xpath}").first
-            loc.wait_for(state="visible", timeout=2000)
+            loc.wait_for(state="visible", timeout=10000)#anciennement 2000
             raw_data[field] = loc.inner_text(timeout=timeout_ms).strip()   
         except PWTimeoutError as e:
             print(str(e))
