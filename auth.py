@@ -9,14 +9,22 @@ USERNAME = "Examens"
 PASSWORD = "7Lin8gua!"
 
 def open_context(p, headless: bool = True):
-    browser = p.chromium.launch(headless=headless)
+    browser = p.chromium.launch(
+        headless=headless,
+        args=["--start-maximized"]
+    )
     if os.path.exists(STATE_PATH):
-        context = browser.new_context(storage_state=STATE_PATH)
+        context = browser.new_context(
+            storage_state=STATE_PATH,
+            viewport=None
+        )
     else:
-        context = browser.new_context()
+        context = browser.new_context(
+            viewport=None
+        )
+
     page = context.new_page()
     return browser, context, page
-
 def is_login_page(page) -> bool:
     return page.locator('input[name="pwd"], input[type="password"]').count() > 0
 

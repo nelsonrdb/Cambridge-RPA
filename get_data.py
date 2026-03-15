@@ -9,7 +9,8 @@ XPATHS = {
     "EXAM_TYPE": "//*[@id='champ_detail']/td[2]/div[2]/table/tbody/tr[3]/td[2]",
     "LINGUASKILL_TYPE": '//*[@id="champ_detail"]/td[2]/div[2]/table/tbody/tr[4]/td[2]', 
     "XPATH_ONLINE_TUTOR": "//*[@id='champ_detail']/td[2]/div[2]/table/tbody/tr[last()]/td[2]", 
-    "DT_CREATION": "//tr[@id='champ_dt_creation']//div[contains(@class,'affVal') and @p='dt_creation']"}
+    "DT_CREATION": "//tr[@id='champ_dt_creation']//div[contains(@class,'affVal') and @p='dt_creation']", 
+    "ORDER_NUMBER": '//*[@p="num_aff"]'}
 
 def parse_id(value, key):
     if value is None:
@@ -100,6 +101,7 @@ def scrape(page, timeout=0.5):
 
 
     data = {}
+    data["id_number"] = raw_data.get("ORDER_NUMBER")
     identity_info = parse_identity_block(raw_data.get("ID") or "")
     data.update(identity_info)    
     exam_detail = parse_exam_id_block(raw_data.get("EXAM_ID") or "")
@@ -123,6 +125,20 @@ def is_online_tutor(string):
     else:
         return None
     
+def set_statusWF(page): 
+    while page.locator(ROWS_SEL).count() > 0: 
+        rows = page.locator(ROWS_SEL)
+        row = rows.nth(1)
+        row.click()
+        page.locator('a[title="Revenir ou aller à un statut workflow"]').click()
+        page.locator('select[name="velcmdwftrid"]').selectOption('3')
+        page.locator('button:has-text("Valider")').click()
+        page.locator(BACK_BTN).click()
+        page.locator(ROWS_SEL).first.wait_for(state="visible")
+    print("Orders set à 'En cours' status")
+
+
+    
 def main(page):
     page.set_default_timeout(5000)
     data = []
@@ -137,6 +153,7 @@ def main(page):
                 data.append(info)
                 page.locator(BACK_BTN).click()
                 page.locator(ROWS_SEL).first.wait_for(state="visible")
+    
 
         except PWTimeoutError as e:
             print(f"[{i}] Timeout: {e}")
@@ -148,5 +165,5 @@ def main(page):
 
         except Exception as e:
             print(f"[{i}] Error: {e}")
-
+    
     return data
