@@ -16,6 +16,7 @@ def generate_csv():
     print("Generating csv file")
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     df = main()
+    print(df)
     df.to_csv(CSV_PATH, index=False)
     return df
 
