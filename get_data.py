@@ -102,6 +102,7 @@ def scrape(page, timeout=0.5):
 
     data = {}
     data["id_number"] = raw_data.get("ORDER_NUMBER")
+    print("Order number trouvé : ", data["id_number"])
     identity_info = parse_identity_block(raw_data.get("ID") or "")
     data.update(identity_info)    
     exam_detail = parse_exam_id_block(raw_data.get("EXAM_ID") or "")

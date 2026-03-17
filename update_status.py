@@ -14,11 +14,10 @@ def go_to_commandes(page):
 
 def set_status_and_comment(page, info): 
     page.wait_for_timeout(500)
-    menu_button = page.locator('button.btn.btn-default.btn-sm.mrBtn.noPicto')
-    menu_button.click()
-    page.locator('a[title="Revenir ou aller à un statut workflow"]').click()
-    if info[2]:
-        page.wait_for_timeout(2000)
+    page.locator('button.btn.btn-default.btn-sm.mrBtn.noPicto').click()
+    page.get_by_role("link", name="Statut WF").click()
+    if info[2]: 
+        page.wait_for_timeout(500)
 
         page.locator('select[name="velcmdwftrid"]').select_option('24')
         textarea = page.locator('textarea[name="wfcmt"]')
@@ -31,7 +30,7 @@ def set_status_and_comment(page, info):
     else:
         page.locator('select[name="velcmdwftrid"]').select_option('3')
     
-    # page.locator('button:has-text("Valider")').click()
+    page.locator('button:has-text("Valider")').click()
     page.locator(BACK_BTN).click()
 
 
@@ -61,10 +60,7 @@ def main(order_info, headless=False):
         print("CMS Workflow commenté")
 
 if __name__ =="__main__": 
-    main({"26-0780": ['rdbnelson@gmail.com', 'hello world', True], "26-0777": ["rdbnelson@gmail.com", 'hello word', True]})
-
-
-
+    main({"26-0815": ['claraberthou@gmail.com', 'L0ijbWbv', True]})
 
 
 
