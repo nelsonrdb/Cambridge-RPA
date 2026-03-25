@@ -12,19 +12,19 @@ def go_to_commandes(page):
     page.keyboard.press("Enter")
     page.wait_for_timeout(500)
 
-def set_status_and_comment(page, info): 
+def set_status_and_comment(page, info_dic): 
     page.wait_for_timeout(500)
     page.locator('button.btn.btn-default.btn-sm.mrBtn.noPicto').click()
     page.get_by_role("link", name="Statut WF").click()
-    if info[2]: 
+    if info_dic["sucess"]: 
         page.wait_for_timeout(500)
         locator = page.locator('#champ_velcmdwftrid select')
         locator.select_option(label="Clôturer Session")
         textarea = page.locator('textarea[name="wfcmt"]')
 
         textarea.fill(
-            f"Username : {info[0]}\n"
-            f"Password : {info[1]}\n"
+            f"Username : {info_dic["email"]}\n"
+            f"Password : {info_dic["password"]}\n"
             f"Institution : FR731"
         )
     else:
@@ -58,13 +58,4 @@ def main(order_info, headless=True):
                 print("Exception : ", str(e))
 
         print("CMS Workflow commenté")
-
-if __name__ =="__main__": 
-    main({"26-0815": ['claraberthou@gmail.com', 'L0ijbWbv', True], '26-0884': ["andrea.dossantos02@hotmail.com", "lskjdhflqskdjhf", True]})
-
-
-
-
-
-                
-                  
+               
