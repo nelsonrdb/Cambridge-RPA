@@ -3,7 +3,9 @@ from fastapi.responses import FileResponse
 from pathlib import Path
 import os
 import time
-from update_status import main as update_status
+from update_status import main as do_update_status
+from typing import Dict, Any
+
 
 
 from runner import main
@@ -55,6 +57,6 @@ def output():
     return FileResponse(str(CSV_PATH), media_type="text/csv", filename="orders.csv")
 
 @app.post("/update_status")
-def update_status(dict):
-    update_status(dict)
+def update_status(payload: Dict[str, Any]):
+    do_update_status(payload)
     return {"ok": True}
