@@ -1,4 +1,6 @@
 from playwright.sync_api import TimeoutError as PWTimeoutError
+from time import time
+from datetime import datetime
 
 BACK_BTN = 'button.btnListe[title*="Aller à la liste"]'
 ROWS_SEL = ".bc tbody tr[itemlb]:visible"  
@@ -112,6 +114,7 @@ def scrape(page, timeout=0.5):
     data["dt_creation"] = raw_data.get("DT_CREATION")
     data["linguaskill_type"] = raw_data.get("LINGUASKILL_TYPE")
     data["online_tutor"] = is_online_tutor(raw_data.get("XPATH_ONLINE_TUTOR"))
+    data["scrapping_time"] = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
     return data
 
 def is_online_tutor(string): 
