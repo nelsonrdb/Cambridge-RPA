@@ -3,6 +3,7 @@ from fastapi.responses import FileResponse
 from pathlib import Path
 import os
 import time
+from update_status import main as update_status
 
 
 from runner import main
@@ -52,3 +53,8 @@ def root():
 def output():
     generate_timed_csv()
     return FileResponse(str(CSV_PATH), media_type="text/csv", filename="orders.csv")
+
+@app.post("/update_status")
+def update_status(dict):
+    update_status(dict)
+    return {"ok": True}

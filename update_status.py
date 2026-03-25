@@ -30,7 +30,7 @@ def set_status_and_comment(page, info):
     else:
         page.locator('select[name="velcmdwftrid"]').select_option('3')
     
-    page.locator('button:has-text("Valider")').click()
+    # page.locator('button:has-text("Valider")').click()
     page.locator(BACK_BTN).click()
 
 
