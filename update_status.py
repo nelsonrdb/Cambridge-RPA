@@ -46,7 +46,7 @@ def go_to_order(page, order_number):
 
 #FONCTION DEV MODE
 # order_list = {order_number : [email, password, sucess_bool]}
-def main(order_info, headless=False):
+def main(order_info, headless=True):
         with sync_playwright() as p:
             _, _, page = ensure_logged_with_state(p, headless=headless)
             try:
