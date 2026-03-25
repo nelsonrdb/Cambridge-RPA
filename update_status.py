@@ -18,8 +18,8 @@ def set_status_and_comment(page, info):
     page.get_by_role("link", name="Statut WF").click()
     if info[2]: 
         page.wait_for_timeout(500)
-
-        page.locator('select[name="velcmdwftrid"]').select_option('24')
+        locator = page.locator('#champ_velcmdwftrid select')
+        locator.select_option(label="Clôturer Session")
         textarea = page.locator('textarea[name="wfcmt"]')
 
         textarea.fill(
@@ -28,9 +28,9 @@ def set_status_and_comment(page, info):
             f"Institution : FR731"
         )
     else:
-        page.locator('select[name="velcmdwftrid"]').select_option('3')
+        page.locator('select[name="velcmdwftrid"]').select_option('MANUEL')
     
-    # page.locator('button:has-text("Valider")').click()
+    page.locator('button:has-text("Valider")').click()
     page.locator(BACK_BTN).click()
 
 
@@ -45,7 +45,7 @@ def go_to_order(page, order_number):
 
 
 #FONCTION DEV MODE
-# order_list = {order_number : [email, password, sucess_bool]}
+#order_list = {order_number : [email, password, sucess_bool]}
 def main(order_info, headless=True):
         with sync_playwright() as p:
             _, _, page = ensure_logged_with_state(p, headless=headless)
@@ -60,7 +60,7 @@ def main(order_info, headless=True):
         print("CMS Workflow commenté")
 
 if __name__ =="__main__": 
-    main({"26-0815": ['claraberthou@gmail.com', 'L0ijbWbv', True]})
+    main({"26-0815": ['claraberthou@gmail.com', 'L0ijbWbv', True], '26-0884': ["andrea.dossantos02@hotmail.com", "lskjdhflqskdjhf", True]})
 
 
 
