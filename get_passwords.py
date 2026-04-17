@@ -140,3 +140,4 @@ def return_password(txt):
             return tokens[-1] if len(tokens) >= 2 else None
 
     return None
+

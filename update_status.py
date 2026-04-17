@@ -13,8 +13,8 @@ def go_to_commandes(page):
     page.wait_for_timeout(500)
 
 def set_status_and_comment(page, info_dic): 
-    page.wait_for_timeout(500)
-    page.locator('button.btn.btn-default.btn-sm.mrBtn.noPicto').click()
+    page.wait_for_timeout(1000)
+    #page.locator('button.btn.btn-default.btn-sm.mrBtn.noPicto').click() Je me rappelle plus pourquoi j'avais rajouté ce truc
     page.get_by_role("link", name="Statut WF").click()
     if info_dic["sucess"]: 
         page.wait_for_timeout(500)
@@ -58,4 +58,10 @@ def main(order_info, headless=True):
                 print("Exception : ", str(e))
 
         print("CMS Workflow commenté")
+
+if __name__ == "__main__":
+    sample_dic = {'AD226-0004':{"email": "charlotte.aux.fraises@gmail.com", "password" : "AFZEFSL314", "sucess" : "True"}}
+    main(sample_dic, headless=False)
+
+
                
