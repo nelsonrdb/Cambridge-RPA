@@ -14,15 +14,22 @@ def go_to_commandes(page):
 
 def set_status_and_comment(page, info_dic): 
     page.wait_for_timeout(1000)
-    #page.locator('button.btn.btn-default.btn-sm.mrBtn.noPicto').click() Je me rappelle plus pourquoi j'avais rajouté ce truc
-    page.get_by_role("link", name="Statut WF").click()
-    if info_dic["sucess"]: 
+    try:
+        page.get_by_text("Statut WF", exact=False).click(timeout=3000)
+    except:
+        page.locator('button.btn.btn-default.btn-sm.mrBtn.noPicto').click()
+        page.wait_for_timeout(500)
+        try:
+            page.get_by_text("Statut WF", exact=False).click(timeout=3000)
+        except:
+            raise Exception("Bouton 'Statut WF' introuvable")
+    if info_dic["success"]: 
         page.wait_for_timeout(500)
         locator = page.locator('#champ_velcmdwftrid select')
         locator.select_option(label="Clôturer Session")
         textarea = page.locator('textarea[name="wfcmt"]')
 
-        textarea.fill(
+        textarea.fill( 
             f"Username : {info_dic["email"]}\n"
             f"Password : {info_dic["password"]}\n"
             f"Institution : FR731"
