@@ -26,7 +26,7 @@ def set_status_and_comment(page, info_dic):
     if info_dic["success"]: 
         page.wait_for_timeout(500)
         locator = page.locator('#champ_velcmdwftrid select')
-        locator.select_option(label="Clôturer Session")
+        locator.select_option(label="MAIL A ENVOYER")
         textarea = page.locator('textarea[name="wfcmt"]')
 
         textarea.fill( 
