@@ -19,8 +19,6 @@ def main(headless=True):
                 print(f"[INFO] {len(df)} commandes trouvées")
                 print(df.to_string())
 
-                df.to_csv("shared/orders.csv", index=False)
-
                 return df
             else : 
                 print("Aucune nouvelle commande à été trouvée dans le CMS")
