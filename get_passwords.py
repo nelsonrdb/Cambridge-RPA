@@ -107,7 +107,7 @@ def get_password_for_email(page, email):
     
     finally:
         try:
-            page.get_by_title("wwà la liste [←]").first.click(timeout=15000, no_wait_after=True)
+            page.get_by_title("Aller à la liste [←]").first.click(timeout=15000, no_wait_after=True)
         except Exception as e:
             print(f"back to list failed: {e}")
     return (password, entry_code_detected_bool)
