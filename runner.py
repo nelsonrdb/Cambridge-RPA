@@ -14,8 +14,14 @@ def main(headless=True):
             if len(data)>0: 
                 emails = [x["email"] for x in data]
                 passwords = extract_passwords(context, emails)
-                #create_dataframe(data, passwords).to_csv("shared/orders.csv", index=False)
-                return create_dataframe(data, passwords)
+                df = create_dataframe(data, passwords)
+
+                print(f"[INFO] {len(df)} commandes trouvées")
+                print(df.to_string())
+
+                df.to_csv("shared/orders.csv", index=False)
+
+                return df
             else : 
                 print("Aucune nouvelle commande à été trouvée dans le CMS")
                 return pd.DataFrame(columns = ["order_number", 'surname', 'name', 'date_of_birth', 'id_number', 'exam_date', 'exam_hour', 'email', 'exam_type', 'dt_creation', 'linguaskill_type', 'online_tutor', 'password_cms', 'password_generated', 'password', 'is_entry_code', 'session_name'])

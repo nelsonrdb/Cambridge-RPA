@@ -52,8 +52,14 @@ def get_password_for_email(page, email):
     try:
         page.get_by_title("Effacer le filtre (et afficher tous les éléments)").first.click(timeout=15000)
 
-        page.locator("#sel_email_contient_0").click(timeout=15000)
-        page.locator("#sel_email_contient_0").fill(email, timeout=15000)
+        champ_email = page.locator(
+            'span[data-operateur="contient"][filtre="email:contient:"] input[type="text"]'
+        ).first
+
+        champ_email.wait_for(state="visible", timeout=15000)
+        champ_email.scroll_into_view_if_needed()
+        champ_email.click(timeout=15000)
+        champ_email.fill(email, timeout=15000)
 
         btn = page.get_by_title("Appliquer le filtre")
         btn.click(timeout=15000, no_wait_after=True)
