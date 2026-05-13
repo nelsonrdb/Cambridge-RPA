@@ -1,0 +1,27 @@
+{
+  "docVersion": "1.0.0",
+  "resource": {
+    "name": "data-orders",
+    "kind": "bucket",
+    "type": "orchestratorBucket",
+    "apiVersion": "orchestrator.uipath.com/v1",
+    "isOverridable": true,
+    "dependencies": [],
+    "runtimeDependencies": [],
+    "files": [],
+    "folders": [
+      {
+        "fullyQualifiedName": "solution_folder"
+      }
+    ],
+    "spec": {
+      "name": "data-orders",
+      "description": "Data for exam orders",
+      "type": "Orchestrator",
+      "options": null,
+      "tags": []
+    },
+    "locks": [],
+    "key": "9b9507fe-1140-41c3-8911-3135be16bea7"
+  }
+}

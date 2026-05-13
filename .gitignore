@@ -1,0 +1,8 @@
+.DS_Store
+*_UiCache.zip
+**/.local
+!.local/PackagerFlags.json
+*.crswap
+.entities/EntitiesBundle.*.zip
+remote-repository.config.json
+.sw-path-marker

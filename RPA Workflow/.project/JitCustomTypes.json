@@ -1,0 +1,31 @@
+{
+  "version": "3.0.0.0",
+  "bundleHash": "5ZCD00yPsStrIC0ParXrFUOajKnjZ5Aj8peHSjQ5Wg",
+  "addedAssemblyNames": [],
+  "discardedAssemblyNames": [],
+  "discardedAssemblyReplacements": {},
+  "assembliesJitInfo": {
+    "Studio.Generated.TypedDataTable1": {
+      "createdAt": "2026-02-25T13:39:58.2503945+00:00",
+      "providerName": "TypedDataTable",
+      "rootNamespace": "System.Data",
+      "typeNames": [
+        "DataTable1",
+        "DataColumnCollection1",
+        "DataRow1",
+        "DataRowCollection1"
+      ]
+    },
+    "Studio.Generated.TypedDataTable2": {
+      "createdAt": "2026-02-25T13:40:12.729034+00:00",
+      "providerName": "TypedDataTable",
+      "rootNamespace": "System.Data",
+      "typeNames": [
+        "DataTable2",
+        "DataColumnCollection2",
+        "DataRow2",
+        "DataRowCollection2"
+      ]
+    }
+  }
+}

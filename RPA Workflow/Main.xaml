@@ -1,0 +1,1104 @@
+<Activity mc:Ignorable="sap sap2010" x:Class="Main"
+ xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:s="clr-namespace:System;assembly=System.Private.CoreLib"
+ xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
+ xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
+ xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib"
+ xmlns:sd="clr-namespace:System.Data;assembly=System.Data.Common"
+ xmlns:uga="clr-namespace:UiPath.GSuite.Activities;assembly=UiPath.GSuite.Activities"
+ xmlns:ugade="clr-namespace:UiPath.GSuite.Activities.Drive.Enums;assembly=UiPath.GSuite.Activities"
+ xmlns:ugam="clr-namespace:UiPath.GSuite.Activities.Models;assembly=UiPath.GSuite.Activities"
+ xmlns:ugase="clr-namespace:UiPath.GSuite.Activities.Sheets.Enums;assembly=UiPath.GSuite.Activities"
+ xmlns:ui="http://schemas.uipath.com/workflow/activities"
+ xmlns:uix="http://schemas.uipath.com/workflow/activities/uix"
+ xmlns:upr="clr-namespace:UiPath.Platform.ResourceHandling;assembly=UiPath.Platform"
+ xmlns:usau="clr-namespace:UiPath.Shared.Activities.Utils;assembly=UiPath.GSuite.Activities"
+ xmlns:uwah="clr-namespace:UiPath.Web.Activities.Http;assembly=UiPath.Web.Activities"
+ xmlns:uwahm="clr-namespace:UiPath.Web.Activities.Http.Models;assembly=UiPath.Web.Activities"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <TextExpression.NamespacesForImplementation>
+    <scg:List x:TypeArguments="x:String" Capacity="66">
+      <x:String>UiPath.GSuite.Activities.Drive.Enums</x:String>
+      <x:String>System</x:String>
+      <x:String>UiPath.Shared.Activities.Utils</x:String>
+      <x:String>UiPath.GSuite.Drive.Models</x:String>
+      <x:String>UiPath.Platform.ResourceHandling</x:String>
+      <x:String>UiPath.GSuite.Activities.Models</x:String>
+      <x:String>UiPath.GSuite.Activities.Sheets.Enums</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Collections</x:String>
+      <x:String>UiPath.GSuite.Sheets.Contracts</x:String>
+      <x:String>UiPath.GSuite.Activities</x:String>
+      <x:String>UiPath.Shared.Activities.ConnectionService.Contracts</x:String>
+      <x:String>UiPath.Shared.Activities</x:String>
+      <x:String>System.Activities</x:String>
+      <x:String>UiPath.UIAutomationNext.Enums</x:String>
+      <x:String>UiPath.UIAutomationNext.Activities</x:String>
+      <x:String>UiPath.UIAutomationNext</x:String>
+      <x:String>System.ComponentModel</x:String>
+      <x:String>UiPath.UIAutomationNext.Contracts</x:String>
+      <x:String>UiPath.UIAutomationNext.Models</x:String>
+      <x:String>UiPath.Core</x:String>
+      <x:String>System.Runtime.Serialization</x:String>
+      <x:String>UiPath.Platform.ObjectLibrary</x:String>
+      <x:String>UiPath.Platform.SyncObjects</x:String>
+      <x:String>System.Security</x:String>
+      <x:String>System.Collections.ObjectModel</x:String>
+      <x:String>System.Activities.Statements</x:String>
+      <x:String>UiPath.Core.Activities</x:String>
+      <x:String>UiPath.FTP.Activities</x:String>
+      <x:String>System.IO</x:String>
+      <x:String>UiPath.Web.Activities.Http.Models</x:String>
+      <x:String>System.Net</x:String>
+      <x:String>System.Reflection</x:String>
+      <x:String>UiPath.Web.Activities.Http</x:String>
+      <x:String>UiPath.Sdk.Activities</x:String>
+      <x:String>UiPath.Sdk.Activities.DependencyInjection.Contracts</x:String>
+      <x:String>UiPath.Sdk.Activities.DependencyInjection</x:String>
+      <x:String>UiPath</x:String>
+      <x:String>System.Xml.Serialization</x:String>
+      <x:String>UiPath.UIAutomationNext.Models.ExtractData</x:String>
+      <x:String>UiPath.DataTableUtilities</x:String>
+      <x:String>UiPath.Persistence.Activities.Tasks</x:String>
+      <x:String>UiPath.Persistence.Activities.Model.Task</x:String>
+      <x:String>UiPath.Persistence.Activities</x:String>
+      <x:String>UiPath.CSV</x:String>
+      <x:String>UiPath.CSV.Activities</x:String>
+      <x:String>UiPath.Core.Activities.Storage</x:String>
+      <x:String>UiPath.Core.Activities.Orchestrator</x:String>
+      <x:String>UiPath.Semantic.Activities</x:String>
+      <x:String>UiPath.GSuite.Sheets.Enums</x:String>
+      <x:String>UiPath.GSuite.Sheets.Models</x:String>
+      <x:String>UiPath.Shared.Activities.Business</x:String>
+      <x:String>UiPath.UIAutomationNext.Activities.Design.Services.Contracts</x:String>
+      <x:String>System.Activities.Expressions</x:String>
+      <x:String>System.Activities.Validation</x:String>
+      <x:String>System.Activities.XamlIntegration</x:String>
+      <x:String>Microsoft.VisualBasic</x:String>
+      <x:String>Microsoft.VisualBasic.Activities</x:String>
+      <x:String>System.Diagnostics</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Windows.Markup</x:String>
+      <x:String>Newtonsoft.Json</x:String>
+      <x:String>Newtonsoft.Json.Linq</x:String>
+      <x:String>Microsoft.VisualBasic.CompilerServices</x:String>
+      <x:String>System.Text</x:String>
+    </scg:List>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <scg:List x:TypeArguments="AssemblyReference" Capacity="32">
+      <AssemblyReference>Studio.Generated.TypedDataTable2</AssemblyReference>
+      <AssemblyReference>Studio.Generated.TypedDataTable1</AssemblyReference>
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Linq</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>System.Net.Primitives</AssemblyReference>
+      <AssemblyReference>System.Runtime.InteropServices</AssemblyReference>
+      <AssemblyReference>Newtonsoft.Json</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities</AssemblyReference>
+      <AssemblyReference>System.Private.CoreLib</AssemblyReference>
+      <AssemblyReference>UiPath.UIAutomationNext.Activities</AssemblyReference>
+      <AssemblyReference>System.Drawing.Primitives</AssemblyReference>
+      <AssemblyReference>UiPath.Platform</AssemblyReference>
+      <AssemblyReference>System.ObjectModel</AssemblyReference>
+      <AssemblyReference>System.Data.Common</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.Primitives</AssemblyReference>
+      <AssemblyReference>System.ComponentModel</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.TypeConverter</AssemblyReference>
+      <AssemblyReference>System.Private.Xml</AssemblyReference>
+      <AssemblyReference>UiPath.Excel</AssemblyReference>
+      <AssemblyReference>UiPath.Excel.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.GSuite.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.GSuite</AssemblyReference>
+      <AssemblyReference>UiPath.Persistence.Activities</AssemblyReference>
+      <AssemblyReference>Microsoft.VisualBasic.Core</AssemblyReference>
+      <AssemblyReference>UiPath.Web.Activities</AssemblyReference>
+      <AssemblyReference>System.Private.Uri</AssemblyReference>
+      <AssemblyReference>UiPath.Driver.ComInterop</AssemblyReference>
+      <AssemblyReference>UiPath.FTP.Activities</AssemblyReference>
+    </scg:List>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence sap:VirtualizedContainerService.HintSize="356,732" sap2010:WorkflowViewState.IdRef="Sequence_1">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="x:String" Name="id" />
+      <Variable x:TypeArguments="sd:DataTable" Default="[new System.Data.DataTable With {.TableName = &quot;TableName&quot;}]" Name="df" />
+      <Variable x:TypeArguments="x:String" Name="first_name" />
+      <Variable x:TypeArguments="x:String" Name="exame_date" />
+      <Variable x:TypeArguments="x:String" Name="surname" />
+      <Variable x:TypeArguments="x:String" Name="session_name" />
+      <Variable x:TypeArguments="x:String" Name="exam_type" />
+      <Variable x:TypeArguments="x:Object" Default="[new System.Object]" Name="exam_hour" />
+      <Variable x:TypeArguments="sd:DataTable" Default="[new System.Data.DataTable With {.TableName = &quot;TableName&quot;}]" Name="data_table_astext" />
+      <Variable x:TypeArguments="uwahm:HttpResponseSummary" Name="responseContent">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:String x:Key="SourceIdRef">NetHttpRequest_1</x:String>
+            <x:String x:Key="SourcePropertyName">Result</x:String>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </Variable>
+      <Variable x:TypeArguments="x:String" Name="dtText" />
+      <Variable x:TypeArguments="x:Object" Default="[new System.Object]" Name="current_password" />
+      <Variable x:TypeArguments="x:String" Name="current_email" />
+      <Variable x:TypeArguments="scg:Dictionary(x:String, x:Boolean)" Default="[New Dictionary(Of System.String, System.Boolean) From {  }]" Name="sucess_table" />
+      <Variable x:TypeArguments="scg:Dictionary(x:String, x:String)" Default="[New Dictionary(Of System.String, System.String) From {  }]" Name="email_table" />
+      <Variable x:TypeArguments="scg:Dictionary(x:String, x:String)" Default="[New Dictionary(Of System.String, System.String) From {  }]" Name="password_table" />
+      <Variable x:TypeArguments="x:String" Name="order_number" />
+      <Variable x:TypeArguments="scg:Dictionary(x:String, x:Object)" Default="[New Dictionary(Of System.String, System.Object) From {  }]" Name="final_dict" />
+      <Variable x:TypeArguments="scg:Dictionary(x:String, x:Object)" Default="[New Dictionary(Of System.String, System.Object) From {  }]" Name="row_dict" />
+      <Variable x:TypeArguments="x:Boolean" Default="[False]" Name="is_sucess" />
+      <Variable x:TypeArguments="x:String" Name="jsonBody" />
+      <Variable x:TypeArguments="upr:ILocalResource" Name="file" />
+      <Variable x:TypeArguments="x:Boolean" Default="[Nothing]" Name="fileOrFolderExists">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:String x:Key="SourceIdRef">PathExists_1</x:String>
+            <x:String x:Key="SourcePropertyName">Exists</x:String>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </Variable>
+      <Variable x:TypeArguments="x:String" Default="[&quot;/Users/nelsonrouxdebezieux/Desktop/Cambridge_automation/shared/orders.csv&quot;]" Name="csv_path" />
+    </Sequence.Variables>
+    <sap:WorkflowViewStateService.ViewState>
+      <scg:Dictionary x:TypeArguments="x:String, x:Object">
+        <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+      </scg:Dictionary>
+    </sap:WorkflowViewStateService.ViewState>
+    <ui:ManualTrigger Result="{x:Null}" DisplayName="Manual Trigger" sap2010:WorkflowViewState.IdRef="ManualTrigger_1" />
+    <Sequence DisplayName="Deleting order file" sap2010:WorkflowViewState.IdRef="Sequence_50">
+      <ui:PathExists DisplayName="Check if the specified file exists" Exists="[fileOrFolderExists]" sap2010:WorkflowViewState.IdRef="PathExists_1" Path="[System.IO.Path.Combine(Environment.CurrentDirectory,&quot;orders.csv&quot;)]" PathType="File" Resource="[file]" />
+      <If Condition="[fileOrFolderExists]" DisplayName="If 5" sap2010:WorkflowViewState.IdRef="If_8">
+        <If.Then>
+          <Sequence sap2010:WorkflowViewState.IdRef="Sequence_48">
+            <ui:Delete ContinueOnError="{x:Null}" ResourceFile="{x:Null}" DisplayName="Delete File or Folder" sap2010:WorkflowViewState.IdRef="Delete_1" Path="[System.IO.Path.Combine(Environment.CurrentDirectory,&quot;orders.csv&quot;)]" />
+          </Sequence>
+        </If.Then>
+        <If.Else>
+          <Sequence sap2010:WorkflowViewState.IdRef="Sequence_49" />
+        </If.Else>
+      </If>
+    </Sequence>
+    <uwah:NetHttpRequest BasicAuthPassword="{x:Null}" BasicAuthSecurePassword="{x:Null}" BasicAuthUsername="{x:Null}" BinaryPayload="{x:Null}" ClientCertPassword="{x:Null}" ClientCertPath="{x:Null}" ClientCertSecurePassword="{x:Null}" Cookies="{x:Null}" CustomNegotiatedAuthCredentials="{x:Null}" FilePath="{x:Null}" FormData="{x:Null}" Headers="{x:Null}" LocalFiles="{x:Null}" OAuthToken="{x:Null}" Parameters="{x:Null}" PathResource="{x:Null}" ProxyConfiguration="{x:Null}" ResourceFiles="{x:Null}" TextPayload="{x:Null}" AuthenticationType="None" ContinueOnError="True" DisableSslVerification="False" DisplayName="HTTP Request" EnableCookies="True" FileOverwrite="AutoRename" FollowRedirects="True" FormDataParts="[New List (Of FormDataPart) From _&#xA;{&#xA; New FileFormDataPart(),&#xA; New BinaryFormDataPart(),&#xA; New TextFormDataPart()&#xA;}]" sap2010:WorkflowViewState.IdRef="NetHttpRequest_1" InitialDelay="1000" MaxRedirects="3" MaxRetryAfterDelay="30000" Method="GET" Multiplier="2" OutputFileName="orders.csv" OutputFileTargetFolder="[Environment.CurrentDirectory]" PreferRetryAfterValue="True" RequestBodyType="None" RequestUrl="https://cambridge-rpa.onrender.com/output" Result="[responseContent]" RetryCount="3" RetryPolicyType="Basic" RetryStatusCodes="[New List (Of System.Net.HttpStatusCode) From _&#xA;{&#xA; System.Net.HttpStatusCode.RequestTimeout,&#xA; System.Net.HttpStatusCode.TooManyRequests,&#xA; System.Net.HttpStatusCode.InternalServerError,&#xA; System.Net.HttpStatusCode.BadGateway,&#xA; System.Net.HttpStatusCode.ServiceUnavailable,&#xA; System.Net.HttpStatusCode.GatewayTimeout&#xA;}]" SaveRawRequestResponse="False" SaveResponseAsFile="True" TextPayloadContentType="application/json" TextPayloadEncoding="UTF-8" TlsProtocol="Automatic" UseJitter="True" UseOsNegotiatedAuthCredentials="True">
+      <uwah:NetHttpRequest.TimeoutInMiliseconds>
+        <InArgument x:TypeArguments="s:Nullable(x:Int32)">
+          <Literal x:TypeArguments="s:Nullable(x:Int32)" Value="180000" />
+        </InArgument>
+      </uwah:NetHttpRequest.TimeoutInMiliseconds>
+    </uwah:NetHttpRequest>
+    <ui:ReadCsvFile PathResource="{x:Null}" DataTable="[data_table_astext]" Delimitator="Comma" DelimitatorForViewModel="Comma" DisplayName="Read CSV" FilePath="[System.IO.Path.Combine(Environment.CurrentDirectory, &quot;orders.csv&quot;)]" sap2010:WorkflowViewState.IdRef="ReadCsvFile_1" />
+    <ui:CommentOut DisplayName="Disabled activities" sap2010:WorkflowViewState.IdRef="CommentOut_1">
+      <ui:CommentOut.Body>
+        <Sequence DisplayName="Ignored Activities" sap2010:WorkflowViewState.IdRef="Sequence_51">
+          <uga:WriteRangeConnections ConnectionAccountName="{x:Null}" ContinueOnError="{x:Null}" ManualEntrySpreadsheetId="{x:Null}" RowPosition="{x:Null}" Spreadsheet="{x:Null}" TemplateBrowserItemFriendlyName="{x:Null}" TemplateBrowserItemId="{x:Null}" AuthScopesInvalid="False" BrowserItemFriendlyName="orders.csv" BrowserItemId="https://docs.google.com/spreadsheets/d/1sikMfrVbG5OdFMeNggN2mQuW17TWlwVfZpnvOBFDGoc/edit?usp=drivesdk" ConnectionId="579c3d5c-e9c2-4d7c-b3be-1be0d1dc836c" DisplayName="Write Range" sap2010:WorkflowViewState.IdRef="WriteRangeConnections_1" IncludeHeaders="False" ItemSelectionMode="Browse" Range="'Feuille 1'" Source="[data_table_astext]" UseConnectionService="True" WorkingWithTemplateSpreadsheet="False" WriteMode="Append">
+            <uga:WriteRangeConnections.FileIdBackup>
+              <usau:BackupSlot x:TypeArguments="ugade:EDriveItemMode" x:Name="__ReferenceID0" StoredValue="Browse">
+                <usau:BackupSlot.BackupValues>
+                  <scg:Dictionary x:TypeArguments="ugade:EDriveItemMode, scg:List(x:Object)" />
+                </usau:BackupSlot.BackupValues>
+              </usau:BackupSlot>
+            </uga:WriteRangeConnections.FileIdBackup>
+            <uga:WriteRangeConnections.Item>
+              <ugam:DriveItemArgument Backup="{x:Reference __ReferenceID0}" ConnectionDescriptor="{x:Null}" Existing="{x:Null}" FullPath="{x:Null}" IdOrUrl="{x:Null}" ParentId="{x:Null}" ParentIdFriendlyName="{x:Null}" RelativePath="{x:Null}" BrowserId="https://docs.google.com/spreadsheets/d/1sikMfrVbG5OdFMeNggN2mQuW17TWlwVfZpnvOBFDGoc/edit?usp=drivesdk" ConnectionKey="579c3d5c-e9c2-4d7c-b3be-1be0d1dc836c" FriendlyName="orders.csv" FullPathHint="My Drive/orders.csv" InputMode="Browse">
+                <ugam:DriveItemArgument.DriveId>
+                  <InArgument x:TypeArguments="x:String" />
+                </ugam:DriveItemArgument.DriveId>
+                <ugam:DriveItemArgument.ParentIdFullPathHint>
+                  <InArgument x:TypeArguments="x:String">
+                    <Literal x:TypeArguments="x:String" Value="" />
+                  </InArgument>
+                </ugam:DriveItemArgument.ParentIdFullPathHint>
+              </ugam:DriveItemArgument>
+            </uga:WriteRangeConnections.Item>
+            <uga:WriteRangeConnections.RangeWriteModeBackup>
+              <usau:BackupSlot x:TypeArguments="ugase:RangeWriteMode" StoredValue="Append">
+                <usau:BackupSlot.BackupValues>
+                  <scg:List x:TypeArguments="x:Object" x:Key="Overwrite" Capacity="1">
+                    <x:String></x:String>
+                  </scg:List>
+                  <scg:List x:TypeArguments="x:Object" x:Key="Append" Capacity="1">
+                    <x:String></x:String>
+                  </scg:List>
+                  <scg:List x:TypeArguments="x:Object" x:Key="Insert" Capacity="1">
+                    <InArgument x:TypeArguments="x:Int32">0</InArgument>
+                  </scg:List>
+                </usau:BackupSlot.BackupValues>
+              </usau:BackupSlot>
+            </uga:WriteRangeConnections.RangeWriteModeBackup>
+          </uga:WriteRangeConnections>
+        </Sequence>
+      </ui:CommentOut.Body>
+    </ui:CommentOut>
+    <ui:OutputDataTable DataTable="[data_table_astext]" DisplayName="Output Data Table as Text" sap2010:WorkflowViewState.IdRef="OutputDataTable_1" Text="[dtText]" />
+    <uix:NApplicationCard AttachMode="ByInstance" DisplayName="Open browser, navigate and read CSV file" HealingAgentBehavior="Job" sap2010:WorkflowViewState.IdRef="NApplicationCard_1" IsIncognito="False" OpenMode="[UiPath.UIAutomationNext.Enums.NAppOpenMode.IfNotOpen]" ScopeGuid="85fcce01-a1c6-4790-868b-04ea8a373435" Version="V2" WindowResize="Maximize">
+      <uix:NApplicationCard.Body>
+        <ActivityAction x:TypeArguments="x:Object">
+          <ActivityAction.Argument>
+            <DelegateInArgument x:TypeArguments="x:Object" Name="WSSessionData" />
+          </ActivityAction.Argument>
+          <Sequence DisplayName="Do" sap2010:WorkflowViewState.IdRef="Sequence_2">
+            <uix:NCheckState DisplayName="Check App State 'Sessions'" HealingAgentBehavior="Disabled" sap2010:WorkflowViewState.IdRef="NCheckState_3" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Timeout="1" Version="V5">
+              <uix:NCheckState.IfExists>
+                <Sequence DisplayName="Target appears" sap2010:WorkflowViewState.IdRef="Sequence_9" />
+              </uix:NCheckState.IfExists>
+              <uix:NCheckState.IfNotExists>
+                <Sequence DisplayName="Target does not appear" sap2010:WorkflowViewState.IdRef="Sequence_10">
+                  <uix:NTypeInto ActivateBefore="True" ClickBeforeMode="Single" ClipboardMode="Never" DisplayName="Type Into 'Username*'" EmptyFieldMode="SingleLine" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NTypeInto_1" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Text="hrb@victorias.fr" Version="V5">
+                    <uix:NTypeInto.Target>
+                      <uix:TargetAnchorable BrowserURL="metritests.com/metrica/default.aspx" CVScreenId="ba073e46-1ed6-49ba-aa5e-709b4d76faac" CvElementArea="204, 412, 349, 38" CvType="InputBox" DesignTimeRectangle="205, 413, 348, 37" ElementType="InputBox" ElementVisibilityArgument="Interactive" FuzzySelectorArgument="&lt;webctrl tag='INPUT' type='text' class='validatable form-control' aaname='Username*' matching:class='fuzzy' fuzzylevel:class='0.0' fuzzylevel:aaname='0.0' /&gt;" Guid="2ebaec8b-085b-4267-ba6c-ad6836ef090f" InformativeScreenshot="0e6c77cf73a8d3199f71e49dc87b4cad.jpg" IsResponsive="True" ScopeSelectorArgument="&lt;html title='Welcome to the Cambridge English Test Portal' app='chrome.exe' /&gt;" SearchSteps="FuzzySelector, CV" Version="V6" WaitForReadyArgument="Interactive">
+                        <uix:TargetAnchorable.Anchors>
+                          <scg:List x:TypeArguments="uix:ITarget" Capacity="1">
+                            <uix:Target CVScreenId="ba073e46-1ed6-49ba-aa5e-709b4d76faac" CvTextArea="204, 391, 65, 13" CvTextArgument="Username*" CvType="Text" DesignTimeRectangle="205, 388, 65, 20" ElementType="Text" FuzzySelectorArgument="&lt;webctrl tag='LABEL' type='' class='' aaname='Username' matching:class='fuzzy' fuzzylevel:class='0.0' matching:aaname='fuzzy' fuzzylevel:aaname='0.0' check:innerText='Username*' /&gt;" Guid="3297ff4b-3bac-464c-b334-da18c585410a" SearchSteps="FuzzySelector, CV" />
+                          </scg:List>
+                        </uix:TargetAnchorable.Anchors>
+                      </uix:TargetAnchorable>
+                    </uix:NTypeInto.Target>
+                  </uix:NTypeInto>
+                  <uix:NTypeInto ActivateBefore="True" ClickBeforeMode="Single" ClipboardMode="Never" DisplayName="Type Into Password" EmptyFieldMode="SingleLine" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NTypeInto_2" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Text="Student12345*" Version="V5">
+                    <uix:NTypeInto.Target>
+                      <uix:TargetAnchorable BrowserURL="metritests.com/metrica/default.aspx" DesignTimeRectangle="205, 485, 348, 37" ElementType="InputBoxPassword" ElementVisibilityArgument="Interactive" FuzzySelectorArgument="&lt;webctrl tag='INPUT' type='password' class='validatable form-control' aaname='Password*' matching:class='fuzzy' fuzzylevel:class='0.0' fuzzylevel:aaname='0.0' /&gt;" Guid="773f7651-b114-4caf-8583-5d562f35f4bd" InformativeScreenshot="55ee76ee3a52945ab0f7d99fb50ac01d.jpg" ScopeSelectorArgument="&lt;html title='Welcome to the Cambridge English Test Portal' app='chrome.exe' /&gt;" SearchSteps="FuzzySelector" Version="V6" WaitForReadyArgument="Interactive">
+                        <uix:TargetAnchorable.Anchors>
+                          <scg:List x:TypeArguments="uix:ITarget" Capacity="1">
+                            <uix:Target DesignTimeRectangle="205, 460, 62, 20" ElementType="Text" FuzzySelectorArgument="&lt;webctrl tag='LABEL' class='formlabel' type='' aaname='Password' matching:class='fuzzy' fuzzylevel:class='0.0' matching:aaname='fuzzy' fuzzylevel:aaname='0.0' check:innerText='Password*' /&gt;" Guid="d8bf1747-cb16-4357-b55c-fe22f23f7113" SearchSteps="FuzzySelector" />
+                          </scg:List>
+                        </uix:TargetAnchorable.Anchors>
+                      </uix:TargetAnchorable>
+                    </uix:NTypeInto.Target>
+                  </uix:NTypeInto>
+                  <uix:NTypeInto ActivateBefore="True" ClickBeforeMode="Single" ClipboardMode="Never" DisplayName="Type Into 'Institution ID   Instit…'" EmptyFieldMode="SingleLine" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NTypeInto_19" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Text="FR731" Version="V5">
+                    <uix:NTypeInto.Target>
+                      <uix:TargetAnchorable BrowserURL="metritests.com/metrica/FR731.aspx" DesignTimeRectangle="205, 619, 190, 37" ElementType="InputBox" ElementVisibilityArgument="Interactive" FuzzySelectorArgument="&lt;webctrl tag='INPUT' type='text' name='ctl00$ContentPlaceHolder$candidatelogin1$txtInstitution' class='validatable form-control' aaname='                     Institution ID                                                                                                                          Institution ID is a unique identifier for your organisation and will have been provided to you if needed. If you are a candidate who booked a test directly on Metritests, you do not need an institution ID to log in.                                                               ' matching:name='fuzzy' fuzzylevel:name='0.0' matching:class='fuzzy' fuzzylevel:class='0.0' matching:aaname='fuzzy' fuzzylevel:aaname='0.0' /&gt;" Guid="e196815a-3dbc-4fa1-9939-1431d80b4504" InformativeScreenshot="14ce9ac377ae8da3228a48ba28391f61.jpg" IsResponsive="True" ScopeSelectorArgument="&lt;html title='Welcome to the Cambridge English Test Portal' app='chrome.exe' /&gt;" SearchSteps="FuzzySelector" Version="V6" WaitForReadyArgument="Interactive">
+                        <uix:TargetAnchorable.Anchors>
+                          <scg:List x:TypeArguments="uix:ITarget" Capacity="1">
+                            <uix:Target DesignTimeRectangle="205, 587, 101, 27" ElementType="Text" FuzzySelectorArgument="&lt;webctrl tag='LABEL' class='formlabel' aaname='                     Institution ID                                                            ' type='' matching:class='fuzzy' fuzzylevel:class='0.0' matching:aaname='fuzzy' fuzzylevel:aaname='0.0' check:innerText='Institution ID' /&gt;" Guid="20ad4c2a-baf9-4dd8-90e2-90812b4014f8" SearchSteps="FuzzySelector" />
+                          </scg:List>
+                        </uix:TargetAnchorable.Anchors>
+                      </uix:TargetAnchorable>
+                    </uix:NTypeInto.Target>
+                  </uix:NTypeInto>
+                  <uix:NClick ActivateBefore="True" ClickType="Single" DelayAfter="0.5" DelayBefore="0.5" DisplayName="Click 'Log in'" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NClick_8" KeyModifiers="None" MouseButton="Left" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Version="V5">
+                    <uix:NClick.Target>
+                      <uix:TargetAnchorable BrowserURL="metritests.com/metrica/FR731.aspx" DesignTimeRectangle="212, 686, 67, 37" ElementType="Button" ElementVisibilityArgument="Interactive" FullSelectorArgument="&lt;webctrl tag='INPUT' type='submit' /&gt;" Guid="7b4d2759-84b2-45a0-a15c-2e5f64d97dc7" InformativeScreenshot="93c99e395aa0246fbb117108beacf3d6.jpg" ScopeSelectorArgument="&lt;html title='Welcome to the Cambridge English Test Portal' app='chrome.exe' /&gt;" SearchSteps="Selector" Version="V6" WaitForReadyArgument="Interactive" />
+                    </uix:NClick.Target>
+                  </uix:NClick>
+                </Sequence>
+              </uix:NCheckState.IfNotExists>
+              <uix:NCheckState.Target>
+                <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" CVScreenId="2db680c3-99ce-458c-8136-8d23b561b33a" CvTextArea="589, 210, 53, 13" CvTextArgument="Sessions" CvType="Text" DesignTimeRectangle="591, 207, 50, 20" ElementType="Text" ElementVisibilityArgument="Interactive" FullSelectorArgument="&lt;webctrl tag='SPAN' parentid='sessions' /&gt;" Guid="f14dfed7-9292-4694-bc35-38116dcc6a5c" InformativeScreenshot="27573073c8eed3a1a6bae1c855ec4c9f.jpg" ScopeSelectorArgument="&lt;html title='Sessions' app='chrome.exe' /&gt;" SearchSteps="Selector, CV" Version="V6" WaitForReadyArgument="Interactive" />
+              </uix:NCheckState.Target>
+            </uix:NCheckState>
+            <uix:NClick ActivateBefore="True" ClickType="[UiPath.UIAutomationNext.Enums.NClickType.Double]" DisplayName="Click 'Sessions'" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NClick_3" KeyModifiers="None" MouseButton="Left" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Version="V5">
+              <uix:NClick.Target>
+                <uix:TargetAnchorable BrowserURL="metritests.com/metrica/adminhome.aspx" CVScreenId="624215e2-8a85-44c2-ae85-0ae1a8d03e7e" CvTextArea="597, 210, 52, 13" CvTextArgument="Sessions" CvType="Text" DesignTimeRectangle="598, 207, 51, 20" ElementType="Text" ElementVisibilityArgument="Interactive" FullSelectorArgument="&lt;webctrl tag='SPAN' parentid='sessions' /&gt;" Guid="d6026f14-ffa5-4359-91f6-2ffa1505494f" InformativeScreenshot="e925b4b235b9a965b203830638fde985.png" ScopeSelectorArgument="&lt;html title='Welcome to the Cambridge English Test Portal' app='chrome.exe' /&gt;" SearchSteps="Selector, CV" Version="V6" WaitForReadyArgument="Interactive" />
+              </uix:NClick.Target>
+            </uix:NClick>
+            <ui:ForEachRow ColumnNames="{x:Null}" CurrentIndex="{x:Null}" DataTable="[data_table_astext]" DisplayName="Creating Sessions" sap2010:WorkflowViewState.IdRef="ForEachRow_1">
+              <ui:ForEachRow.Body>
+                <ActivityAction x:TypeArguments="sd:DataRow">
+                  <ActivityAction.Argument>
+                    <DelegateInArgument x:TypeArguments="sd:DataRow" Name="CurrentRow" />
+                  </ActivityAction.Argument>
+                  <Sequence DisplayName="Body" sap2010:WorkflowViewState.IdRef="Sequence_13">
+                    <Sequence DisplayName="Finding session 1" sap2010:WorkflowViewState.IdRef="Sequence_34">
+                      <uix:NClick ActivateBefore="True" ClickType="[UiPath.UIAutomationNext.Enums.NClickType.Single]" DisplayName="Searching Session 1" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NClick_60" InteractionMode="HardwareEvents" KeyModifiers="None" MouseButton="Left" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Version="V5">
+                        <uix:NClick.Target>
+                          <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" DesignTimeRectangle="195, 456, 40, 38" ElementType="Button" ElementVisibilityArgument="Interactive" FullSelectorArgument="&lt;webctrl tag='BUTTON' id='showSearch2' /&gt;" Guid="10217ecc-476e-4a87-97b8-0bf1453cee33" InformativeScreenshot="c2d75bcecd700c8ab5275270662bcb1d.jpg" ScopeSelectorArgument="&lt;html title='Session List' app='chrome.exe' /&gt;" SearchSteps="Selector" Version="V6" WaitForReadyArgument="Interactive" />
+                        </uix:NClick.Target>
+                        <uix:NClick.VerifyOptions>
+                          <uix:VerifyExecutionOptions Mode="Appears" Retry="True" Timeout="0.2">
+                            <uix:VerifyExecutionOptions.Target>
+                              <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" DesignTimeRectangle="195, 495, 254, 37" ElementType="InputBox" ElementVisibilityArgument="Interactive" FuzzySelectorArgument="&lt;webctrl tag='INPUT' type='text' name='ctl00$ContentPlaceHolder$txtReferenceFilter' class='form-control autowidth' aaname='Session Name' matching:name='fuzzy' fuzzylevel:name='0.0' matching:class='fuzzy' fuzzylevel:class='0.0' matching:aaname='fuzzy' fuzzylevel:aaname='0.0' /&gt;" Guid="6bc2125c-89a9-4cd8-b5bb-6b77f771eaa8" InformativeScreenshot="f8aad7e8f0af69d77d063032e12c33dd.jpg" IsResponsive="True" ScopeSelectorArgument="&lt;html title='Session List' app='chrome.exe' /&gt;" SearchSteps="FuzzySelector" Version="V6" WaitForReadyArgument="Interactive">
+                                <uix:TargetAnchorable.Anchors>
+                                  <scg:List x:TypeArguments="uix:ITarget" Capacity="1">
+                                    <uix:Target DesignTimeRectangle="195, 470, 82, 20" ElementType="Text" FuzzySelectorArgument="&lt;webctrl tag='LABEL' parentid='advancedSearchArea2' type='' class='' aaname='Session Name' matching:parentid='fuzzy' fuzzylevel:parentid='0.0' matching:class='fuzzy' fuzzylevel:class='0.0' matching:aaname='fuzzy' fuzzylevel:aaname='0.0' check:innerText='Session Name' /&gt;" Guid="a9eb8ba7-f03d-49eb-8a9d-945bba699b1c" SearchSteps="FuzzySelector" />
+                                  </scg:List>
+                                </uix:TargetAnchorable.Anchors>
+                              </uix:TargetAnchorable>
+                            </uix:VerifyExecutionOptions.Target>
+                          </uix:VerifyExecutionOptions>
+                        </uix:NClick.VerifyOptions>
+                      </uix:NClick>
+                      <uix:NTypeInto ActivateBefore="True" ClickBeforeMode="Single" ClipboardMode="Never" DelayAfter="1" DisplayName="Type Into 'Session Name'" EmptyFieldMode="SingleLine" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NTypeInto_17" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Text="[CurrentRow(&quot;session_name&quot;).ToString()]" Version="V5">
+                        <uix:NTypeInto.Target>
+                          <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" CVScreenId="7b7c3ab7-7530-4126-a59d-a881e41cd974" CvElementArea="199, 319, 258, 39" CvType="InputBox" DesignTimeRectangle="202, 320, 255, 37" ElementType="InputBox" ElementVisibilityArgument="Interactive" FuzzySelectorArgument="&lt;webctrl tag='INPUT' type='text' name='ctl00$ContentPlaceHolder$txtReferenceFilter' class='form-control autowidth' aaname='Session Name' matching:name='fuzzy' fuzzylevel:name='0.0' matching:class='fuzzy' fuzzylevel:class='0.0' matching:aaname='fuzzy' fuzzylevel:aaname='0.0' /&gt;" Guid="651fcd4d-3bc5-4964-ab4a-b0650115f618" InformativeScreenshot="1ae249f51454333adc4ba0ac28c17466.jpg" IsResponsive="True" ScopeSelectorArgument="&lt;html title='Session List' app='chrome.exe' /&gt;" SearchSteps="FuzzySelector, CV" Version="V6" WaitForReadyArgument="Interactive">
+                            <uix:TargetAnchorable.Anchors>
+                              <scg:List x:TypeArguments="uix:ITarget" Capacity="1">
+                                <uix:Target CVScreenId="7b7c3ab7-7530-4126-a59d-a881e41cd974" CvTextArea="201, 299, 84, 12" CvTextArgument="Session Name" CvType="Text" DesignTimeRectangle="202, 295, 82, 20" ElementType="Text" FuzzySelectorArgument="&lt;webctrl tag='LABEL' parentid='advancedSearchArea2' type='' class='' aaname='Session Name' matching:parentid='fuzzy' fuzzylevel:parentid='0.0' matching:class='fuzzy' fuzzylevel:class='0.0' matching:aaname='fuzzy' fuzzylevel:aaname='0.0' check:innerText='Session Name' /&gt;" Guid="2e1ba603-7ed9-41ac-bf53-479edd2a62cc" SearchSteps="FuzzySelector, CV" />
+                              </scg:List>
+                            </uix:TargetAnchorable.Anchors>
+                          </uix:TargetAnchorable>
+                        </uix:NTypeInto.Target>
+                      </uix:NTypeInto>
+                      <uix:NClick ActivateBefore="True" ClickType="Single" DisplayName="Click 'Search'" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NClick_47" KeyModifiers="None" MouseButton="Left" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Version="V5">
+                        <uix:NClick.Target>
+                          <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" CVScreenId="35809525-39d6-4000-af7d-d3fbc2fefb03" CvElementArea="199, 661, 77, 41" CvTextArea="217, 677, 41, 13" CvTextArgument="Search" CvType="Button" DesignTimeRectangle="202, 663, 72, 37" ElementType="Button" ElementVisibilityArgument="Interactive" FullSelectorArgument="&lt;webctrl tag='INPUT' type='submit' name='ctl00$ContentPlaceHolder$btnSearch' /&gt;" Guid="d8b4659a-2016-4eb1-b24d-3f2be32c08aa" InformativeScreenshot="243f6cae9c694e98554ad20eb21ad0d5.jpg" ScopeSelectorArgument="&lt;html title='Session List' app='chrome.exe' /&gt;" SearchSteps="Selector, CV" Version="V6" WaitForReadyArgument="Interactive" />
+                        </uix:NClick.Target>
+                      </uix:NClick>
+                      <uix:NCheckState DisplayName="Check App State 'Session Name'" HealingAgentBehavior="Disabled" sap2010:WorkflowViewState.IdRef="NCheckState_4" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Timeout="1" Version="V5">
+                        <uix:NCheckState.IfExists>
+                          <Sequence DisplayName="Target appears" sap2010:WorkflowViewState.IdRef="Sequence_37">
+                            <uix:NClick ActivateBefore="True" ClickType="Single" DisplayName="Click 'Sessions' 1" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NClick_50" KeyModifiers="None" MouseButton="Left" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Version="V5">
+                              <uix:NClick.Target>
+                                <uix:TargetAnchorable BrowserURL="metritests.com/metrica/adminhome.aspx" CVScreenId="624215e2-8a85-44c2-ae85-0ae1a8d03e7e" CvTextArea="597, 210, 52, 13" CvTextArgument="Sessions" CvType="Text" DesignTimeRectangle="598, 207, 51, 20" ElementType="Text" ElementVisibilityArgument="Interactive" FullSelectorArgument="&lt;webctrl tag='SPAN' parentid='sessions' /&gt;" Guid="d6026f14-ffa5-4359-91f6-2ffa1505494f" InformativeScreenshot="e925b4b235b9a965b203830638fde985.png" ScopeSelectorArgument="&lt;html title='Welcome to the Cambridge English Test Portal' app='chrome.exe' /&gt;" SearchSteps="Selector, CV" Version="V6" WaitForReadyArgument="Interactive" />
+                              </uix:NClick.Target>
+                            </uix:NClick>
+                          </Sequence>
+                        </uix:NCheckState.IfExists>
+                        <uix:NCheckState.IfNotExists>
+                          <Sequence DisplayName="Target does not appear" sap2010:WorkflowViewState.IdRef="Sequence_38">
+                            <Sequence DisplayName="Create Session" sap2010:WorkflowViewState.IdRef="Sequence_14">
+                              <uix:NClick ActivateBefore="True" ClickType="Single" DisplayName="Click 'Add Session'" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NClick_4" KeyModifiers="None" MouseButton="Left" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Version="V5">
+                                <uix:NClick.Target>
+                                  <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" CVScreenId="c57867fd-5e13-4f0b-9043-679ee6a71478" CvElementArea="244, 340, 108, 42" CvTextArea="261, 355, 73, 13" CvTextArgument="Add Session" CvType="Button" DesignTimeRectangle="247, 342, 103, 37" ElementType="Button" ElementVisibilityArgument="Interactive" FullSelectorArgument="&lt;webctrl tag='INPUT' type='submit' /&gt;" Guid="d90edfc8-867b-442d-a23a-8134bda47469" InformativeScreenshot="c759ccae279a628c236073655fc93c28.png" ScopeSelectorArgument="&lt;html title='Session List' app='chrome.exe' /&gt;" SearchSteps="Selector, CV" Version="V6" WaitForReadyArgument="Interactive" />
+                                </uix:NClick.Target>
+                              </uix:NClick>
+                              <uix:NClick ActivateBefore="True" ClickType="Single" DisplayName="Click 'Please Select'" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NClick_17" KeyModifiers="None" MouseButton="Left" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Version="V5">
+                                <uix:NClick.Target>
+                                  <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" CVScreenId="7453f252-2c5c-4bcc-9f25-ec8cec64356a" CvElementArea="168, 176, 314, 39" CvType="InputBox" DesignTimeRectangle="187, 222, 269, 20" ElementType="Text" ElementVisibilityArgument="Interactive" FuzzySelectorArgument="&lt;webctrl tag='DIV' class='filter-option-inner-inner' type='' aaname='Please Select' matching:class='fuzzy' fuzzylevel:class='0.0' matching:aaname='fuzzy' fuzzylevel:aaname='0.0' check:innerText='Please Select' /&gt;" Guid="81f29223-cd1a-4e3f-b746-2ee3bd98ecb9" InformativeScreenshot="10a2e68ec60de5345458a8278dd945fb.jpg" ScopeSelectorArgument="&lt;html title='Add Session' app='chrome.exe' /&gt;" SearchSteps="FuzzySelector, CV" Version="V6" WaitForReadyArgument="Interactive">
+                                    <uix:TargetAnchorable.Anchors>
+                                      <scg:List x:TypeArguments="uix:ITarget" Capacity="1">
+                                        <uix:Target CVScreenId="7453f252-2c5c-4bcc-9f25-ec8cec64356a" CvTextArea="169, 154, 58, 15" CvTextArgument="Group* ?" CvType="Text" DesignTimeRectangle="171, 180, 61, 27" ElementType="Text" FuzzySelectorArgument="&lt;webctrl tag='LABEL' type='' class='' aaname=' &amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;Group &amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9; &amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;' matching:class='fuzzy' fuzzylevel:class='0.0' matching:aaname='fuzzy' fuzzylevel:aaname='0.0' check:innerText='Group*' /&gt;" Guid="a190a8e4-fdaa-4d40-aa35-ca195cab2359" SearchSteps="FuzzySelector, CV" />
+                                      </scg:List>
+                                    </uix:TargetAnchorable.Anchors>
+                                  </uix:TargetAnchorable>
+                                </uix:NClick.Target>
+                              </uix:NClick>
+                              <If Condition="[CurrentRow(&quot;linguaskill_type&quot;).ToString() = &quot;LINGUASKILL General&quot;]" DisplayName="If" sap2010:WorkflowViewState.IdRef="If_1">
+                                <If.Then>
+                                  <Sequence sap2010:WorkflowViewState.IdRef="Sequence_7">
+                                    <uix:NClick ActivateBefore="True" ClickType="Single" DisplayName="Click 'New Linguaskill General…'" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NClick_10" KeyModifiers="None" MouseButton="Left" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Version="V5">
+                                      <uix:NClick.Target>
+                                        <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" CVScreenId="5fc72dbd-cdeb-41bc-bc36-2fa49a636bfe" CvTextArea="215, 537, 189, 12" CvTextArgument="New Linguaskill General Remote" CvType="Text" DesignTimeRectangle="216, 533, 188, 20" ElementType="Text" ElementVisibilityArgument="Interactive" FullSelectorArgument="&lt;webctrl tag='SPAN' parentid='bs-select-17-4' class='text' /&gt;" Guid="c1bacdba-db1b-4a53-9585-e39e5ae0e63b" InformativeScreenshot="9b94ee79f5a4cfd7f4c048fd2b58389f.jpg" ScopeSelectorArgument="&lt;html title='Sessions' app='chrome.exe' /&gt;" SearchSteps="Selector, CV" Version="V6" WaitForReadyArgument="Interactive" />
+                                      </uix:NClick.Target>
+                                    </uix:NClick>
+                                  </Sequence>
+                                </If.Then>
+                                <If.Else>
+                                  <Sequence sap2010:WorkflowViewState.IdRef="Sequence_8">
+                                    <uix:NClick ActivateBefore="True" ClickType="Single" DisplayName="Click 'New Linguaskill Busines…'" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NClick_11" KeyModifiers="None" MouseButton="Left" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Version="V5">
+                                      <uix:NClick.Target>
+                                        <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" CVScreenId="b048e6f9-e033-4e59-b735-58b02868ce31" CvTextArea="215, 511, 195, 12" CvTextArgument="New Linguaskill Business Remote" CvType="Text" DesignTimeRectangle="216, 507, 194, 20" ElementType="Text" ElementVisibilityArgument="Interactive" FullSelectorArgument="&lt;webctrl tag='SPAN' parentid='bs-select-17-3' class='text' /&gt;" Guid="a706c71e-257b-4f42-ac1b-0288ab4ba6b2" InformativeScreenshot="a7e031741a8bf5b84d430c6f7944a4e2.jpg" ScopeSelectorArgument="&lt;html title='Sessions' app='chrome.exe' /&gt;" SearchSteps="Selector, CV" Version="V6" WaitForReadyArgument="Interactive" />
+                                      </uix:NClick.Target>
+                                    </uix:NClick>
+                                  </Sequence>
+                                </If.Else>
+                              </If>
+                              <uix:NClick ActivateBefore="True" ClickType="Single" DelayBefore="0.4" DisplayName="Click 'checked'" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NClick_12" InteractionMode="Simulate" KeyModifiers="None" MouseButton="Left" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Version="V5">
+                                <uix:NClick.Target>
+                                  <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" CVScreenId="d01ca46e-8961-4de5-a9e4-cf2be55aba50" CvElementArea="191, 334, 22, 21" CvType="RadioButton" DesignTimeRectangle="195, 337, 17, 17" ElementVisibilityArgument="Interactive" FullSelectorArgument="&lt;webctrl tag='LABEL' css-selector='body&amp;gt;form&amp;gt;div&amp;gt;div&amp;gt;div&amp;gt;div&amp;gt;div&amp;gt;div&amp;gt;div&amp;gt;div&amp;gt;div&amp;gt;div&amp;gt;div&amp;gt;span&amp;gt;label' idx='3' /&gt;" Guid="248e220f-796b-4bb8-ae58-b686a6e83d84" InformativeScreenshot="d683d2438644b04f32f6cc598f4d442b.jpg" ScopeSelectorArgument="&lt;html title='Sessions' app='chrome.exe' /&gt;" SearchSteps="Selector, CV" Version="V6" WaitForReadyArgument="Interactive" />
+                                </uix:NClick.Target>
+                                <uix:NClick.VerifyOptions>
+                                  <uix:VerifyExecutionOptions Mode="Appears" Retry="True">
+                                    <uix:VerifyExecutionOptions.Timeout>
+                                      <InArgument x:TypeArguments="x:Double" />
+                                    </uix:VerifyExecutionOptions.Timeout>
+                                  </uix:VerifyExecutionOptions>
+                                </uix:NClick.VerifyOptions>
+                              </uix:NClick>
+                              <uix:NClick ActivateBefore="True" ClickType="Single" DisplayName="Click 'Please select'" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NClick_24" KeyModifiers="None" MouseButton="Left" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Version="V5">
+                                <uix:NClick.Target>
+                                  <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" CVScreenId="4014155d-87b9-47bd-8a3f-bbbd63a36f53" CvElementArea="167, 398, 315, 39" CvType="InputBox" DesignTimeRectangle="186, 410, 269, 20" ElementType="Text" ElementVisibilityArgument="Interactive" FullSelectorArgument="&lt;webctrl tag='DIV' class='filter-option-inner-inner' aaname='Please select' /&gt;" Guid="eecb0eea-6f5d-4ed9-9c1c-c70ba76b2bb5" InformativeScreenshot="ae1251a333741c354f1ea2bb9cd47504.jpg" ScopeSelectorArgument="&lt;html title='Add Session' app='chrome.exe' /&gt;" SearchSteps="Selector, CV" Version="V6" WaitForReadyArgument="Interactive" />
+                                </uix:NClick.Target>
+                              </uix:NClick>
+                              <uix:NClick ActivateBefore="True" ClickType="Single" DisplayName="Click 'REMOTE'" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NClick_15" InteractionMode="Simulate" KeyModifiers="None" MouseButton="Left" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Version="V5">
+                                <uix:NClick.Target>
+                                  <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" CVScreenId="2ca44e3e-e76b-4c27-b25c-60c105f02f31" CvTextArea="136, 626, 51, 13" CvTextArgument="REMOTE" CvType="Text" DesignTimeRectangle="138, 623, 49, 20" ElementType="Text" ElementVisibilityArgument="Interactive" FullSelectorArgument="&lt;webctrl tag='SPAN' parentid='bs-select-14-5' class='text' /&gt;" Guid="20b0bdbd-4cf4-45f0-b452-ecf508ee3def" InformativeScreenshot="6bf5f5edb21812efd6dc3bd59caf2d58.jpg" ScopeSelectorArgument="&lt;html title='Sessions' app='chrome.exe' /&gt;" SearchSteps="Selector, CV" Version="V6" WaitForReadyArgument="Interactive" />
+                                </uix:NClick.Target>
+                                <uix:NClick.VerifyOptions>
+                                  <uix:VerifyExecutionOptions Mode="Appears" Retry="True">
+                                    <uix:VerifyExecutionOptions.Timeout>
+                                      <InArgument x:TypeArguments="x:Double" />
+                                    </uix:VerifyExecutionOptions.Timeout>
+                                  </uix:VerifyExecutionOptions>
+                                </uix:NClick.VerifyOptions>
+                              </uix:NClick>
+                              <uix:NClick ActivateBefore="True" ClickType="Single" DisplayName="Click 'checked'" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NClick_13" InteractionMode="Simulate" KeyModifiers="None" MouseButton="Left" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Version="V5">
+                                <uix:NClick.Target>
+                                  <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" CVScreenId="d01ca46e-8961-4de5-a9e4-cf2be55aba50" CvElementArea="192, 613, 21, 21" CvType="RadioButton" DesignTimeRectangle="195, 616, 17, 17" ElementVisibilityArgument="Interactive" FullSelectorArgument="&lt;webctrl tag='LABEL' css-selector='body&amp;gt;form&amp;gt;div&amp;gt;div&amp;gt;div&amp;gt;div&amp;gt;div&amp;gt;div&amp;gt;div&amp;gt;div&amp;gt;div&amp;gt;div&amp;gt;span&amp;gt;label' idx='3' /&gt;" Guid="222039ca-74f4-40d4-a155-02ee3db2445b" InformativeScreenshot="1fbde4d07b1a9024f5220d65e64b6bbe.jpg" ScopeSelectorArgument="&lt;html title='Sessions' app='chrome.exe' /&gt;" SearchSteps="Selector, CV" Version="V6" WaitForReadyArgument="Interactive" />
+                                </uix:NClick.Target>
+                              </uix:NClick>
+                              <uix:NTypeInto ActivateBefore="True" ClickBeforeMode="Single" ClipboardMode="Never" DisplayName="Type Into '19/02/2026'" EmptyFieldMode="SingleLine" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NTypeInto_3" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Text="[CurrentRow(&quot;exam_date&quot;).ToString()]" Version="V5">
+                                <uix:NTypeInto.Target>
+                                  <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" CVScreenId="5df7c35b-68cd-4d2f-b2ee-f013664df276" CvElementArea="115, 499, 137, 39" CvType="InputBox" DesignTimeRectangle="117, 500, 134, 37" ElementType="InputBox" ElementVisibilityArgument="Interactive" FullSelectorArgument="&lt;webctrl tag='TABLE' /&gt;&lt;webctrl tag='INPUT' tableRow='2' /&gt;" Guid="e073591c-ccab-4069-8724-55167f5b2852" InformativeScreenshot="67cf157558246fae18129c2dc38aaedd.jpg" ScopeSelectorArgument="&lt;html title='Sessions' app='chrome.exe' /&gt;" SearchSteps="Selector, CV" Version="V6" WaitForReadyArgument="Interactive" />
+                                </uix:NTypeInto.Target>
+                              </uix:NTypeInto>
+                              <uix:NTypeInto ActivateBefore="True" ClickBeforeMode="Single" ClipboardMode="Never" DisplayName="Type Into '20:17'" EmptyFieldMode="SingleLine" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NTypeInto_6" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Text="[CurrentRow(&quot;exam_hour&quot;).ToString().Replace(&quot;h&quot;, &quot;:00&quot;) &amp; &quot;[k(tab)]&quot;]" Version="V5">
+                                <uix:NTypeInto.Target>
+                                  <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" CVScreenId="72a9a8a0-36a0-4177-933f-b009c051afa2" CvElementArea="277, 522, 138, 40" CvType="InputBox" DesignTimeRectangle="279, 524, 134, 37" ElementType="InputBox" ElementVisibilityArgument="Interactive" FullSelectorArgument="&lt;webctrl tag='TABLE' aaname=' &amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;RadDatePicker &amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;' idx='2' /&gt;&lt;webctrl tag='INPUT' tableRow='2' /&gt;" Guid="fa302654-aa69-4e7f-b1d1-63504b003aba" InformativeScreenshot="aae84f948e81fe1fa1e484270d0a151a.jpg" ScopeSelectorArgument="&lt;html title='Sessions' app='chrome.exe' /&gt;" SearchSteps="Selector, CV" Version="V6" WaitForReadyArgument="Interactive" />
+                                </uix:NTypeInto.Target>
+                              </uix:NTypeInto>
+                              <uix:NClick ActivateBefore="True" ClickType="[UiPath.UIAutomationNext.Enums.NClickType.Double]" DisplayName="Click 'Add Test Component'" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NClick_30" InteractionMode="SameAsCard" KeyModifiers="None" MouseButton="Left" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Version="V5">
+                                <uix:NClick.Target>
+                                  <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" DesignTimeRectangle="195, 530, 122, 18" ElementType="Text" ElementVisibilityArgument="Interactive" FullSelectorArgument="&lt;webctrl tag='A' aaname='Add Test Component' /&gt;" FuzzySelectorArgument="&lt;webctrl tag='A' aaname='Add Test Component' type='' class='' matching:aaname='fuzzy' fuzzylevel:aaname='0.0' matching:class='fuzzy' fuzzylevel:class='0.0' check:innerText='Add Test Component' /&gt;" Guid="f96fa847-3478-4bbc-8776-da0ef95931d5" InformativeScreenshot="9b9e6a9bbe98374c33b7cec4a7a84758.jpg" ScopeSelectorArgument="&lt;html title='Add Session' app='chrome.exe' /&gt;" SearchSteps="Selector" Version="V6" WaitForReadyArgument="Interactive" />
+                                </uix:NClick.Target>
+                              </uix:NClick>
+                              <Sequence DisplayName="Sequence 1" sap2010:WorkflowViewState.IdRef="Sequence_16">
+                                <If Condition="[CurrentRow(&quot;skills_code&quot;).ToString().Contains(&quot;W&quot;)]" DisplayName="If 3" sap2010:WorkflowViewState.IdRef="If_4">
+                                  <If.Then>
+                                    <Sequence sap2010:WorkflowViewState.IdRef="Sequence_21" />
+                                  </If.Then>
+                                  <If.Else>
+                                    <Sequence sap2010:WorkflowViewState.IdRef="Sequence_22">
+                                      <uix:NClick ActivateBefore="True" ClickType="[UiPath.UIAutomationNext.Enums.NClickType.Double]" DisplayName="Click 'Remove -'" HealingAgentBehavior="RecommendationOnly" sap2010:WorkflowViewState.IdRef="NClick_34" InteractionMode="DebuggerApi" KeyModifiers="None" MouseButton="Left" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Version="V5">
+                                        <uix:NClick.Target>
+                                          <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" CVScreenId="c539613d-1f0d-4ffc-ac97-a3850d73ee05" CvTextArea="648, 655, 55, 13" CvTextArgument="Remove -" CvType="Text" DesignTimeRectangle="648, 653, 55, 18" DesignTimeScaleFactor="2" ElementType="Text" ElementVisibilityArgument="Interactive" FullSelectorArgument="&lt;webctrl tag='TABLE' id='grdSessionSlots' /&gt;&lt;webctrl tag='A' tableRow='38' id='btnRemove' /&gt;" Guid="906b71df-4f51-4c6a-9351-6dae6179125a" InformativeScreenshot="ca2d9e2ddcbea9f26810e9fd39fbc3b6.jpg" ScopeSelectorArgument="&lt;html title='Sessions' app='chrome.exe' /&gt;" SearchSteps="Selector, CV" Version="V6" />
+                                        </uix:NClick.Target>
+                                        <uix:NClick.VerifyOptions>
+                                          <uix:VerifyExecutionOptions Mode="Disappears">
+                                            <uix:VerifyExecutionOptions.Retry>
+                                              <InArgument x:TypeArguments="x:Boolean" />
+                                            </uix:VerifyExecutionOptions.Retry>
+                                            <uix:VerifyExecutionOptions.Target>
+                                              <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" DesignTimeRectangle="656, 654, 54, 18" ElementType="Text" ElementVisibilityArgument="Interactive" FullSelectorArgument="&lt;webctrl tag='TABLE' id='grdSessionSlots' /&gt;&lt;webctrl tag='A' tableRow='38' id='btnRemove' /&gt;" Guid="e9658fe7-62f6-4e26-b2e9-a5c77449069b" InformativeScreenshot="8dd3a126d524c3221902eaf3451d8cfb.jpg" ScopeSelectorArgument="&lt;html title='Sessions' app='chrome.exe' /&gt;" SearchSteps="Selector" Version="V6" WaitForReadyArgument="Interactive" />
+                                            </uix:VerifyExecutionOptions.Target>
+                                            <uix:VerifyExecutionOptions.Timeout>
+                                              <InArgument x:TypeArguments="x:Double" />
+                                            </uix:VerifyExecutionOptions.Timeout>
+                                          </uix:VerifyExecutionOptions>
+                                        </uix:NClick.VerifyOptions>
+                                      </uix:NClick>
+                                    </Sequence>
+                                  </If.Else>
+                                </If>
+                                <If Condition="[CurrentRow(&quot;skills_code&quot;).ToString().Contains(&quot;S&quot;)]" DisplayName="If 4" sap2010:WorkflowViewState.IdRef="If_5">
+                                  <If.Then>
+                                    <Sequence sap2010:WorkflowViewState.IdRef="Sequence_23" />
+                                  </If.Then>
+                                  <If.Else>
+                                    <Sequence sap2010:WorkflowViewState.IdRef="Sequence_24">
+                                      <uix:NClick ActivateBefore="True" ClickType="[UiPath.UIAutomationNext.Enums.NClickType.Double]" DisplayName="Click 'Remove -'" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NClick_35" InteractionMode="HardwareEvents" KeyModifiers="None" MouseButton="Left" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Version="V5">
+                                        <uix:NClick.Target>
+                                          <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" DesignTimeRectangle="656, 551, 54, 18" ElementType="Text" ElementVisibilityArgument="Interactive" FullSelectorArgument="&lt;webctrl tag='TABLE' id='grdSessionSlots' /&gt;&lt;webctrl tag='A' tableRow='26' id='btnRemove' /&gt;" Guid="cb2b7af3-4c07-4953-b708-0f8922398191" InformativeScreenshot="3894b103da7f21fd7bab3d36d034d530.jpg" ScopeSelectorArgument="&lt;html title='Sessions' app='chrome.exe' /&gt;" SearchSteps="Selector" Version="V6" WaitForReadyArgument="Interactive" />
+                                        </uix:NClick.Target>
+                                      </uix:NClick>
+                                    </Sequence>
+                                  </If.Else>
+                                </If>
+                                <If Condition="[CurrentRow(&quot;skills_code&quot;).ToString().Contains(&quot;R&quot;)]" DisplayName="If 1" sap2010:WorkflowViewState.IdRef="If_2">
+                                  <If.Then>
+                                    <Sequence sap2010:WorkflowViewState.IdRef="Sequence_17" />
+                                  </If.Then>
+                                  <If.Else>
+                                    <Sequence sap2010:WorkflowViewState.IdRef="Sequence_18">
+                                      <uix:NClick ActivateBefore="True" ClickType="[UiPath.UIAutomationNext.Enums.NClickType.Double]" DisplayName="Click 'Remove -'" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NClick_32" InteractionMode="DebuggerApi" KeyModifiers="None" MouseButton="Left" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Version="V5">
+                                        <uix:NClick.Target>
+                                          <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" CVScreenId="c539613d-1f0d-4ffc-ac97-a3850d73ee05" CvTextArea="648, 541, 55, 12" CvTextArgument="Remove -" CvType="Text" DesignTimeRectangle="648, 539, 55, 18" DesignTimeScaleFactor="2" ElementType="Text" ElementVisibilityArgument="Interactive" FullSelectorArgument="&lt;webctrl tag='TABLE' id='grdSessionSlots' /&gt;&lt;webctrl tag='A' tableRow='14' id='btnRemove' /&gt;" Guid="ffe388af-2d9d-4caa-9dea-b1d3e6fc9dba" InformativeScreenshot="faed10f08bffa6bcdd1cd20c5b10280d.jpg" ScopeSelectorArgument="&lt;html title='Sessions' app='chrome.exe' /&gt;" SearchSteps="Selector, CV" Version="V6" />
+                                        </uix:NClick.Target>
+                                      </uix:NClick>
+                                    </Sequence>
+                                  </If.Else>
+                                </If>
+                                <If Condition="[CurrentRow(&quot;skills_code&quot;).ToString().Contains(&quot;L&quot;)]" DisplayName="If 2" sap2010:WorkflowViewState.IdRef="If_3">
+                                  <If.Then>
+                                    <Sequence sap2010:WorkflowViewState.IdRef="Sequence_19" />
+                                  </If.Then>
+                                  <If.Else>
+                                    <Sequence sap2010:WorkflowViewState.IdRef="Sequence_20">
+                                      <uix:NClick ActivateBefore="True" ClickType="[UiPath.UIAutomationNext.Enums.NClickType.Double]" DisplayName="Click 'Remove -'" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NClick_33" InteractionMode="DebuggerApi" KeyModifiers="None" MouseButton="Left" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Version="V5">
+                                        <uix:NClick.Target>
+                                          <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" CVScreenId="c539613d-1f0d-4ffc-ac97-a3850d73ee05" CvTextArea="648, 484, 55, 12" CvTextArgument="Remove -" CvType="Text" DesignTimeRectangle="648, 482, 55, 18" DesignTimeScaleFactor="2" ElementType="Text" ElementVisibilityArgument="Interactive" FullSelectorArgument="&lt;webctrl tag='TABLE' id='grdSessionSlots' /&gt;&lt;webctrl tag='A' tableRow='2' id='btnRemove' /&gt;" Guid="6453d083-346a-4eca-a47d-3947ce206176" InformativeScreenshot="fc1d7787c0e510295379fccdc2b4deb2.jpg" ScopeSelectorArgument="&lt;html title='Sessions' app='chrome.exe' /&gt;" SearchSteps="Selector, CV" Version="V6" />
+                                        </uix:NClick.Target>
+                                      </uix:NClick>
+                                    </Sequence>
+                                  </If.Else>
+                                </If>
+                              </Sequence>
+                              <uix:NTypeInto ActivateBefore="True" ClickBeforeMode="Single" ClipboardMode="Never" DisplayName="Type Into 'Session Name* The sessi…'" EmptyFieldMode="SingleLine" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NTypeInto_7" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Text="[CurrentRow(&quot;session_name&quot;).ToString()]" Version="V5">
+                                <uix:NTypeInto.Target>
+                                  <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" CVScreenId="1694db89-d363-452d-bf6f-f795f71aa20c" CvElementArea="200, 641, 314, 40" CvType="InputBox" DesignTimeRectangle="202, 643, 311, 37" ElementType="InputBox" ElementVisibilityArgument="Interactive" FuzzySelectorArgument="&lt;webctrl tag='INPUT' type='text' name='ctl00$ContentPlaceHolder$createSession1$txtName' class='check-your-details form-control' aaname=' &amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;Session Name* &amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9; &amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9; &amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9; &amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;The session name will be shown to the candidate when they log in. If you use the Session List page a lot then you may wish to call it something memorable. &amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9; &amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9; &amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;' matching:name='fuzzy' fuzzylevel:name='0.0' matching:class='fuzzy' fuzzylevel:class='0.0' fuzzylevel:aaname='0.0' /&gt;" Guid="71241d38-2f25-4c7b-99cc-21d61db60904" InformativeScreenshot="85d91c4bd999003d7f7396a7c8243a2f.jpg" IsResponsive="True" ScopeSelectorArgument="&lt;html title='Add Session' app='chrome.exe' /&gt;" SearchSteps="FuzzySelector, CV" Version="V6" WaitForReadyArgument="Interactive">
+                                    <uix:TargetAnchorable.Anchors>
+                                      <scg:List x:TypeArguments="uix:ITarget" Capacity="1">
+                                        <uix:Target CVScreenId="1694db89-d363-452d-bf6f-f795f71aa20c" CvTextArea="201, 619, 104, 14" CvTextArgument="Session Name* ?" CvType="Text" DesignTimeRectangle="202, 611, 108, 27" ElementType="Text" FuzzySelectorArgument="&lt;webctrl tag='LABEL' aaname=' &amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;Session Name &amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9; &amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;' type='' class='' matching:aaname='fuzzy' fuzzylevel:aaname='0.0' matching:class='fuzzy' fuzzylevel:class='0.0' check:innerText='Session Name*' /&gt;" Guid="edfbc32e-ae6d-4844-a913-0ff33a4dd32e" SearchSteps="FuzzySelector, CV" />
+                                      </scg:List>
+                                    </uix:TargetAnchorable.Anchors>
+                                  </uix:TargetAnchorable>
+                                </uix:NTypeInto.Target>
+                              </uix:NTypeInto>
+                              <uix:NClick ActivateBefore="True" ClickType="Single" DisplayName="Click 'Create Session'" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NClick_28" KeyModifiers="None" MouseButton="Left" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Version="V5">
+                                <uix:NClick.Target>
+                                  <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" CVScreenId="2b211221-108b-4ed9-9657-b14612f4afa4" CvElementArea="176, 724, 122, 41" CvTextArea="193, 739, 87, 13" CvTextArgument="Create Session" CvType="Button" DesignTimeRectangle="179, 726, 117, 37" ElementType="Button" ElementVisibilityArgument="Interactive" FullSelectorArgument="&lt;webctrl tag='INPUT' type='submit' name='ctl00$ContentPlaceHolder$btnCreateSession1' /&gt;" Guid="0ac9e989-58f7-43fc-a755-d0498e89ee77" InformativeScreenshot="7b101831c2fba9591ccecfa796d6b9d1.jpg" ScopeSelectorArgument="&lt;html title='Sessions' app='chrome.exe' /&gt;" SearchSteps="Selector, CV" Version="V6" WaitForReadyArgument="Interactive">
+                                    <uix:TargetAnchorable.PointOffset>
+                                      <uix:PointOffset Position="TopRight" X="-30" Y="10" />
+                                    </uix:TargetAnchorable.PointOffset>
+                                  </uix:TargetAnchorable>
+                                </uix:NClick.Target>
+                              </uix:NClick>
+                            </Sequence>
+                          </Sequence>
+                        </uix:NCheckState.IfNotExists>
+                        <uix:NCheckState.Target>
+                          <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" CVScreenId="498494b7-3d4a-429e-9289-eb7c326b3c88" CvTextArea="123, 688, 84, 13" CvTextArgument="Session Name" CvType="Text" DesignTimeRectangle="115, 681, 449, 27" ElementType="Text" ElementVisibilityArgument="Interactive" FullSelectorArgument="&lt;webctrl tag='TABLE' aaname='Session Name Institution ID Venue Start Date Candidates' /&gt;&lt;webctrl tag='TH' tableRow='1' /&gt;" Guid="0c310778-82bb-4373-bf46-05b9dd4c4cdb" InformativeScreenshot="e31af320a301a36ac32f3e068afde80c.jpg" ScopeSelectorArgument="&lt;html title='Session List' app='chrome.exe' /&gt;" SearchSteps="Selector, CV" Version="V6" WaitForReadyArgument="Interactive" />
+                        </uix:NCheckState.Target>
+                      </uix:NCheckState>
+                    </Sequence>
+                  </Sequence>
+                </ActivityAction>
+              </ui:ForEachRow.Body>
+            </ui:ForEachRow>
+            <uix:NClick ActivateBefore="True" ClickType="Single" DisplayName="Click 'Sessions' 2" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NClick_59" KeyModifiers="None" MouseButton="Left" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Version="V5">
+              <uix:NClick.Target>
+                <uix:TargetAnchorable BrowserURL="metritests.com/metrica/adminhome.aspx" CVScreenId="624215e2-8a85-44c2-ae85-0ae1a8d03e7e" CvTextArea="597, 210, 52, 13" CvTextArgument="Sessions" CvType="Text" DesignTimeRectangle="598, 207, 51, 20" ElementType="Text" ElementVisibilityArgument="Interactive" FullSelectorArgument="&lt;webctrl tag='SPAN' parentid='sessions' /&gt;" Guid="d6026f14-ffa5-4359-91f6-2ffa1505494f" InformativeScreenshot="e925b4b235b9a965b203830638fde985.png" ScopeSelectorArgument="&lt;html title='Welcome to the Cambridge English Test Portal' app='chrome.exe' /&gt;" SearchSteps="Selector, CV" Version="V6" WaitForReadyArgument="Interactive" />
+              </uix:NClick.Target>
+            </uix:NClick>
+            <ui:ForEachRow ColumnNames="{x:Null}" CurrentIndex="{x:Null}" DataTable="[data_table_astext]" DisplayName="Adding candidates to sessions" sap2010:WorkflowViewState.IdRef="ForEachRow_2">
+              <ui:ForEachRow.Body>
+                <ActivityAction x:TypeArguments="sd:DataRow">
+                  <ActivityAction.Argument>
+                    <DelegateInArgument x:TypeArguments="sd:DataRow" Name="CurrentRow" />
+                  </ActivityAction.Argument>
+                  <Sequence DisplayName="Body" sap2010:WorkflowViewState.IdRef="Sequence_27">
+                    <TryCatch DisplayName="Try Catch 1" sap2010:WorkflowViewState.IdRef="TryCatch_2">
+                      <TryCatch.Try>
+                        <Sequence sap2010:WorkflowViewState.IdRef="Sequence_45">
+                          <If Condition="[CBool(CurrentRow(&quot;is_entry_code&quot;))]" DisplayName="If entry code" sap2010:WorkflowViewState.IdRef="If_6">
+                            <If.Then>
+                              <Sequence sap2010:WorkflowViewState.IdRef="Sequence_28">
+                                <Assign DisplayName="Assign Variable Value 2 1" sap2010:WorkflowViewState.IdRef="Assign_10">
+                                  <Assign.To>
+                                    <OutArgument x:TypeArguments="x:Boolean">[is_sucess]</OutArgument>
+                                  </Assign.To>
+                                  <Assign.Value>
+                                    <InArgument x:TypeArguments="x:Boolean">False</InArgument>
+                                  </Assign.Value>
+                                </Assign>
+                              </Sequence>
+                            </If.Then>
+                            <If.Else>
+                              <Sequence sap2010:WorkflowViewState.IdRef="Sequence_29">
+                                <Sequence DisplayName="Finding session" sap2010:WorkflowViewState.IdRef="Sequence_33">
+                                  <uix:NClick ActivateBefore="True" ClickType="[UiPath.UIAutomationNext.Enums.NClickType.Single]" DisplayName="Searching Session" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NClick_36" InteractionMode="HardwareEvents" KeyModifiers="None" MouseButton="Left" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Version="V5">
+                                    <uix:NClick.Target>
+                                      <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" DesignTimeRectangle="195, 456, 40, 38" ElementType="Button" ElementVisibilityArgument="Interactive" FullSelectorArgument="&lt;webctrl tag='BUTTON' id='showSearch2' /&gt;" Guid="10217ecc-476e-4a87-97b8-0bf1453cee33" InformativeScreenshot="c2d75bcecd700c8ab5275270662bcb1d.jpg" ScopeSelectorArgument="&lt;html title='Session List' app='chrome.exe' /&gt;" SearchSteps="Selector" Version="V6" WaitForReadyArgument="Interactive" />
+                                    </uix:NClick.Target>
+                                    <uix:NClick.VerifyOptions>
+                                      <uix:VerifyExecutionOptions Mode="Appears" Retry="True" Timeout="0.2">
+                                        <uix:VerifyExecutionOptions.Target>
+                                          <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" DesignTimeRectangle="195, 495, 254, 37" ElementType="InputBox" ElementVisibilityArgument="Interactive" FuzzySelectorArgument="&lt;webctrl tag='INPUT' type='text' name='ctl00$ContentPlaceHolder$txtReferenceFilter' class='form-control autowidth' aaname='Session Name' matching:name='fuzzy' fuzzylevel:name='0.0' matching:class='fuzzy' fuzzylevel:class='0.0' matching:aaname='fuzzy' fuzzylevel:aaname='0.0' /&gt;" Guid="6bc2125c-89a9-4cd8-b5bb-6b77f771eaa8" InformativeScreenshot="f8aad7e8f0af69d77d063032e12c33dd.jpg" IsResponsive="True" ScopeSelectorArgument="&lt;html title='Session List' app='chrome.exe' /&gt;" SearchSteps="FuzzySelector" Version="V6" WaitForReadyArgument="Interactive">
+                                            <uix:TargetAnchorable.Anchors>
+                                              <scg:List x:TypeArguments="uix:ITarget" Capacity="1">
+                                                <uix:Target DesignTimeRectangle="195, 470, 82, 20" ElementType="Text" FuzzySelectorArgument="&lt;webctrl tag='LABEL' parentid='advancedSearchArea2' type='' class='' aaname='Session Name' matching:parentid='fuzzy' fuzzylevel:parentid='0.0' matching:class='fuzzy' fuzzylevel:class='0.0' matching:aaname='fuzzy' fuzzylevel:aaname='0.0' check:innerText='Session Name' /&gt;" Guid="a9eb8ba7-f03d-49eb-8a9d-945bba699b1c" SearchSteps="FuzzySelector" />
+                                              </scg:List>
+                                            </uix:TargetAnchorable.Anchors>
+                                          </uix:TargetAnchorable>
+                                        </uix:VerifyExecutionOptions.Target>
+                                      </uix:VerifyExecutionOptions>
+                                    </uix:NClick.VerifyOptions>
+                                  </uix:NClick>
+                                  <uix:NTypeInto ActivateBefore="True" ClickBeforeMode="Single" ClipboardMode="Never" DisplayName="Type Into 'Session Name'" EmptyFieldMode="SingleLine" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NTypeInto_8" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Text="[CurrentRow(&quot;session_name&quot;).ToString()]" Version="V5">
+                                    <uix:NTypeInto.Target>
+                                      <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" CVScreenId="7b7c3ab7-7530-4126-a59d-a881e41cd974" CvElementArea="199, 319, 258, 39" CvType="InputBox" DesignTimeRectangle="202, 320, 255, 37" ElementType="InputBox" ElementVisibilityArgument="Interactive" FuzzySelectorArgument="&lt;webctrl tag='INPUT' type='text' name='ctl00$ContentPlaceHolder$txtReferenceFilter' class='form-control autowidth' aaname='Session Name' matching:name='fuzzy' fuzzylevel:name='0.0' matching:class='fuzzy' fuzzylevel:class='0.0' matching:aaname='fuzzy' fuzzylevel:aaname='0.0' /&gt;" Guid="651fcd4d-3bc5-4964-ab4a-b0650115f618" InformativeScreenshot="1ae249f51454333adc4ba0ac28c17466.jpg" IsResponsive="True" ScopeSelectorArgument="&lt;html title='Session List' app='chrome.exe' /&gt;" SearchSteps="FuzzySelector, CV" Version="V6" WaitForReadyArgument="Interactive">
+                                        <uix:TargetAnchorable.Anchors>
+                                          <scg:List x:TypeArguments="uix:ITarget" Capacity="1">
+                                            <uix:Target CVScreenId="7b7c3ab7-7530-4126-a59d-a881e41cd974" CvTextArea="201, 299, 84, 12" CvTextArgument="Session Name" CvType="Text" DesignTimeRectangle="202, 295, 82, 20" ElementType="Text" FuzzySelectorArgument="&lt;webctrl tag='LABEL' parentid='advancedSearchArea2' type='' class='' aaname='Session Name' matching:parentid='fuzzy' fuzzylevel:parentid='0.0' matching:class='fuzzy' fuzzylevel:class='0.0' matching:aaname='fuzzy' fuzzylevel:aaname='0.0' check:innerText='Session Name' /&gt;" Guid="2e1ba603-7ed9-41ac-bf53-479edd2a62cc" SearchSteps="FuzzySelector, CV" />
+                                          </scg:List>
+                                        </uix:TargetAnchorable.Anchors>
+                                      </uix:TargetAnchorable>
+                                    </uix:NTypeInto.Target>
+                                  </uix:NTypeInto>
+                                  <uix:NClick ActivateBefore="True" ClickType="Single" DelayAfter="1" DisplayName="Click 'Search'" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NClick_52" KeyModifiers="None" MouseButton="Left" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Version="V5">
+                                    <uix:NClick.Target>
+                                      <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" DesignTimeRectangle="195, 629, 72, 37" ElementType="Button" ElementVisibilityArgument="Interactive" FullSelectorArgument="&lt;webctrl tag='INPUT' type='submit' name='ctl00$ContentPlaceHolder$btnSearch' /&gt;" Guid="e57d59ed-74e6-4d4b-9b5c-1f682a661b05" InformativeScreenshot="00160eea5a42e0ced0928391587f8131.jpg" ScopeSelectorArgument="&lt;html title='Session List' app='chrome.exe' /&gt;" SearchSteps="Selector" Version="V6" WaitForReadyArgument="Interactive">
+                                        <uix:TargetAnchorable.PointOffset>
+                                          <uix:PointOffset Position="BottomLeft" X="18" Y="-8" />
+                                        </uix:TargetAnchorable.PointOffset>
+                                      </uix:TargetAnchorable>
+                                    </uix:NClick.Target>
+                                  </uix:NClick>
+                                  <uix:NClick ActivateBefore="True" ClickType="[UiPath.UIAutomationNext.Enums.NClickType.Double]" DisplayName="Click '16/03/2026 3SG d.leblan…'" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NClick_53" KeyModifiers="None" MouseButton="Left" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Version="V5">
+                                    <uix:NClick.Target>
+                                      <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" CVScreenId="b43608df-0e56-421f-875d-3b07a826adc1" CvTextArea="188, 667, 245, 17" CvTextArgument="16/03/2026 3SG d.leblanc971@gmail.com" CvType="Text" DesignTimeRectangle="190, 665, 242, 18" ElementType="Text" ElementVisibilityArgument="Interactive" FullSelectorArgument="&lt;webctrl tag='TABLE' aaname='Session Name Institution ID Venue Start Date Candidates' /&gt;&lt;webctrl tag='A' tableRow='2' /&gt;" Guid="2e7f49fd-eadd-4c8a-b8e2-fe13e1d44063" InformativeScreenshot="6919ad034aa5c965d4b75cd2b125ed2c.jpg" ScopeSelectorArgument="&lt;html title='Session List' app='chrome.exe' /&gt;" SearchSteps="Selector, CV" Version="V6" WaitForReadyArgument="Interactive">
+                                        <uix:TargetAnchorable.Anchors>
+                                          <scg:List x:TypeArguments="uix:ITarget" Capacity="1">
+                                            <uix:Target DesignTimeRectangle="180, 656, 458, 54" FuzzySelectorArgument="&lt;webctrl tag='TABLE' aaname='Session Name Institution ID Venue Start Date Candidates' matching:aaname='fuzzy' fuzzylevel:aaname='0.0' /&gt;&lt;webctrl tag='TD' type='' class='' aaname=' &amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9; &amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9; &amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9; &amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9; &amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9; &amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;&amp;#x9;' matching:class='fuzzy' fuzzylevel:class='0.0' matching:aaname='fuzzy' fuzzylevel:aaname='0.0' check:innerText='16/03/2026 3SG d.leblanc971@gmail.com&amp;#xA;New' /&gt;" Guid="32a2ad19-e698-4863-9ac3-2c7ab022f16c" SearchSteps="FuzzySelector" />
+                                          </scg:List>
+                                        </uix:TargetAnchorable.Anchors>
+                                      </uix:TargetAnchorable>
+                                    </uix:NClick.Target>
+                                  </uix:NClick>
+                                  <uix:NClick ActivateBefore="True" ClickType="Single" DelayAfter="1" DisplayName="Click 'Add Entries'" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NClick_39" KeyModifiers="None" MouseButton="Left" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Version="V5">
+                                    <uix:NClick.Target>
+                                      <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" CVScreenId="06c77b45-7913-4362-9f07-6202b3bab5fe" CvElementArea="383, 515, 104, 42" CvTextArea="400, 530, 69, 13" CvTextArgument="Add Entries" CvType="Button" DesignTimeRectangle="386, 517, 98, 37" ElementType="Button" ElementVisibilityArgument="Interactive" FullSelectorArgument="&lt;webctrl tag='INPUT' type='submit' name='ctl00$ContentPlaceHolder$registeredCandidates1$btnCLSAddEntries' /&gt;" Guid="e774bc61-97ec-4552-ae91-541655939066" InformativeScreenshot="141838b73a91e0fb749f0d50165db81f.jpg" ScopeSelectorArgument="&lt;html title='Session Entries:02/03/2026 4SG mathildeesmolis@gmail.com' app='chrome.exe' /&gt;" SearchSteps="Selector, CV" Version="V6" WaitForReadyArgument="Interactive" />
+                                    </uix:NClick.Target>
+                                  </uix:NClick>
+                                </Sequence>
+                                <If Condition="[CurrentRow(&quot;password_cms&quot;).ToString.Trim.Length &gt; 0]" DisplayName="If password was found" sap2010:WorkflowViewState.IdRef="If_7">
+                                  <If.Then>
+                                    <Sequence sap2010:WorkflowViewState.IdRef="Sequence_30">
+                                      <uix:NClick ActivateBefore="True" ClickType="Single" DisplayName="Click 'Search Existing'" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NClick_40" KeyModifiers="None" MouseButton="Left" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Version="V5">
+                                        <uix:NClick.Target>
+                                          <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" CVScreenId="a90ac414-f4fa-4d8a-ba6f-9a9f890e69c4" CvElementArea="483, 417, 122, 44" CvTextArea="499, 431, 90, 16" CvTextArgument="Search Existing" CvType="Button" DesignTimeRectangle="485, 419, 118, 38" ElementType="Text" ElementVisibilityArgument="Interactive" FullSelectorArgument="&lt;webctrl tag='A' class='ui-tabs-anchor' aaname='Search Existing' /&gt;" Guid="cbbb1b93-9d5b-4b0e-af85-fd0e6f6f28ca" InformativeScreenshot="d18e0cabf93d13d752c6866ad15bbf63.jpg" ScopeSelectorArgument="&lt;html title='Session Entries: 02/03/2026 4SG mathildeesmolis@gmail.com' app='chrome.exe' /&gt;" SearchSteps="Selector, CV" Version="V6" WaitForReadyArgument="Interactive" />
+                                        </uix:NClick.Target>
+                                      </uix:NClick>
+                                      <uix:NTypeInto ActivateBefore="True" ClickBeforeMode="Single" ClipboardMode="Never" DisplayName="Type Into 'INPUT ctl00_ContentPlac…'" EmptyFieldMode="SingleLine" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NTypeInto_9" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Text="[CurrentRow(&quot;email&quot;).ToString]" Version="V5">
+                                        <uix:NTypeInto.Target>
+                                          <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" DesignTimeRectangle="202, 278, 349, 37" ElementType="InputBox" ElementVisibilityArgument="Interactive" FullSelectorArgument="&lt;webctrl tag='INPUT' type='text' /&gt;" Guid="945fe61f-e9d7-4d9d-b760-33338ccfd086" InformativeScreenshot="f982c21dff6ad9d82333b93e97fcd09d.jpg" ScopeSelectorArgument="&lt;html title='Session Entries: 02/03/2026 4SG mathildeesmolis@gmail.com' app='chrome.exe' /&gt;" SearchSteps="Selector" Version="V6" WaitForReadyArgument="Interactive" />
+                                        </uix:NTypeInto.Target>
+                                      </uix:NTypeInto>
+                                      <uix:NClick ActivateBefore="True" ClickType="Single" DisplayName="Click 'Search'" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NClick_41" KeyModifiers="None" MouseButton="Left" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Version="V5">
+                                        <uix:NClick.Target>
+                                          <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" CVScreenId="7853b8da-171d-4846-aa9d-d15880fccc58" CvElementArea="579, 517, 76, 41" CvTextArea="596, 533, 42, 12" CvTextArgument="Search" CvType="Button" DesignTimeRectangle="581, 519, 72, 37" ElementType="Button" ElementVisibilityArgument="Interactive" FullSelectorArgument="&lt;webctrl tag='INPUT' type='submit' /&gt;" Guid="d9313254-8e3f-48d1-83b3-53406ac51c21" InformativeScreenshot="4fffa9c023d5264d8108d9600e571488.jpg" ScopeSelectorArgument="&lt;html title='Sessions' app='chrome.exe' /&gt;" SearchSteps="Selector, CV" Version="V6" WaitForReadyArgument="Interactive" />
+                                        </uix:NClick.Target>
+                                      </uix:NClick>
+                                      <uix:NClick ActivateBefore="True" ClickType="Single" DisplayName="Click 'checked'" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NClick_42" KeyModifiers="None" MouseButton="Left" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Version="V5">
+                                        <uix:NClick.Target>
+                                          <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" CVScreenId="7853b8da-171d-4846-aa9d-d15880fccc58" CvElementArea="210, 642, 21, 20" CvType="CheckBox" DesignTimeRectangle="212, 643, 17, 17" ElementVisibilityArgument="Interactive" FullSelectorArgument="&lt;webctrl tag='TABLE' /&gt;&lt;webctrl tag='LABEL' tableRow='2' /&gt;" Guid="d83a578b-9197-4544-8fe9-d7cfd7958065" InformativeScreenshot="35240c0260a1a332c6945ce89a331022.jpg" ScopeSelectorArgument="&lt;html title='Sessions' app='chrome.exe' /&gt;" SearchSteps="Selector, CV" Version="V6" WaitForReadyArgument="Interactive" />
+                                        </uix:NClick.Target>
+                                      </uix:NClick>
+                                      <uix:NClick ActivateBefore="True" ClickType="Single" DisplayName="Click 'Save'" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NClick_43" KeyModifiers="None" MouseButton="Left" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Version="V5">
+                                        <uix:NClick.Target>
+                                          <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" CVScreenId="7853b8da-171d-4846-aa9d-d15880fccc58" CvElementArea="200, 683, 64, 41" CvTextArea="217, 699, 29, 12" CvTextArgument="Save" CvType="Button" DesignTimeRectangle="202, 685, 60, 37" ElementType="Button" ElementVisibilityArgument="Interactive" FullSelectorArgument="&lt;webctrl tag='INPUT' type='submit' name='ctl00$ContentPlaceHolder$registeredCandidates1$btnAddExistingSave' /&gt;" Guid="7ffc36b7-5e7b-4ff4-b848-6dc17369e3d9" InformativeScreenshot="50903fed672cb0ae9286b7d70fa34c85.jpg" ScopeSelectorArgument="&lt;html title='Sessions' app='chrome.exe' /&gt;" SearchSteps="Selector, CV" Version="V6" WaitForReadyArgument="Interactive" />
+                                        </uix:NClick.Target>
+                                      </uix:NClick>
+                                      <uix:NClick ActivateBefore="True" ClickType="Single" DisplayName="Click 'Back to Session List'" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NClick_44" KeyModifiers="None" MouseButton="Left" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Version="V5">
+                                        <uix:NClick.Target>
+                                          <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" CVScreenId="29026ae0-0649-4590-9198-1df3d9658441" CvElementArea="183, 704, 151, 42" CvTextArea="202, 719, 115, 13" CvTextArgument="Back to Session List" CvType="Button" DesignTimeRectangle="186, 706, 147, 37" ElementType="Button" ElementVisibilityArgument="Interactive" FullSelectorArgument="&lt;webctrl tag='INPUT' type='submit' name='ctl00$ContentPlaceHolder$registeredCandidates1$btnBackToSessionList' /&gt;" Guid="15aa5f88-2c5d-4471-8cf9-e74e071abbd8" InformativeScreenshot="9ae4f0d20c93f99e5bf79f043fbfd519.jpg" ScopeSelectorArgument="&lt;html title='Session Entries:02/03/2026 4SG mathildeesmolis@gmail.com' app='chrome.exe' /&gt;" SearchSteps="Selector, CV" Version="V6" WaitForReadyArgument="Interactive" />
+                                        </uix:NClick.Target>
+                                      </uix:NClick>
+                                    </Sequence>
+                                  </If.Then>
+                                  <If.Else>
+                                    <Sequence sap2010:WorkflowViewState.IdRef="Sequence_31">
+                                      <Sequence DisplayName="Sequence 2" sap2010:WorkflowViewState.IdRef="Sequence_32">
+                                        <uix:NClick ActivateBefore="True" ClickType="Single" DisplayName="Click 'Single candidate Entry'" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NClick_56" KeyModifiers="None" MouseButton="Left" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Version="V5">
+                                          <uix:NClick.Target>
+                                            <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" CVScreenId="d487ae1f-9dd9-4d5e-9a87-69fe75c89a78" CvElementArea="322, 206, 161, 44" CvTextArea="335, 220, 134, 17" CvTextArgument="Single candidate Entry" CvType="Button" DesignTimeRectangle="321, 209, 162, 38" ElementType="Text" ElementVisibilityArgument="Interactive" FullSelectorArgument="&lt;webctrl tag='A' class='ui-tabs-anchor' aaname='Single candidate Entry' /&gt;" Guid="b9e96a1a-7535-4e7a-a4bc-76d089165732" InformativeScreenshot="da9736db75d265aa0880fe6f1fcdc7fb.jpg" ScopeSelectorArgument="&lt;html title='Session Entries: 16/03/2026 3SG d.leblanc971@gmail.com' app='chrome.exe' /&gt;" SearchSteps="Selector, CV" Version="V6" WaitForReadyArgument="Interactive" />
+                                          </uix:NClick.Target>
+                                        </uix:NClick>
+                                        <uix:NTypeInto ActivateBefore="True" ClickBeforeMode="Single" ClipboardMode="Never" DisplayName="Type Into 'Username*'" EmptyFieldMode="SingleLine" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NTypeInto_10" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Text="[CurrentRow(&quot;email&quot;).ToString()]" Version="V5">
+                                          <uix:NTypeInto.Target>
+                                            <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" CVScreenId="17946972-6bac-40df-aed4-f2519f72c012" CvElementArea="200, 256, 352, 40" CvType="InputBox" DesignTimeRectangle="202, 258, 349, 37" ElementType="InputBox" ElementVisibilityArgument="Interactive" FuzzySelectorArgument="&lt;webctrl tag='INPUT' type='text' name='ctl00$ContentPlaceHolder$registeredCandidates1$txtLogin' class='form-control' aaname='Username*' matching:name='fuzzy' fuzzylevel:name='0.0' matching:class='fuzzy' fuzzylevel:class='0.0' fuzzylevel:aaname='0.0' /&gt;" Guid="ced3505d-789c-4bcf-8675-cd32a549c2ee" InformativeScreenshot="461711fd36c463c278b8208705f56bbf.jpg" IsResponsive="True" ScopeSelectorArgument="&lt;html title='Session Entries: 02/03/2026 4SG mathildeesmolis@gmail.com' app='chrome.exe' /&gt;" SearchSteps="FuzzySelector, CV" Version="V6" WaitForReadyArgument="Interactive">
+                                              <uix:TargetAnchorable.Anchors>
+                                                <scg:List x:TypeArguments="uix:ITarget" Capacity="1">
+                                                  <uix:Target CVScreenId="17946972-6bac-40df-aed4-f2519f72c012" CvTextArea="201, 226, 66, 13" CvTextArgument="Username*" CvType="Text" DesignTimeRectangle="202, 223, 65, 20" ElementType="Text" FuzzySelectorArgument="&lt;webctrl tag='LABEL' aaname='Username' type='' class='' matching:aaname='fuzzy' fuzzylevel:aaname='0.0' matching:class='fuzzy' fuzzylevel:class='0.0' check:innerText='Username*' /&gt;" Guid="16a26c9a-6598-4166-a2ee-d4a72325c536" SearchSteps="FuzzySelector, CV" />
+                                                </scg:List>
+                                              </uix:TargetAnchorable.Anchors>
+                                            </uix:TargetAnchorable>
+                                          </uix:NTypeInto.Target>
+                                          <uix:NTypeInto.VerifyOptions>
+                                            <uix:VerifyExecutionTypeIntoOptions Mode="Appears">
+                                              <uix:VerifyExecutionTypeIntoOptions.Retry>
+                                                <InArgument x:TypeArguments="x:Boolean" />
+                                              </uix:VerifyExecutionTypeIntoOptions.Retry>
+                                              <uix:VerifyExecutionTypeIntoOptions.Timeout>
+                                                <InArgument x:TypeArguments="x:Double" />
+                                              </uix:VerifyExecutionTypeIntoOptions.Timeout>
+                                            </uix:VerifyExecutionTypeIntoOptions>
+                                          </uix:NTypeInto.VerifyOptions>
+                                        </uix:NTypeInto>
+                                        <uix:NTypeInto ActivateBefore="True" ClickBeforeMode="Single" ClipboardMode="Never" DisplayName="Type Into 'Password*'" EmptyFieldMode="SingleLine" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NTypeInto_11" InteractionMode="HardwareEvents" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Text="[CurrentRow(&quot;password&quot;).ToString()]" Version="V5">
+                                          <uix:NTypeInto.Target>
+                                            <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" CVScreenId="ed9184f9-5e2c-46b1-b8f3-332ec25e0449" CvElementArea="200, 338, 352, 39" CvType="InputBox" DesignTimeRectangle="202, 340, 349, 37" ElementType="InputBoxPassword" ElementVisibilityArgument="Interactive" FuzzySelectorArgument="&lt;webctrl tag='INPUT' type='password' name='ctl00$ContentPlaceHolder$registeredCandidates1$txtPassword' class='form-control' aaname='Password*' matching:name='fuzzy' fuzzylevel:name='0.0' matching:class='fuzzy' fuzzylevel:class='0.0' fuzzylevel:aaname='0.0' /&gt;" Guid="5377ee3e-8e2a-43ae-8fe0-7ad0f54f8fb9" InformativeScreenshot="1711a407cabeb8eed3ae54712db27efe.jpg" ScopeSelectorArgument="&lt;html title='Session Entries: 02/03/2026 4SG mathildeesmolis@gmail.com' app='chrome.exe' /&gt;" SearchSteps="FuzzySelector, CV" Version="V6" WaitForReadyArgument="Interactive">
+                                              <uix:TargetAnchorable.Anchors>
+                                                <scg:List x:TypeArguments="uix:ITarget" Capacity="1">
+                                                  <uix:Target CVScreenId="ed9184f9-5e2c-46b1-b8f3-332ec25e0449" CvTextArea="201, 308, 62, 13" CvTextArgument="Password*" CvType="Text" DesignTimeRectangle="202, 305, 62, 20" ElementType="Text" FuzzySelectorArgument="&lt;webctrl tag='LABEL' aaname='Password' type='' class='' matching:aaname='fuzzy' fuzzylevel:aaname='0.0' matching:class='fuzzy' fuzzylevel:class='0.0' check:innerText='Password*' /&gt;" Guid="50241d18-7274-4710-a689-621344f84b5a" SearchSteps="FuzzySelector, CV" />
+                                                </scg:List>
+                                              </uix:TargetAnchorable.Anchors>
+                                            </uix:TargetAnchorable>
+                                          </uix:NTypeInto.Target>
+                                          <uix:NTypeInto.VerifyOptions>
+                                            <uix:VerifyExecutionTypeIntoOptions ExpectedText="[CurrentRow(&quot;password&quot;).ToString()]" Mode="Appears">
+                                              <uix:VerifyExecutionTypeIntoOptions.Retry>
+                                                <InArgument x:TypeArguments="x:Boolean" />
+                                              </uix:VerifyExecutionTypeIntoOptions.Retry>
+                                              <uix:VerifyExecutionTypeIntoOptions.Timeout>
+                                                <InArgument x:TypeArguments="x:Double" />
+                                              </uix:VerifyExecutionTypeIntoOptions.Timeout>
+                                            </uix:VerifyExecutionTypeIntoOptions>
+                                          </uix:NTypeInto.VerifyOptions>
+                                        </uix:NTypeInto>
+                                        <uix:NTypeInto ActivateBefore="True" ClickBeforeMode="Single" ClipboardMode="Never" DisplayName="Type Into 'First name*'" EmptyFieldMode="SingleLine" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NTypeInto_12" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Text="[CurrentRow(&quot;name&quot;).ToString()]" Version="V5">
+                                          <uix:NTypeInto.Target>
+                                            <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" CVScreenId="d00c3fc4-7a17-4fd2-8c85-4fedbef77a79" CvElementArea="200, 420, 352, 40" CvType="InputBox" DesignTimeRectangle="202, 422, 349, 37" ElementType="InputBox" ElementVisibilityArgument="Interactive" FuzzySelectorArgument="&lt;webctrl tag='INPUT' type='text' name='ctl00$ContentPlaceHolder$registeredCandidates1$txtFirstName' class='form-control' aaname='First name*' matching:name='fuzzy' fuzzylevel:name='0.0' matching:class='fuzzy' fuzzylevel:class='0.0' fuzzylevel:aaname='0.0' /&gt;" Guid="a303885b-ad4e-4efd-aba4-b924e6213a52" InformativeScreenshot="0cd4844712a8a1a641863655f9a9ab9b.jpg" IsResponsive="True" ScopeSelectorArgument="&lt;html title='Session Entries: 02/03/2026 4SG mathildeesmolis@gmail.com' app='chrome.exe' /&gt;" SearchSteps="FuzzySelector, CV" Version="V6" WaitForReadyArgument="Interactive">
+                                              <uix:TargetAnchorable.Anchors>
+                                                <scg:List x:TypeArguments="uix:ITarget" Capacity="1">
+                                                  <uix:Target CVScreenId="d00c3fc4-7a17-4fd2-8c85-4fedbef77a79" CvTextArea="201, 390, 68, 13" CvTextArgument="First name*" CvType="Text" DesignTimeRectangle="202, 387, 67, 20" ElementType="Text" FuzzySelectorArgument="&lt;webctrl tag='LABEL' aaname='First name' type='' class='' matching:aaname='fuzzy' fuzzylevel:aaname='0.0' matching:class='fuzzy' fuzzylevel:class='0.0' check:innerText='First name*' /&gt;" Guid="199070a4-6430-4057-a758-0369f31fd7d1" SearchSteps="FuzzySelector, CV" />
+                                                </scg:List>
+                                              </uix:TargetAnchorable.Anchors>
+                                            </uix:TargetAnchorable>
+                                          </uix:NTypeInto.Target>
+                                        </uix:NTypeInto>
+                                        <uix:NTypeInto ActivateBefore="True" ClickBeforeMode="Single" ClipboardMode="Never" DisplayName="Type Into 'Last name*'" EmptyFieldMode="SingleLine" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NTypeInto_13" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Text="[CurrentRow(&quot;surname&quot;).ToString()]" Version="V5">
+                                          <uix:NTypeInto.Target>
+                                            <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" CVScreenId="e526d515-3bde-4146-b5e3-3d09a7d73630" CvElementArea="200, 502, 352, 39" CvType="InputBox" DesignTimeRectangle="202, 504, 349, 37" ElementType="InputBox" ElementVisibilityArgument="Interactive" FuzzySelectorArgument="&lt;webctrl tag='INPUT' type='text' name='ctl00$ContentPlaceHolder$registeredCandidates1$txtSurname' class='form-control' aaname='Last name*' matching:name='fuzzy' fuzzylevel:name='0.0' matching:class='fuzzy' fuzzylevel:class='0.0' fuzzylevel:aaname='0.0' /&gt;" Guid="bb5a1a41-3e46-4662-894b-0eadb40554c0" InformativeScreenshot="2aecbfe58a34f75118dfe5855bb9486e.jpg" IsResponsive="True" ScopeSelectorArgument="&lt;html title='Session Entries: 02/03/2026 4SG mathildeesmolis@gmail.com' app='chrome.exe' /&gt;" SearchSteps="FuzzySelector, CV" Version="V6" WaitForReadyArgument="Interactive">
+                                              <uix:TargetAnchorable.Anchors>
+                                                <scg:List x:TypeArguments="uix:ITarget" Capacity="1">
+                                                  <uix:Target CVScreenId="e526d515-3bde-4146-b5e3-3d09a7d73630" CvTextArea="201, 472, 66, 13" CvTextArgument="Last name*" CvType="Text" DesignTimeRectangle="202, 469, 66, 20" ElementType="Text" FuzzySelectorArgument="&lt;webctrl tag='LABEL' aaname='Last name' type='' class='' matching:aaname='fuzzy' fuzzylevel:aaname='0.0' matching:class='fuzzy' fuzzylevel:class='0.0' check:innerText='Last name*' /&gt;" Guid="7db82a35-2a35-4518-969b-6ff7b761722b" SearchSteps="FuzzySelector, CV" />
+                                                </scg:List>
+                                              </uix:TargetAnchorable.Anchors>
+                                            </uix:TargetAnchorable>
+                                          </uix:NTypeInto.Target>
+                                        </uix:NTypeInto>
+                                        <uix:NTypeInto ActivateBefore="True" ClickBeforeMode="Single" ClipboardMode="Never" DisplayName="Type Into 'Email address*'" EmptyFieldMode="SingleLine" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NTypeInto_16" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Text="[CurrentRow(&quot;email&quot;).ToString()]" Version="V5">
+                                          <uix:NTypeInto.Target>
+                                            <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" CVScreenId="8b919758-7973-403f-9e5a-4e2cdcc40bf6" CvElementArea="194, 600, 351, 41" CvType="InputBox" DesignTimeRectangle="195, 602, 349, 37" ElementType="InputBox" ElementVisibilityArgument="Interactive" FuzzySelectorArgument="&lt;webctrl tag='INPUT' id='txtEmailAddress' type='text' class='form-control' aaname='Email address* ' matching:id='fuzzy' fuzzylevel:id='0.0' matching:class='fuzzy' fuzzylevel:class='0.0' fuzzylevel:aaname='0.0' /&gt;" Guid="35365c87-5540-4f60-8477-424d4c8b0c70" InformativeScreenshot="875a479079a678fb89c63f52c3b519b8.jpg" IsResponsive="True" ScopeSelectorArgument="&lt;html title='Session Entries: 28/02/2026 1SG W tehaupro@gmail.com' app='chrome.exe' /&gt;" SearchSteps="FuzzySelector, CV" Version="V6" WaitForReadyArgument="Interactive">
+                                              <uix:TargetAnchorable.Anchors>
+                                                <scg:List x:TypeArguments="uix:ITarget" Capacity="1">
+                                                  <uix:Target CVScreenId="8b919758-7973-403f-9e5a-4e2cdcc40bf6" CvTextArea="194, 570, 87, 13" CvTextArgument="Email address*" CvType="Text" DesignTimeRectangle="195, 567, 87, 20" ElementType="Text" FuzzySelectorArgument="&lt;webctrl tag='LABEL' aaname='Email address ' type='' class='' matching:aaname='fuzzy' fuzzylevel:aaname='0.0' matching:class='fuzzy' fuzzylevel:class='0.0' check:innerText='Email address*' /&gt;" Guid="1e72f7ca-16ac-4f91-aa5e-148d4f5d207c" SearchSteps="FuzzySelector, CV" />
+                                                </scg:List>
+                                              </uix:TargetAnchorable.Anchors>
+                                            </uix:TargetAnchorable>
+                                          </uix:NTypeInto.Target>
+                                        </uix:NTypeInto>
+                                        <uix:NSelectItem DisplayName="Select Item 'DD'" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NSelectItem_1" Item="[CurrentRow(&quot;date_of_birth&quot;).ToString().Split(&quot;/&quot;c)(0)]" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Version="V5">
+                                          <uix:NSelectItem.Items>
+                                            <scg:List x:TypeArguments="x:String" Capacity="32">
+                                              <x:String>DD</x:String>
+                                              <x:String>01</x:String>
+                                              <x:String>02</x:String>
+                                              <x:String>03</x:String>
+                                              <x:String>04</x:String>
+                                              <x:String>05</x:String>
+                                              <x:String>06</x:String>
+                                              <x:String>07</x:String>
+                                              <x:String>08</x:String>
+                                              <x:String>09</x:String>
+                                              <x:String>10</x:String>
+                                              <x:String>11</x:String>
+                                              <x:String>12</x:String>
+                                              <x:String>13</x:String>
+                                              <x:String>14</x:String>
+                                              <x:String>15</x:String>
+                                              <x:String>16</x:String>
+                                              <x:String>17</x:String>
+                                              <x:String>18</x:String>
+                                              <x:String>19</x:String>
+                                              <x:String>20</x:String>
+                                              <x:String>21</x:String>
+                                              <x:String>22</x:String>
+                                              <x:String>23</x:String>
+                                              <x:String>24</x:String>
+                                              <x:String>25</x:String>
+                                              <x:String>26</x:String>
+                                              <x:String>27</x:String>
+                                              <x:String>28</x:String>
+                                              <x:String>29</x:String>
+                                              <x:String>30</x:String>
+                                              <x:String>31</x:String>
+                                            </scg:List>
+                                          </uix:NSelectItem.Items>
+                                          <uix:NSelectItem.Target>
+                                            <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" DesignTimeRectangle="195, 388, 159, 37" ElementType="DropDown" ElementVisibilityArgument="Interactive" FullSelectorArgument="&lt;webctrl tag='SELECT' /&gt;" Guid="163aa941-c084-4058-9cd3-d5f63fe99836" InformativeScreenshot="765a000ef4143da859576af344fe060d.jpg" ScopeSelectorArgument="&lt;html title='Session Entries: 28/02/2026 1SG W tehaupro@gmail.com' app='chrome.exe' /&gt;" SearchSteps="Selector" Version="V6" WaitForReadyArgument="Interactive" />
+                                          </uix:NSelectItem.Target>
+                                        </uix:NSelectItem>
+                                        <uix:NSelectItem DisplayName="Select Item 'MM'" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NSelectItem_2" Item="[CurrentRow(&quot;date_of_birth&quot;).ToString().Split(&quot;/&quot;c)(1)]" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Version="V5">
+                                          <uix:NSelectItem.Items>
+                                            <scg:List x:TypeArguments="x:String" Capacity="13">
+                                              <x:String>MM</x:String>
+                                              <x:String>01</x:String>
+                                              <x:String>02</x:String>
+                                              <x:String>03</x:String>
+                                              <x:String>04</x:String>
+                                              <x:String>05</x:String>
+                                              <x:String>06</x:String>
+                                              <x:String>07</x:String>
+                                              <x:String>08</x:String>
+                                              <x:String>09</x:String>
+                                              <x:String>10</x:String>
+                                              <x:String>11</x:String>
+                                              <x:String>12</x:String>
+                                            </scg:List>
+                                          </uix:NSelectItem.Items>
+                                          <uix:NSelectItem.Target>
+                                            <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" CVScreenId="66a31d66-046b-494a-a0ae-d957c721c669" CvElementArea="382, 386, 164, 40" CvType="InputBox" DesignTimeRectangle="384, 388, 160, 37" ElementType="DropDown" ElementVisibilityArgument="Interactive" FullSelectorArgument="&lt;webctrl tag='SELECT' name='ctl00$ContentPlaceHolder$registeredCandidates1$ddlMonth' /&gt;" Guid="609b488e-e59f-48ce-8087-e6f9edeac2d0" InformativeScreenshot="734ab83e34e5eef2ae12d83b3d013fab.jpg" ScopeSelectorArgument="&lt;html title='Session Entries: 28/02/2026 1SG W tehaupro@gmail.com' app='chrome.exe' /&gt;" SearchSteps="Selector, CV" Version="V6" WaitForReadyArgument="Interactive" />
+                                          </uix:NSelectItem.Target>
+                                        </uix:NSelectItem>
+                                        <uix:NSelectItem DisplayName="Select Item 'YYYY'" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NSelectItem_3" Item="[CurrentRow(&quot;date_of_birth&quot;).ToString().Split(&quot;/&quot;c)(2)]" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Version="V5">
+                                          <uix:NSelectItem.Items>
+                                            <scg:List x:TypeArguments="x:String" Capacity="50">
+                                              <x:String>YYYY</x:String>
+                                              <x:String>2026</x:String>
+                                              <x:String>2025</x:String>
+                                              <x:String>2024</x:String>
+                                              <x:String>2023</x:String>
+                                              <x:String>2022</x:String>
+                                              <x:String>2021</x:String>
+                                              <x:String>2020</x:String>
+                                              <x:String>2019</x:String>
+                                              <x:String>2018</x:String>
+                                              <x:String>2017</x:String>
+                                              <x:String>2016</x:String>
+                                              <x:String>2015</x:String>
+                                              <x:String>2014</x:String>
+                                              <x:String>2013</x:String>
+                                              <x:String>2012</x:String>
+                                              <x:String>2011</x:String>
+                                              <x:String>2010</x:String>
+                                              <x:String>2009</x:String>
+                                              <x:String>2008</x:String>
+                                              <x:String>2007</x:String>
+                                              <x:String>2006</x:String>
+                                              <x:String>2005</x:String>
+                                              <x:String>2004</x:String>
+                                              <x:String>2003</x:String>
+                                              <x:String>2002</x:String>
+                                              <x:String>2001</x:String>
+                                              <x:String>2000</x:String>
+                                              <x:String>1999</x:String>
+                                              <x:String>1998</x:String>
+                                              <x:String>1997</x:String>
+                                              <x:String>1996</x:String>
+                                              <x:String>1995</x:String>
+                                              <x:String>1994</x:String>
+                                              <x:String>1993</x:String>
+                                              <x:String>1992</x:String>
+                                              <x:String>1991</x:String>
+                                              <x:String>1990</x:String>
+                                              <x:String>1989</x:String>
+                                              <x:String>1988</x:String>
+                                              <x:String>1987</x:String>
+                                              <x:String>1986</x:String>
+                                              <x:String>1985</x:String>
+                                              <x:String>1984</x:String>
+                                              <x:String>1983</x:String>
+                                              <x:String>1982</x:String>
+                                              <x:String>1981</x:String>
+                                              <x:String>1980</x:String>
+                                              <x:String>1979</x:String>
+                                              <x:String>1978</x:String>
+                                            </scg:List>
+                                          </uix:NSelectItem.Items>
+                                          <uix:NSelectItem.Target>
+                                            <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" CVScreenId="66a31d66-046b-494a-a0ae-d957c721c669" CvElementArea="572, 387, 163, 39" CvType="InputBox" DesignTimeRectangle="574, 388, 159, 37" ElementType="DropDown" ElementVisibilityArgument="Interactive" FullSelectorArgument="&lt;webctrl tag='SELECT' name='ctl00$ContentPlaceHolder$registeredCandidates1$ddlYear' /&gt;" Guid="d7a6b055-47fc-42a4-8e9e-cc2dee23a7ed" InformativeScreenshot="53651b0367b4a460b51448ca0b5ffd68.jpg" ScopeSelectorArgument="&lt;html title='Session Entries: 28/02/2026 1SG W tehaupro@gmail.com' app='chrome.exe' /&gt;" SearchSteps="Selector, CV" Version="V6" WaitForReadyArgument="Interactive" />
+                                          </uix:NSelectItem.Target>
+                                        </uix:NSelectItem>
+                                        <uix:NSelectItem DisplayName="Select Item 'Gender*'" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NSelectItem_4" Item="[CurrentRow(&quot;gender&quot;).ToString()]" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Version="V5">
+                                          <uix:NSelectItem.Items>
+                                            <scg:List x:TypeArguments="x:String" Capacity="5">
+                                              <x:String>Please select</x:String>
+                                              <x:String>Female</x:String>
+                                              <x:String>Male</x:String>
+                                              <x:String>Other</x:String>
+                                              <x:String>Prefer Not To Specify</x:String>
+                                            </scg:List>
+                                          </uix:NSelectItem.Items>
+                                          <uix:NSelectItem.Target>
+                                            <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" CVScreenId="7b940eac-312d-46b4-9806-3717fa6a8743" CvElementArea="194, 453, 350, 39" CvType="InputBox" DesignTimeRectangle="195, 454, 349, 37" ElementType="DropDown" ElementVisibilityArgument="Interactive" FuzzySelectorArgument="&lt;webctrl tag='SELECT' name='ctl00$ContentPlaceHolder$registeredCandidates1$ddlGender' type='' class='form-control normal-dropdown' aaname='Gender*' matching:name='fuzzy' fuzzylevel:name='0.0' matching:class='fuzzy' fuzzylevel:class='0.0' fuzzylevel:aaname='0.0' /&gt;" Guid="4375a7a9-25fe-45be-971e-5737d362d4c2" InformativeScreenshot="e421883a7b11641a133b21c8c6bb8011.jpg" ScopeSelectorArgument="&lt;html title='Session Entries: 16/03/2026 3SG d.leblanc971@gmail.com' app='chrome.exe' /&gt;" SearchSteps="FuzzySelector, CV" Version="V6" WaitForReadyArgument="Interactive">
+                                              <uix:TargetAnchorable.Anchors>
+                                                <scg:List x:TypeArguments="uix:ITarget" Capacity="1">
+                                                  <uix:Target CVScreenId="7b940eac-312d-46b4-9806-3717fa6a8743" CvTextArea="193, 422, 50, 13" CvTextArgument="Gender*" CvType="Text" DesignTimeRectangle="195, 419, 48, 20" ElementType="Text" FuzzySelectorArgument="&lt;webctrl tag='LABEL' aaname='Gender' type='' class='' matching:aaname='fuzzy' fuzzylevel:aaname='0.0' matching:class='fuzzy' fuzzylevel:class='0.0' check:innerText='Gender*' /&gt;" Guid="980776be-a2da-4b00-b28d-1796c2c59cce" SearchSteps="FuzzySelector, CV" />
+                                                </scg:List>
+                                              </uix:TargetAnchorable.Anchors>
+                                            </uix:TargetAnchorable>
+                                          </uix:NSelectItem.Target>
+                                        </uix:NSelectItem>
+                                        <uix:NSelectItem DisplayName="Select Item 'Nationality*'" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NSelectItem_5" Item="[CurrentRow(&quot;nationality&quot;).ToString()]" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Version="V5">
+                                          <uix:NSelectItem.Items>
+                                            <scg:List x:TypeArguments="x:String" Capacity="50">
+                                              <x:String>Botswana</x:String>
+                                              <x:String>Bouvet Island</x:String>
+                                              <x:String>Brazil</x:String>
+                                              <x:String>British Indian Ocean Territory</x:String>
+                                              <x:String>Brunei Darussalam</x:String>
+                                              <x:String>Bulgaria</x:String>
+                                              <x:String>Burkina Faso</x:String>
+                                              <x:String>Burundi</x:String>
+                                              <x:String>Cabo Verde</x:String>
+                                              <x:String>Cambodia</x:String>
+                                              <x:String>Cameroon</x:String>
+                                              <x:String>Canada</x:String>
+                                              <x:String>Cayman Islands</x:String>
+                                              <x:String>Central African Republic</x:String>
+                                              <x:String>Chad</x:String>
+                                              <x:String>Chile</x:String>
+                                              <x:String>China</x:String>
+                                              <x:String>Christmas Island</x:String>
+                                              <x:String>Cocos (Keeling) Islands</x:String>
+                                              <x:String>Colombia</x:String>
+                                              <x:String>Comoros</x:String>
+                                              <x:String>Congo</x:String>
+                                              <x:String>Congo (the Democratic Republic)</x:String>
+                                              <x:String>Cook Islands</x:String>
+                                              <x:String>Costa Rica</x:String>
+                                              <x:String>Côte d'Ivoire</x:String>
+                                              <x:String>Croatia</x:String>
+                                              <x:String>Cuba</x:String>
+                                              <x:String>Curaçao</x:String>
+                                              <x:String>Cyprus</x:String>
+                                              <x:String>Czech Republic</x:String>
+                                              <x:String>Denmark</x:String>
+                                              <x:String>Djibouti</x:String>
+                                              <x:String>Dominica</x:String>
+                                              <x:String>Dominican Republic</x:String>
+                                              <x:String>Ecuador</x:String>
+                                              <x:String>Egypt</x:String>
+                                              <x:String>El Salvador</x:String>
+                                              <x:String>Equatorial Guinea</x:String>
+                                              <x:String>Eritrea</x:String>
+                                              <x:String>Estonia</x:String>
+                                              <x:String>Ethiopia</x:String>
+                                              <x:String>Falkland Islands</x:String>
+                                              <x:String>Faroe Islands</x:String>
+                                              <x:String>Fiji</x:String>
+                                              <x:String>Finland</x:String>
+                                              <x:String>France</x:String>
+                                              <x:String>French Guiana</x:String>
+                                              <x:String>French Polynesia</x:String>
+                                              <x:String>French Southern Territories (the)</x:String>
+                                            </scg:List>
+                                          </uix:NSelectItem.Items>
+                                          <uix:NSelectItem.Target>
+                                            <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" CVScreenId="1e339230-def9-4de9-81cf-3b4019fc6a69" CvElementArea="194, 534, 350, 40" CvType="InputBox" DesignTimeRectangle="195, 536, 349, 37" ElementType="DropDown" ElementVisibilityArgument="Interactive" FuzzySelectorArgument="&lt;webctrl tag='SELECT' name='ctl00$ContentPlaceHolder$registeredCandidates1$ddlNationality' type='' class='form-control normal-dropdown' aaname='Nationality*' matching:name='fuzzy' fuzzylevel:name='0.0' matching:class='fuzzy' fuzzylevel:class='0.0' fuzzylevel:aaname='0.0' /&gt;" Guid="6b77ec0c-391c-40fe-be1d-2dfa59a2cd7e" InformativeScreenshot="ea9fced0361dde9cb2d93bfc429cd887.jpg" ScopeSelectorArgument="&lt;html title='Session Entries: 16/03/2026 3SG d.leblanc971@gmail.com' app='chrome.exe' /&gt;" SearchSteps="FuzzySelector, CV" Version="V6" WaitForReadyArgument="Interactive">
+                                              <uix:TargetAnchorable.Anchors>
+                                                <scg:List x:TypeArguments="uix:ITarget" Capacity="1">
+                                                  <uix:Target CVScreenId="1e339230-def9-4de9-81cf-3b4019fc6a69" CvTextArea="193, 504, 72, 17" CvTextArgument="Nationality*" CvType="Text" DesignTimeRectangle="195, 501, 70, 20" ElementType="Text" FuzzySelectorArgument="&lt;webctrl tag='LABEL' aaname='Nationality' type='' class='' matching:aaname='fuzzy' fuzzylevel:aaname='0.0' matching:class='fuzzy' fuzzylevel:class='0.0' check:innerText='Nationality*' /&gt;" Guid="242356a6-590f-41e0-8645-3cd31c2c55a8" SearchSteps="FuzzySelector, CV" />
+                                                </scg:List>
+                                              </uix:TargetAnchorable.Anchors>
+                                            </uix:TargetAnchorable>
+                                          </uix:NSelectItem.Target>
+                                        </uix:NSelectItem>
+                                        <uix:NTypeInto ActivateBefore="True" ClickBeforeMode="Single" ClipboardMode="Never" DisplayName="Type Into 'Identification Document…'" EmptyFieldMode="SingleLine" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NTypeInto_18" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Text="[CurrentRow(&quot;id_number&quot;).ToString()]" Version="V5">
+                                          <uix:NTypeInto.Target>
+                                            <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" CVScreenId="1e339230-def9-4de9-81cf-3b4019fc6a69" CvElementArea="193, 616, 351, 40" CvType="InputBox" DesignTimeRectangle="195, 618, 349, 37" ElementType="InputBox" ElementVisibilityArgument="Interactive" FuzzySelectorArgument="&lt;webctrl tag='INPUT' type='text' name='ctl00$ContentPlaceHolder$registeredCandidates1$txtidentitydocumentnumber' class='form-control' aaname='Identification Document Number*' matching:name='fuzzy' fuzzylevel:name='0.0' matching:class='fuzzy' fuzzylevel:class='0.0' fuzzylevel:aaname='0.0' /&gt;" Guid="3740a343-c5e6-4f60-8fd1-27416cb8bb0c" InformativeScreenshot="669d619207062aa601c425cbdca65019.jpg" IsResponsive="True" ScopeSelectorArgument="&lt;html title='Session Entries: 16/03/2026 3SG d.leblanc971@gmail.com' app='chrome.exe' /&gt;" SearchSteps="FuzzySelector, CV" Version="V6" WaitForReadyArgument="Interactive">
+                                              <uix:TargetAnchorable.Anchors>
+                                                <scg:List x:TypeArguments="uix:ITarget" Capacity="1">
+                                                  <uix:Target CVScreenId="1e339230-def9-4de9-81cf-3b4019fc6a69" CvTextArea="193, 585, 200, 15" CvTextArgument="Identification Document Number*" CvType="Text" DesignTimeRectangle="195, 583, 198, 20" ElementType="Text" FuzzySelectorArgument="&lt;webctrl tag='LABEL' aaname='Identification Document Number' type='' class='' matching:aaname='fuzzy' fuzzylevel:aaname='0.0' matching:class='fuzzy' fuzzylevel:class='0.0' check:innerText='Identification Document Number*' /&gt;" Guid="3eb67589-7c62-48ef-a18c-275c08e312d2" SearchSteps="FuzzySelector, CV" />
+                                                </scg:List>
+                                              </uix:TargetAnchorable.Anchors>
+                                            </uix:TargetAnchorable>
+                                          </uix:NTypeInto.Target>
+                                        </uix:NTypeInto>
+                                        <uix:NClick ActivateBefore="True" ClickType="Single" DisplayName="Click 'Identification Document…'" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NClick_54" KeyModifiers="None" MouseButton="Left" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Version="V5">
+                                          <uix:NClick.Target>
+                                            <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" CVScreenId="1e339230-def9-4de9-81cf-3b4019fc6a69" CvElementArea="193, 616, 351, 40" CvType="InputBox" DesignTimeRectangle="195, 618, 349, 37" ElementType="InputBox" ElementVisibilityArgument="Interactive" FuzzySelectorArgument="&lt;webctrl tag='INPUT' type='text' name='ctl00$ContentPlaceHolder$registeredCandidates1$txtidentitydocumentnumber' class='form-control' aaname='Identification Document Number*' matching:name='fuzzy' fuzzylevel:name='0.0' matching:class='fuzzy' fuzzylevel:class='0.0' fuzzylevel:aaname='0.0' /&gt;" Guid="b56974d0-9ebe-4d99-81b9-8e37b86ad087" InformativeScreenshot="669d619207062aa601c425cbdca65019.jpg" IsResponsive="True" ScopeSelectorArgument="&lt;html title='Session Entries: 16/03/2026 3SG d.leblanc971@gmail.com' app='chrome.exe' /&gt;" SearchSteps="FuzzySelector, CV" Version="V6" WaitForReadyArgument="Interactive">
+                                              <uix:TargetAnchorable.Anchors>
+                                                <scg:List x:TypeArguments="uix:ITarget" Capacity="1">
+                                                  <uix:Target CVScreenId="1e339230-def9-4de9-81cf-3b4019fc6a69" CvTextArea="193, 585, 200, 15" CvTextArgument="Identification Document Number*" CvType="Text" DesignTimeRectangle="195, 583, 198, 20" ElementType="Text" FuzzySelectorArgument="&lt;webctrl tag='LABEL' aaname='Identification Document Number' type='' class='' matching:aaname='fuzzy' fuzzylevel:aaname='0.0' matching:class='fuzzy' fuzzylevel:class='0.0' check:innerText='Identification Document Number*' /&gt;" Guid="c4dbed77-a91c-4fe5-853a-7224f80ffb5c" SearchSteps="FuzzySelector, CV" />
+                                                </scg:List>
+                                              </uix:TargetAnchorable.Anchors>
+                                            </uix:TargetAnchorable>
+                                          </uix:NClick.Target>
+                                        </uix:NClick>
+                                        <uix:NClick ActivateBefore="True" ClickType="Single" DisplayName="Click 'Save'" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NClick_62" KeyModifiers="None" MouseButton="Left" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Version="V5">
+                                          <uix:NClick.Target>
+                                            <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" DesignTimeRectangle="202, 634, 60, 37" ElementType="Button" ElementVisibilityArgument="Interactive" FullSelectorArgument="&lt;webctrl tag='INPUT' type='submit' /&gt;" Guid="2723adb4-00da-4ce3-a57c-21508a5dbd8b" InformativeScreenshot="4ee5fdb9d64632e7df2fb8076b627e48.jpg" ScopeSelectorArgument="&lt;html title='Session Entries: 25/05/2026 2SG borel-martial.domgue-defo@polytechnique.edu' app='chrome.exe' /&gt;" SearchSteps="Selector" Version="V6" WaitForReadyArgument="Interactive" />
+                                          </uix:NClick.Target>
+                                        </uix:NClick>
+                                        <uix:NClick ActivateBefore="True" ClickType="[UiPath.UIAutomationNext.Enums.NClickType.Double]" DisplayName="Click 'Back to Session List'" HealingAgentBehavior="SameAsCard" sap2010:WorkflowViewState.IdRef="NClick_58" KeyModifiers="None" MouseButton="Left" ScopeIdentifier="85fcce01-a1c6-4790-868b-04ea8a373435" Version="V5">
+                                          <uix:NClick.Target>
+                                            <uix:TargetAnchorable BrowserURL="metritests.com/metrica/sessions.aspx" DesignTimeRectangle="179, 654, 146, 37" ElementType="Button" ElementVisibilityArgument="Interactive" FullSelectorArgument="&lt;webctrl tag='INPUT' type='submit' name='ctl00$ContentPlaceHolder$registeredCandidates1$btnBackToSessionList' /&gt;" Guid="a66b05b9-de6a-44c3-9b45-4cbaff22353b" InformativeScreenshot="a6850c241d5d389a5dda8a2829a50102.jpg" ScopeSelectorArgument="&lt;html title='Session Entries:23/03/2026 4SG mathieu.bourdoux@icloud.com' app='chrome.exe' /&gt;" SearchSteps="Selector" Version="V6" WaitForReadyArgument="Interactive" />
+                                          </uix:NClick.Target>
+                                        </uix:NClick>
+                                      </Sequence>
+                                    </Sequence>
+                                  </If.Else>
+                                </If>
+                              </Sequence>
+                            </If.Else>
+                          </If>
+                          <Assign DisplayName="Assign Variable Value" sap2010:WorkflowViewState.IdRef="Assign_3">
+                            <Assign.To>
+                              <OutArgument x:TypeArguments="x:Boolean">[is_sucess]</OutArgument>
+                            </Assign.To>
+                            <Assign.Value>
+                              <InArgument x:TypeArguments="x:Boolean">True</InArgument>
+                            </Assign.Value>
+                          </Assign>
+                          <uga:WriteRowConnections AllFields="{x:Null}" ArrayRow="{x:Null}" ConnectionAccountName="{x:Null}" ContinueOnError="{x:Null}" ManualEntrySpreadsheetId="{x:Null}" Spreadsheet="{x:Null}" TemplateBrowserItemFriendlyName="{x:Null}" TemplateBrowserItemId="{x:Null}" AuthScopesInvalid="False" BrowserItemFriendlyName="orders.csv" BrowserItemId="https://docs.google.com/spreadsheets/d/1sikMfrVbG5OdFMeNggN2mQuW17TWlwVfZpnvOBFDGoc/edit?usp=drivesdk" ConnectionId="579c3d5c-e9c2-4d7c-b3be-1be0d1dc836c" DataRow="[CurrentRow]" DataType="DataRow" DisplayName="Write Row" HasHeaders="False" sap2010:WorkflowViewState.IdRef="WriteRowConnections_1" ItemSelectionMode="Browse" Range="'Feuille 1'" RowPosition="0" UseConnectionService="True" WorkingWithTemplateSpreadsheet="False" WriteMode="Append">
+                            <uga:WriteRowConnections.FileIdBackup>
+                              <usau:BackupSlot x:TypeArguments="ugade:EDriveItemMode" x:Name="__ReferenceID1" StoredValue="Browse">
+                                <usau:BackupSlot.BackupValues>
+                                  <scg:Dictionary x:TypeArguments="ugade:EDriveItemMode, scg:List(x:Object)" />
+                                </usau:BackupSlot.BackupValues>
+                              </usau:BackupSlot>
+                            </uga:WriteRowConnections.FileIdBackup>
+                            <uga:WriteRowConnections.InputDataTypeBackup>
+                              <usau:BackupSlot x:TypeArguments="ugase:InputDataType" StoredValue="DataRow">
+                                <usau:BackupSlot.BackupValues>
+                                  <scg:Dictionary x:TypeArguments="ugase:InputDataType, scg:List(x:Object)" />
+                                </usau:BackupSlot.BackupValues>
+                              </usau:BackupSlot>
+                            </uga:WriteRowConnections.InputDataTypeBackup>
+                            <uga:WriteRowConnections.Item>
+                              <ugam:DriveItemArgument Backup="{x:Reference __ReferenceID1}" ConnectionDescriptor="{x:Null}" Existing="{x:Null}" FullPath="{x:Null}" IdOrUrl="{x:Null}" ParentId="{x:Null}" ParentIdFriendlyName="{x:Null}" RelativePath="{x:Null}" BrowserId="https://docs.google.com/spreadsheets/d/1sikMfrVbG5OdFMeNggN2mQuW17TWlwVfZpnvOBFDGoc/edit?usp=drivesdk" ConnectionKey="579c3d5c-e9c2-4d7c-b3be-1be0d1dc836c" FriendlyName="orders.csv" FullPathHint="My Drive/orders.csv" InputMode="Browse">
+                                <ugam:DriveItemArgument.DriveId>
+                                  <InArgument x:TypeArguments="x:String" />
+                                </ugam:DriveItemArgument.DriveId>
+                                <ugam:DriveItemArgument.ParentIdFullPathHint>
+                                  <InArgument x:TypeArguments="x:String">
+                                    <Literal x:TypeArguments="x:String" Value="" />
+                                  </InArgument>
+                                </ugam:DriveItemArgument.ParentIdFullPathHint>
+                              </ugam:DriveItemArgument>
+                            </uga:WriteRowConnections.Item>
+                            <uga:WriteRowConnections.RangeWriteModeBackup>
+                              <usau:BackupSlot x:TypeArguments="ugase:RangeWriteMode" StoredValue="Append">
+                                <usau:BackupSlot.BackupValues>
+                                  <scg:Dictionary x:TypeArguments="ugase:RangeWriteMode, scg:List(x:Object)" />
+                                </usau:BackupSlot.BackupValues>
+                              </usau:BackupSlot>
+                            </uga:WriteRowConnections.RangeWriteModeBackup>
+                            <uga:WriteRowConnections.State>
+                              <uga:ActivityState />
+                            </uga:WriteRowConnections.State>
+                          </uga:WriteRowConnections>
+                        </Sequence>
+                      </TryCatch.Try>
+                      <TryCatch.Catches>
+                        <Catch x:TypeArguments="s:Exception">
+                          <ActivityAction x:TypeArguments="s:Exception">
+                            <ActivityAction.Argument>
+                              <DelegateInArgument x:TypeArguments="s:Exception" Name="exception" />
+                            </ActivityAction.Argument>
+                            <Sequence sap2010:WorkflowViewState.IdRef="Sequence_47">
+                              <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_2" Message="[responseContent.TextContent]" />
+                              <Assign DisplayName="Assign Variable Value 2" sap2010:WorkflowViewState.IdRef="Assign_5">
+                                <Assign.To>
+                                  <OutArgument x:TypeArguments="x:Boolean">[is_sucess]</OutArgument>
+                                </Assign.To>
+                                <Assign.Value>
+                                  <InArgument x:TypeArguments="x:Boolean">False</InArgument>
+                                </Assign.Value>
+                              </Assign>
+                            </Sequence>
+                          </ActivityAction>
+                        </Catch>
+                      </TryCatch.Catches>
+                      <TryCatch.Finally>
+                        <Sequence sap2010:WorkflowViewState.IdRef="Sequence_46">
+                          <Assign DisplayName="Assign Variable Value 5" sap2010:WorkflowViewState.IdRef="Assign_8">
+                            <Assign.To>
+                              <OutArgument x:TypeArguments="x:Object">[final_dict(CurrentRow("order_number").ToString)]</OutArgument>
+                            </Assign.To>
+                            <Assign.Value>
+                              <InArgument x:TypeArguments="x:Object" xml:space="preserve">[New Dictionary(Of String, Object) From {
+    {"email", CurrentRow("email")},
+    {"password", CurrentRow("password")},
+    {"success", is_sucess}
+}]</InArgument>
+                            </Assign.Value>
+                          </Assign>
+                        </Sequence>
+                      </TryCatch.Finally>
+                    </TryCatch>
+                  </Sequence>
+                </ActivityAction>
+              </ui:ForEachRow.Body>
+            </ui:ForEachRow>
+          </Sequence>
+        </ActivityAction>
+      </uix:NApplicationCard.Body>
+      <uix:NApplicationCard.TargetApp>
+        <uix:TargetApp Area="0, 0, 0, 0" BrowserType="Chrome" InformativeScreenshot="14501f2555a4ccb45e5b5ee298cf68e8.png" Selector="&lt;html title='Welcome to the Cambridge English Test Portal' app='chrome.exe' /&gt;" Url="https://www.metritests.com/metrica/default.aspx?ReturnUrl=%2fmetrica%2fsessions.aspx%3finstitution%3dFR731&amp;institution=FR731" Version="V2" />
+      </uix:NApplicationCard.TargetApp>
+    </uix:NApplicationCard>
+    <WriteLine DisplayName="Write Line" sap2010:WorkflowViewState.IdRef="WriteLine_1" Text="[final_dict.ToString()]" />
+    <Assign DisplayName="Assign Variable Value 6" sap2010:WorkflowViewState.IdRef="Assign_9">
+      <Assign.To>
+        <OutArgument x:TypeArguments="x:String">[jsonBody]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="x:String">[Newtonsoft.Json.JsonConvert.SerializeObject(final_dict)]</InArgument>
+      </Assign.Value>
+    </Assign>
+    <uwah:NetHttpRequest BasicAuthPassword="{x:Null}" BasicAuthSecurePassword="{x:Null}" BasicAuthUsername="{x:Null}" BinaryPayload="{x:Null}" ClientCertPassword="{x:Null}" ClientCertPath="{x:Null}" ClientCertSecurePassword="{x:Null}" Cookies="{x:Null}" CustomNegotiatedAuthCredentials="{x:Null}" FilePath="{x:Null}" FormData="{x:Null}" LocalFiles="{x:Null}" OAuthToken="{x:Null}" OutputFileName="{x:Null}" OutputFileTargetFolder="{x:Null}" Parameters="{x:Null}" PathResource="{x:Null}" ProxyConfiguration="{x:Null}" ResourceFiles="{x:Null}" AuthenticationType="None" ContinueOnError="True" DisableSslVerification="False" DisplayName="HTTP Request 1" EnableCookies="True" FileOverwrite="AutoRename" FollowRedirects="True" FormDataParts="[New List (Of FormDataPart) From _&#xA;{&#xA; New FileFormDataPart(),&#xA; New BinaryFormDataPart(),&#xA; New TextFormDataPart()&#xA;}]" Headers="[New Dictionary(Of System.String, System.String) From { {&quot;Content-Type&quot;, &quot;application/json&quot;} }]" sap2010:WorkflowViewState.IdRef="NetHttpRequest_2" InitialDelay="500" MaxRedirects="3" MaxRetryAfterDelay="30000" Method="POST" Multiplier="2" PreferRetryAfterValue="True" RequestBodyType="Text" RequestUrl="https://cambridge-rpa.onrender.com/update_status" RetryCount="3" RetryPolicyType="Basic" RetryStatusCodes="[New List (Of System.Net.HttpStatusCode) From _&#xA;{&#xA; System.Net.HttpStatusCode.RequestTimeout,&#xA; System.Net.HttpStatusCode.TooManyRequests,&#xA; System.Net.HttpStatusCode.InternalServerError,&#xA; System.Net.HttpStatusCode.BadGateway,&#xA; System.Net.HttpStatusCode.ServiceUnavailable,&#xA; System.Net.HttpStatusCode.GatewayTimeout&#xA;}]" SaveRawRequestResponse="False" SaveResponseAsFile="False" TextPayload="[jsonBody]" TextPayloadContentType="application/json" TextPayloadEncoding="UTF-8" TlsProtocol="Automatic" UseJitter="True" UseOsNegotiatedAuthCredentials="True">
+      <uwah:NetHttpRequest.TimeoutInMiliseconds>
+        <InArgument x:TypeArguments="s:Nullable(x:Int32)">
+          <Literal x:TypeArguments="s:Nullable(x:Int32)" Value="120000" />
+        </InArgument>
+      </uwah:NetHttpRequest.TimeoutInMiliseconds>
+    </uwah:NetHttpRequest>
+  </Sequence>
+</Activity>
