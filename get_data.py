@@ -150,7 +150,7 @@ def main(page):
             rows = page.locator(ROWS_SEL)
             row = rows.nth(i)
             row.wait_for(state="visible")
-            if row.locator("td[data-p='velart_id']").inner_text() == "LINGUASKILL Anywhere":
+            if row.locator("td[data-p='velart_id']").inner_text() == "LINGUASKILL":
                 row.click()
                 info = scrape(page) #traiter le cas ou c'est pas des PAS un LINGUASKILL GENERAL
                 data.append(info)
