@@ -6,3 +6,8 @@
 .entities/EntitiesBundle.*.zip
 remote-repository.config.json
 .sw-path-marker
+**/.entities/EntitiesBundle.*.zip
+venv/
+.venv/
+__pycache__/
+**/.agent-builder/
