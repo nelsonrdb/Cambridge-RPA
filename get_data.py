@@ -145,7 +145,8 @@ def set_statusWF(page):
 def main(page):
     page.set_default_timeout(5000)
     data = []
-    for i in range(page.locator(ROWS_SEL).count()):
+    N = page.locator(ROWS_SEL).count()
+    for i in range(N):
         try:
             rows = page.locator(ROWS_SEL)
             row = rows.nth(i)

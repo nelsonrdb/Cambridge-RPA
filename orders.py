@@ -32,8 +32,8 @@ def fill_status_filter(page):
     sel.wait_for(state="visible", timeout=15000)
     sel.select_option(label="Réglée")
 
-def fill_status_workflow_filter(page): 
-    sel = page.locator('#sel_velcmdwft_id_1choix_13')
+def fill_status_workflow_filter(page):
+    sel = page.locator('div[xa-crit="velcmdwft_id"] select')
     sel.wait_for(state="visible", timeout=15000)
     sel.select_option(label="Code accès à envoyer")
 

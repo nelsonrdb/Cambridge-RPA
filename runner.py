@@ -23,7 +23,8 @@ def main(headless=True):
             else : 
                 print("Aucune nouvelle commande à été trouvée dans le CMS")
                 return pd.DataFrame(columns = ["order_number", 'surname', 'name', 'date_of_birth', 'id_number', 'exam_date', 'exam_hour', 'email', 'exam_type', 'dt_creation', 'linguaskill_type', 'online_tutor', 'password_cms', 'password_generated', 'password', 'is_entry_code', 'session_name'])
-            
+        except Exception as e:
+            print(f"[ERROR] Une erreur est survenue : {str(e)}") 
         finally:
             context.close()
             browser.close()
