@@ -5,7 +5,7 @@ import os
 import time
 from update_status import main as do_update_status
 from register_orders import register_orders
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
 
 
@@ -55,8 +55,20 @@ def update_status(payload: Dict[str, Any]):
     return {"ok": True}
 
 @app.post("/register")
-def register():
+def register(limit: Optional[int] = None, order: Optional[str] = None):
+    """Fetch pending orders and register them against Cambridge/Metrica.
+
+    Optional query params for a cautious first test instead of processing
+    every pending order at once:
+      POST /register?order=AD226-0004   — only this one order_number
+      POST /register?limit=1            — only the first N pending orders
+    """
     df = generate_csv()
+    if order:
+        df = df[df["order_number"] == order]
+    elif limit:
+        df = df.head(limit)
+
     if len(df) == 0:
         return {"ok": True, "rows": 0}
     results = register_orders(df)
