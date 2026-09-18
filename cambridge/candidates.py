@@ -1,0 +1,121 @@
+GENDER_MAP = {
+    "m": "m",
+    "male": "m",
+    "homme": "m",
+    "h": "m",
+    "f": "f",
+    "female": "f",
+    "femme": "f",
+}
+
+
+def map_gender(raw: str):
+    """Map a raw X-Net gender value to Metrica's option value ('m'/'f').
+
+    Returns None when the value is missing or not confidently recognised —
+    callers must treat that as ambiguous and route the order to manual
+    review rather than guessing (per project safety rules).
+    """
+    if not raw:
+        return None
+    return GENDER_MAP.get(raw.strip().lower())
+
+
+# Stable ids confirmed live. get_by_label() is unreliable on this form: the
+# "Search Existing" text box has no accessible label at all, its own
+# "Search" button collides by name with an unrelated toggle elsewhere on
+# the site, and generic labels like "DD"/"MM"/"YYYY" have been observed to
+# resolve to the wrong field entirely (the form has hidden/duplicated
+# fields depending on product). Explicit ids avoid all of that.
+_PREFIX = "#ctl00_ContentPlaceHolder_registeredCandidates1_"
+_SEARCH_BOX_ID = _PREFIX + "txtSearch"
+_SEARCH_BTN_ID = _PREFIX + "btnSearch"
+_ADD_EXISTING_SAVE_ID = _PREFIX + "btnAddExistingSave"
+_USERNAME_ID = _PREFIX + "txtLogin"
+_PASSWORD_ID = _PREFIX + "txtPassword"
+_FIRST_NAME_ID = _PREFIX + "txtFirstName"
+_LAST_NAME_ID = _PREFIX + "txtSurname"
+_EMAIL_ID = "#txtESTEmailAddress"  # not namespaced under registeredCandidates1
+_DOB_DAY_ID = _PREFIX + "ddlESTDay"
+_DOB_MONTH_ID = _PREFIX + "ddlESTMonth"
+_DOB_YEAR_ID = _PREFIX + "ddlESTYear"
+_GENDER_ID = _PREFIX + "ddlESTGender"
+_ID_NUMBER_ID = _PREFIX + "txtESTidentitydocumentnumber"
+_NATIONALITY_ID = _PREFIX + "ddlESTNationality"
+_SINGLE_SAVE_ID = _PREFIX + "btnAddSingleSave"
+
+
+def find_existing_candidate(page, email: str):
+    """Search the "Search Existing" tab for an exact email match.
+
+    Returns:
+      - a Locator for the matching row's checkbox, if exactly one match
+      - None if there is no match
+      - raises RuntimeError if the search is ambiguous (more than one
+        exact match) — this must not be guessed away.
+    """
+    page.get_by_role("link", name="Search Existing").click()
+    page.wait_for_load_state("networkidle")
+    page.locator(_SEARCH_BOX_ID).fill(email)
+    page.locator(_SEARCH_BTN_ID).click()
+    page.wait_for_load_state("networkidle")
+
+    rows = page.locator("tr").filter(has_text=email)
+    count = rows.count()
+    if count == 0:
+        return None
+    if count > 1:
+        raise RuntimeError(
+            f"Ambiguous 'Search Existing' match for {email!r}: {count} rows"
+        )
+    return rows.first.locator('input[type="checkbox"]')
+
+
+def add_existing_candidate(page, email: str):
+    checkbox = find_existing_candidate(page, email)
+    if checkbox is None:
+        raise RuntimeError(f"No existing Cambridge candidate found for {email!r}")
+    # This checkbox (id ends in "chkSelect") renders outside the visible
+    # viewport — confirmed live: Playwright's check()/click() hang forever
+    # retrying "element is outside of the viewport". Dispatch a real DOM
+    # click via JS instead, which fires the same onclick handler.
+    checkbox.evaluate("el => el.click()")
+    page.locator(_ADD_EXISTING_SAVE_ID).click()
+    page.wait_for_load_state("networkidle")
+
+
+def fill_single_candidate_entry(page, order: dict):
+    """Fill and save the Single Candidate Entry form for a new candidate.
+
+    `order` must provide: email, password, name, surname, date_of_birth
+    (DD/MM/YYYY), gender, nationality, id_number.
+    """
+    gender_code = map_gender(order.get("gender"))
+    if gender_code is None:
+        raise RuntimeError(
+            f"Cannot map gender {order.get('gender')!r} for order "
+            f"{order.get('order_number')} — needs manual review"
+        )
+
+    day, month, year = order["date_of_birth"].split("/")
+    day, month = day.zfill(2), month.zfill(2)  # option values are "01".."31" / "01".."12"
+
+    page.get_by_role("link", name="Single candidate Entry").click()
+    page.wait_for_load_state("networkidle")
+
+    page.locator(_USERNAME_ID).fill(order["email"])
+    page.locator(_PASSWORD_ID).fill(order["password"])
+    page.locator(_FIRST_NAME_ID).fill(order["name"])
+    page.locator(_LAST_NAME_ID).fill(order["surname"])
+    page.locator(_EMAIL_ID).fill(order["email"])
+
+    page.locator(_DOB_DAY_ID).select_option(value=day)
+    page.locator(_DOB_MONTH_ID).select_option(value=month)
+    page.locator(_DOB_YEAR_ID).select_option(value=year)
+
+    page.locator(_GENDER_ID).select_option(value=gender_code)
+    page.locator(_ID_NUMBER_ID).fill(order["id_number"])
+    page.locator(_NATIONALITY_ID).select_option(label=order["nationality"])
+
+    page.locator(_SINGLE_SAVE_ID).click()
+    page.wait_for_load_state("networkidle")
