@@ -43,6 +43,7 @@ def parse_identity_block(text: str):
     date_of_birth = None
     id_number = None
     gender = None
+    nationality = None
 
     for i, line in enumerate(lines):
         if line.startswith("Nom") and i + 1 < len(lines):
@@ -70,8 +71,8 @@ def parse_identity_block(text: str):
             if nxt not in ("Pièce d'identité", "Genre", "Nom", "Prénom", "Date de naissance"):
                 id_number = nxt
 
-        elif (line.startswith("Nationalité") or line.startswith("Nationalite") and i+1 < len(lines)): 
-            nxt = lines[i+1]
+        elif (line.startswith("Nationalité") or line.startswith("Nationalite")) and i + 1 < len(lines):
+            nxt = lines[i + 1]
             if nxt not in ("Pièce d'identité", "Genre", "Nom", "Prénom", "Date de naissance", "N° d'identité"):
                 nationality = nxt
 
@@ -116,17 +117,18 @@ def scrape(page, timeout=0.5):
     data["scrapping_time"] = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
     return data
 
-def is_online_tutor(string): 
-    if string: 
-        if string == "Non merci, je n'ai pas besoin de la préparation": 
-            return False
-        elif string == 'J\'ai besoin de la préparation "Linguaskill Course" Online Tutor':
-            return True
-        else : 
-            print("Problème dans la récupération du online_tutor")
-            return None
-    else:
+def is_online_tutor(string):
+    if not string:
         return None
+
+    normalized = string.strip().lower()
+    if "non" in normalized:
+        return False
+    if "oui" in normalized or "j'ai besoin" in normalized:
+        return True
+
+    print(f"Problème dans la récupération du online_tutor: {string!r}")
+    return None
     
 def set_statusWF(page): 
     while page.locator(ROWS_SEL).count() > 0: 

@@ -3,8 +3,8 @@ from playwright.sync_api import TimeoutError as PWTimeoutError
 import os
 
 BASE_URL = "https://xnet-apps.com/xa/victorias/"
-# STATE_PATH = os.getenv("STATE_PATH", "/tmp/state.json")
-STATE_PATH = os.getenv("STATE_PATH", "state.json")
+DATA_DIR = os.getenv("DATA_DIR", ".")
+STATE_PATH = os.getenv("STATE_PATH", os.path.join(DATA_DIR, "state.json"))
 USERNAME = "Examens"
 PASSWORD = "7Lin8gua!"
 

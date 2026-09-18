@@ -1,9 +1,10 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from pathlib import Path
 import os
 import time
 from update_status import main as do_update_status
+from register_orders import register_orders
 from typing import Dict, Any
 
 
@@ -16,14 +17,6 @@ DATA_DIR = Path(os.getenv("DATA_DIR", "/var/data"))  # mount path Render Disk
 CSV_PATH = DATA_DIR / "orders.csv"
 
 def generate_csv():
-    print("Generating csv file")
-    DATA_DIR.mkdir(parents=True, exist_ok=True)
-    df = main()
-    print(df)
-    df.to_csv(CSV_PATH, index=False)
-    return df
-
-def generate_timed_csv():
     t0 = time.perf_counter()
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     t1 = time.perf_counter()
@@ -44,7 +37,7 @@ def generate_timed_csv():
 
 @app.post("/run")
 def run():
-    df = generate_timed_csv()
+    df = generate_csv()
     return {"ok": True, "rows": len(df)}
 
 @app.get("/")
@@ -53,10 +46,18 @@ def root():
 
 @app.get("/output")
 def output():
-    generate_timed_csv()
+    generate_csv()
     return FileResponse(str(CSV_PATH), media_type="text/csv", filename="orders.csv")
 
 @app.post("/update_status")
 def update_status(payload: Dict[str, Any]):
     do_update_status(payload)
     return {"ok": True}
+
+@app.post("/register")
+def register():
+    df = generate_csv()
+    if len(df) == 0:
+        return {"ok": True, "rows": 0}
+    results = register_orders(df)
+    return {"ok": True, "rows": len(df), "results": results}
