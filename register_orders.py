@@ -10,6 +10,7 @@ from openpyxl.utils import get_column_letter
 
 from cambridge.registration import register_orders as register_candidates_batch
 from update_status import main as update_xnet_status
+import sheets
 
 DATA_DIR = Path(os.getenv("DATA_DIR", "/var/data"))
 CSV_PATH = DATA_DIR / "orders.csv"
@@ -117,7 +118,18 @@ def register_orders(df: pd.DataFrame, headless: bool = True) -> dict:
         _write_report(rows, timestamp)
 
     if db_rows:
-        _update_database_xlsx(db_rows)
+        # Google Sheets is the durable, team-shared copy (survives Render
+        # restarts with no persistent disk needed). The local xlsx is a
+        # best-effort convenience copy for local runs — its failure (or
+        # Sheets' unavailability) never aborts the batch.
+        try:
+            sheets.upsert_registrations(db_rows, DATABASE_FIELDS)
+        except Exception as exc:
+            print(f"[WARN] could not update Google Sheet: {exc}")
+        try:
+            _update_database_xlsx(db_rows)
+        except Exception as exc:
+            print(f"[WARN] could not update local xlsx database: {exc}")
 
     if results:
         update_xnet_status(results, headless=headless)

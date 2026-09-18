@@ -14,6 +14,7 @@ state.json
 .env
 cambridge_state.json
 data/
+google_service_account.json
 
 
 .DS_Store
