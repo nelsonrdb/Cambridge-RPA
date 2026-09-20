@@ -35,13 +35,19 @@ _USERNAME_ID = _PREFIX + "txtLogin"
 _PASSWORD_ID = _PREFIX + "txtPassword"
 _FIRST_NAME_ID = _PREFIX + "txtFirstName"
 _LAST_NAME_ID = _PREFIX + "txtSurname"
-_EMAIL_ID = "#txtESTEmailAddress"  # not namespaced under registeredCandidates1
-_DOB_DAY_ID = _PREFIX + "ddlESTDay"
-_DOB_MONTH_ID = _PREFIX + "ddlESTMonth"
-_DOB_YEAR_ID = _PREFIX + "ddlESTYear"
-_GENDER_ID = _PREFIX + "ddlESTGender"
-_ID_NUMBER_ID = _PREFIX + "txtESTidentitydocumentnumber"
-_NATIONALITY_ID = _PREFIX + "ddlESTNationality"
+# These ids carry an "EST" infix under the EST General/Business groups
+# (e.g. "txtESTEmailAddress") but NOT under the New Linguaskill groups
+# (just "txtEmailAddress") — confirmed live for both. Suffix-match instead
+# of hardcoding either variant so this works for both session types. Tag
+# name is required: plain "[id$=...]" also matches hidden ASP.NET
+# validator spans with ids like "rfvtxtEmailAddress", causing ambiguity.
+_EMAIL_ID = 'input[id$="EmailAddress"]'
+_DOB_DAY_ID = 'select[id$="Day"]'
+_DOB_MONTH_ID = 'select[id$="Month"]'
+_DOB_YEAR_ID = 'select[id$="Year"]'
+_GENDER_ID = 'select[id$="Gender"]'
+_ID_NUMBER_ID = 'input[id$="identitydocumentnumber"]'
+_NATIONALITY_ID = 'select[id$="Nationality"]'
 _SINGLE_SAVE_ID = _PREFIX + "btnAddSingleSave"
 
 
