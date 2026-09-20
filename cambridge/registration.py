@@ -3,7 +3,11 @@ from playwright.sync_api import sync_playwright
 
 from cambridge.auth import ensure_logged_in
 from cambridge.sessions import ensure_session_exists, open_session
-from cambridge.candidates import add_existing_candidate, fill_single_candidate_entry
+from cambridge.candidates import (
+    find_existing_candidate,
+    save_existing_candidate,
+    fill_single_candidate_entry,
+)
 
 
 def _has_password_on_file(order: dict) -> bool:
@@ -73,8 +77,24 @@ def _register(page, order: dict) -> dict:
     if page.get_by_text("test credits left", exact=False).count() > 0:
         raise RuntimeError("no_test_credits_remaining")
 
-    if _has_password_on_file(order):
-        add_existing_candidate(page, email)
+    # Always check Cambridge itself first — X-Net's password_cms is not
+    # trusted alone (its history can be incomplete/stale). Decision matrix:
+    #   found on Cambridge + password known on X-Net  -> reuse (normal case)
+    #   found on Cambridge + NO password on X-Net     -> can't safely act:
+    #     an account exists but we don't know its password to give back to
+    #     the candidate/X-Net — manual review, never guess or reset it.
+    #   not found on Cambridge + password on X-Net    -> X-Net's record is
+    #     stale/wrong; create fresh, using that X-Net password (order
+    #     already carries it as order["password"]).
+    #   not found on Cambridge + no password on X-Net -> normal new
+    #     candidate, using the freshly generated password.
+    existing_checkbox = find_existing_candidate(page, email)
+    if existing_checkbox is not None and not _has_password_on_file(order):
+        raise RuntimeError(
+            "existing_cambridge_candidate_found_but_no_password_on_file"
+        )
+    if existing_checkbox is not None:
+        save_existing_candidate(page, existing_checkbox)
     else:
         fill_single_candidate_entry(page, order)
 

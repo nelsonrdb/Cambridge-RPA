@@ -71,10 +71,10 @@ def find_existing_candidate(page, email: str):
     return rows.first.locator('input[type="checkbox"]')
 
 
-def add_existing_candidate(page, email: str):
-    checkbox = find_existing_candidate(page, email)
-    if checkbox is None:
-        raise RuntimeError(f"No existing Cambridge candidate found for {email!r}")
+def save_existing_candidate(page, checkbox):
+    """Check the given "Search Existing" row's checkbox and save it into
+    the session. `checkbox` is the Locator returned by
+    find_existing_candidate() — call that first to locate it."""
     # This checkbox (id ends in "chkSelect") renders outside the visible
     # viewport — confirmed live: Playwright's check()/click() hang forever
     # retrying "element is outside of the viewport". Dispatch a real DOM

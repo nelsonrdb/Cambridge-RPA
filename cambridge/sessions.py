@@ -1,11 +1,16 @@
 from cambridge.auth import SESSIONS_URL
 
-# Confirmed live on metritests.com: institution FR731 registers candidates
-# under Group "EST General" / "EST for Business", venue "REMOTE",
-# invigilation method is fixed ("EST/EST For School", auto-set by the Group).
+# IMPORTANT: this institution registers Linguaskill candidates ONLY —
+# never "EST" (a different product on this site's Group dropdown, despite
+# both existing on the account). Confirmed explicitly by the user after a
+# real mis-registration (candidate wrongly created under "EST for
+# Business"): the Group must be "New Linguaskill General Remote" / "New
+# Linguaskill Business Remote". Cross-checked live against a candidate's
+# own prior, correct session: Invigilation Method "Remote - Record and
+# Review" (the New Linguaskill family's value) — not "EST/EST For School".
 GROUP_BY_KIND = {
-    "General": "EST General",
-    "Business": "EST for Business",
+    "General": "New Linguaskill General Remote",
+    "Business": "New Linguaskill Business Remote",
 }
 VENUE = "REMOTE"
 

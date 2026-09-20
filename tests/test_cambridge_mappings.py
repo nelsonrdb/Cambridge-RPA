@@ -21,11 +21,11 @@ class TestNormalizeExamHour(unittest.TestCase):
 class TestLinguaskillKind(unittest.TestCase):
     def test_general(self):
         self.assertEqual(linguaskill_kind("LINGUASKILL General"), "General")
-        self.assertEqual(GROUP_BY_KIND["General"], "EST General")
+        self.assertEqual(GROUP_BY_KIND["General"], "New Linguaskill General Remote")
 
     def test_business(self):
         self.assertEqual(linguaskill_kind("LINGUASKILL Business"), "Business")
-        self.assertEqual(GROUP_BY_KIND["Business"], "EST for Business")
+        self.assertEqual(GROUP_BY_KIND["Business"], "New Linguaskill Business Remote")
 
     def test_unrecognised(self):
         with self.assertRaises(ValueError):
