@@ -11,6 +11,7 @@ from openpyxl.utils import get_column_letter
 from cambridge.registration import register_orders as register_candidates_batch
 from update_status import main as update_xnet_status
 import sheets
+import mailer
 
 DATA_DIR = Path(os.getenv("DATA_DIR", "/var/data"))
 CSV_PATH = DATA_DIR / "orders.csv"
@@ -116,6 +117,10 @@ def register_orders(df: pd.DataFrame, headless: bool = True) -> dict:
     if rows:
         _append_results_csv(rows)
         _write_report(rows, timestamp)
+        try:
+            mailer.send_run_summary_email(rows, timestamp)
+        except Exception as exc:
+            print(f"[WARN] could not send summary email: {exc}")
 
     if db_rows:
         # Google Sheets is the durable, team-shared copy (survives Render
