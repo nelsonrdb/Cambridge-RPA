@@ -29,10 +29,11 @@ def set_status_and_comment(page, info_dic):
         locator.select_option(label="MAIL A ENVOYER")
         textarea = page.locator('textarea[name="wfcmt"]')
 
-        textarea.fill( 
+        textarea.fill(
             f"Username : {info_dic["email"]}\n"
             f"Password : {info_dic["password"]}\n"
-            f"Institution : FR731"
+            f"Institution : FR731\n"
+            f"Session name : {info_dic.get("session_name", "")}"
         )
     else:
         page.locator('select[name="velcmdwftrid"]').select_option('MANUEL')
