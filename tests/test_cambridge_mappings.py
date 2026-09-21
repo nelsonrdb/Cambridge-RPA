@@ -4,7 +4,7 @@ import pandas as pd
 
 from cambridge.sessions import linguaskill_kind, GROUP_BY_KIND, normalize_exam_hour
 from cambridge.candidates import map_gender
-from cambridge.registration import _has_password_on_file
+from cambridge.registration import _has_password_on_file, _is_france_only
 
 
 class TestNormalizeExamHour(unittest.TestCase):
@@ -65,6 +65,23 @@ class TestPasswordReuseDecision(unittest.TestCase):
         # "NA", when no existing password was found.
         self.assertFalse(_has_password_on_file({"password_cms": pd.NA}))
         self.assertFalse(_has_password_on_file({"password_cms": float("nan")}))
+
+
+class TestFranceOnlyFilter(unittest.TestCase):
+    def test_both_france_passes(self):
+        self.assertTrue(_is_france_only({"nationality": "France", "country_of_residence": "France"}))
+        self.assertTrue(_is_france_only({"nationality": "france", "country_of_residence": "FRANCE"}))
+
+    def test_nationality_not_france_fails(self):
+        self.assertFalse(_is_france_only({"nationality": "Burkina Faso", "country_of_residence": "France"}))
+
+    def test_residence_not_france_fails(self):
+        self.assertFalse(_is_france_only({"nationality": "France", "country_of_residence": "Belgium"}))
+
+    def test_missing_fields_fail(self):
+        self.assertFalse(_is_france_only({}))
+        self.assertFalse(_is_france_only({"nationality": "France"}))
+        self.assertFalse(_is_france_only({"nationality": None, "country_of_residence": None}))
 
 
 if __name__ == "__main__":

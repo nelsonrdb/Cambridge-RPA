@@ -39,6 +39,7 @@ country_map = {
 def create_dataframe(data, passwords):
     df = pd.DataFrame(data)
     df["nationality"] = df["nationality"].replace(country_map)
+    df["country_of_residence"] = df["country_of_residence"].replace(country_map)
     pw = pd.DataFrame.from_dict(passwords, orient="index")
     pw.columns= ["password_cms", "password_generated", "password", "is_entry_code"]
     df = df.dropna(subset=["email"])

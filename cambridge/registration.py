@@ -40,6 +40,15 @@ def _already_registered(page, email: str) -> bool:
     return "withdrawn" not in row_text
 
 
+def _is_france_only(order: dict) -> bool:
+    """Only nationality == France AND country of residence == France are
+    handled automatically — everything else goes to manual review without
+    ever touching Cambridge (per explicit business rule)."""
+    nationality = str(order.get("nationality") or "").strip().lower()
+    residence = str(order.get("country_of_residence") or "").strip().lower()
+    return nationality == "france" and residence == "france"
+
+
 def _register(page, order: dict) -> dict:
     order_number = order.get("order_number")
     email = order.get("email")
@@ -52,6 +61,15 @@ def _register(page, order: dict) -> dict:
             "email": email,
             "password": password,
             "manual_review_reason": "entry_code_candidate",
+        }
+
+    if not _is_france_only(order):
+        return {
+            "success": False,
+            "order_number": order_number,
+            "email": email,
+            "password": password,
+            "manual_review_reason": "non_france_nationality_or_residence",
         }
 
     session_name = order["session_name"]

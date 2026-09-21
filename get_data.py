@@ -44,6 +44,7 @@ def parse_identity_block(text: str):
     id_number = None
     gender = None
     nationality = None
+    country_of_residence = None
 
     for i, line in enumerate(lines):
         if line.startswith("Nom") and i + 1 < len(lines):
@@ -73,18 +74,26 @@ def parse_identity_block(text: str):
 
         elif (line.startswith("Nationalité") or line.startswith("Nationalite")) and i + 1 < len(lines):
             nxt = lines[i + 1]
-            if nxt not in ("Pièce d'identité", "Genre", "Nom", "Prénom", "Date de naissance", "N° d'identité"):
+            if nxt not in ("Pièce d'identité", "Genre", "Nom", "Prénom", "Date de naissance", "N° d'identité", "Pays"):
                 nationality = nxt
+
+        # "Pays" = country of residence, distinct from "Nationalité" (a
+        # candidate's nationality and country of residence can differ).
+        elif line.startswith("Pays") and i + 1 < len(lines):
+            nxt = lines[i + 1]
+            if nxt not in ("Pièce d'identité", "Genre", "Nom", "Prénom", "Date de naissance", "N° d'identité", "Nationalité"):
+                country_of_residence = nxt
 
     res = {
         "surname": surname,
         "name": name,
         "date_of_birth": date_of_birth,
         "id_number": id_number,
-        "gender" : gender, 
-        "nationality" : nationality
+        "gender" : gender,
+        "nationality" : nationality,
+        "country_of_residence" : country_of_residence
     }
-    return res 
+    return res
 
 def scrape(page, timeout=0.5):
     raw_data = {}
