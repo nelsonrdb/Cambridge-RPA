@@ -49,12 +49,19 @@ def _is_france_only(order: dict) -> bool:
     return nationality == "france" and residence == "france"
 
 
+def _log(order_number, message):
+    print(f"[CAMBRIDGE] {order_number}: {message}", flush=True)
+
+
 def _register(page, order: dict) -> dict:
     order_number = order.get("order_number")
     email = order.get("email")
     password = order.get("password")
 
+    _log(order_number, f"starting ({email})")
+
     if order.get("is_entry_code"):
+        _log(order_number, "skipped — entry-code candidate (manual review)")
         return {
             "success": False,
             "order_number": order_number,
@@ -64,6 +71,7 @@ def _register(page, order: dict) -> dict:
         }
 
     if not _is_france_only(order):
+        _log(order_number, "skipped — nationality/residence is not France (manual review)")
         return {
             "success": False,
             "order_number": order_number,
@@ -73,10 +81,13 @@ def _register(page, order: dict) -> dict:
         }
 
     session_name = order["session_name"]
+    _log(order_number, f"ensuring session exists: {session_name!r}")
     ensure_session_exists(page, order)
+    _log(order_number, "opening session")
     open_session(page, session_name)
 
     if _already_registered(page, email):
+        _log(order_number, "already registered in this session — skipping duplicate")
         return {
             "success": True,
             "order_number": order_number,
@@ -86,6 +97,7 @@ def _register(page, order: dict) -> dict:
             "confirmation": "already registered in this session — skipped duplicate registration",
         }
 
+    _log(order_number, "clicking Add Entries")
     page.get_by_role("button", name="Add Entries").click()
     page.wait_for_load_state("networkidle")
 
@@ -93,6 +105,7 @@ def _register(page, order: dict) -> dict:
     # "This action cannot be performed as one or many test components has
     # no test credits left." — before any candidate tab is even reachable.
     if page.get_by_text("test credits left", exact=False).count() > 0:
+        _log(order_number, "no test credits remaining for this component")
         raise RuntimeError("no_test_credits_remaining")
 
     # Always check Cambridge itself first — X-Net's password_cms is not
@@ -106,20 +119,27 @@ def _register(page, order: dict) -> dict:
     #     already carries it as order["password"]).
     #   not found on Cambridge + no password on X-Net -> normal new
     #     candidate, using the freshly generated password.
+    _log(order_number, "checking Search Existing on Cambridge")
     existing_checkbox = find_existing_candidate(page, email)
     if existing_checkbox is not None and not _has_password_on_file(order):
+        _log(order_number, "found existing Cambridge account but no password on file (manual review)")
         raise RuntimeError(
             "existing_cambridge_candidate_found_but_no_password_on_file"
         )
     if existing_checkbox is not None:
+        _log(order_number, "reusing existing Cambridge candidate")
         save_existing_candidate(page, existing_checkbox)
     else:
+        _log(order_number, "creating new candidate entry")
         fill_single_candidate_entry(page, order)
 
     if page.get_by_text("test credits left", exact=False).count() > 0:
+        _log(order_number, "no test credits remaining for this component")
         raise RuntimeError("no_test_credits_remaining")
 
+    _log(order_number, "verifying registration")
     verify_registration(page, email)
+    _log(order_number, "success")
 
     return {
         "success": True,
@@ -157,13 +177,18 @@ def register_candidate(order: dict, headless: bool = True) -> dict:
     appears to allow only one active session per account).
     """
     with sync_playwright() as p:
+        print("[CAMBRIDGE] logging in...", flush=True)
         try:
             browser, context, page = ensure_logged_in(p, headless=headless)
         except Exception as exc:
+            print(f"[CAMBRIDGE] login failed: {exc}", flush=True)
             return _failure_result(order, exc)
+        print("[CAMBRIDGE] logged in", flush=True)
         try:
             result = _register(page, order)
         except Exception as exc:
+            order_number = order.get("order_number")
+            _log(order_number, f"failed — {exc}")
             result = _failure_result(order, exc)
         finally:
             browser.close()
@@ -184,20 +209,26 @@ def register_orders(orders: list[dict], headless: bool = True) -> dict:
     session).
     """
     results = {}
+    total = len(orders)
+    print(f"[CAMBRIDGE] logging in... ({total} order(s) to process)", flush=True)
     with sync_playwright() as p:
         try:
             browser, context, page = ensure_logged_in(p, headless=headless)
         except Exception as exc:
+            print(f"[CAMBRIDGE] login failed: {exc}", flush=True)
             for order in orders:
                 results[order.get("order_number")] = _failure_result(order, exc)
             return results
+        print("[CAMBRIDGE] logged in", flush=True)
 
         try:
-            for order in orders:
+            for i, order in enumerate(orders, start=1):
                 order_number = order.get("order_number")
+                print(f"[CAMBRIDGE] --- order {i}/{total}: {order_number} ---", flush=True)
                 try:
                     results[order_number] = _register(page, order)
                 except Exception as exc:
+                    _log(order_number, f"failed — {exc}")
                     results[order_number] = _failure_result(order, exc)
         finally:
             browser.close()

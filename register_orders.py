@@ -72,7 +72,9 @@ def register_orders(df: pd.DataFrame, headless: bool = True) -> dict:
     """
     timestamp = datetime.now(timezone.utc).isoformat(timespec="seconds")
     orders = [row.to_dict() for _, row in df.iterrows()]
+    print(f"[INFO] registering {len(orders)} order(s) against Cambridge/Metrica...", flush=True)
     results = register_candidates_batch(orders, headless=headless)
+    print("[INFO] Cambridge/Metrica pass done", flush=True)
 
     rows = []
     db_rows = []
@@ -120,24 +122,27 @@ def register_orders(df: pd.DataFrame, headless: bool = True) -> dict:
         try:
             mailer.send_run_summary_email(rows, timestamp)
         except Exception as exc:
-            print(f"[WARN] could not send summary email: {exc}")
+            print(f"[WARN] could not send summary email: {exc}", flush=True)
 
     if db_rows:
         # Google Sheets is the durable, team-shared copy (survives Render
         # restarts with no persistent disk needed). The local xlsx is a
         # best-effort convenience copy for local runs — its failure (or
         # Sheets' unavailability) never aborts the batch.
+        print(f"[INFO] updating Google Sheet with {len(db_rows)} validated registration(s)...", flush=True)
         try:
             sheets.upsert_registrations(db_rows, DATABASE_FIELDS)
         except Exception as exc:
-            print(f"[WARN] could not update Google Sheet: {exc}")
+            print(f"[WARN] could not update Google Sheet: {exc}", flush=True)
         try:
             _update_database_xlsx(db_rows)
         except Exception as exc:
-            print(f"[WARN] could not update local xlsx database: {exc}")
+            print(f"[WARN] could not update local xlsx database: {exc}", flush=True)
 
     if results:
+        print("[INFO] updating X-Net status for all processed orders...", flush=True)
         update_xnet_status(results, headless=headless)
+        print("[INFO] X-Net status updated", flush=True)
 
     return results
 
@@ -247,33 +252,34 @@ if __name__ == "__main__":
 
     if args.csv:
         orders_df = pd.read_csv(args.csv)
-        print(f"[INFO] {len(orders_df)} orders loaded from {args.csv}")
+        print(f"[INFO] {len(orders_df)} orders loaded from {args.csv}", flush=True)
     else:
         from runner import main as fetch_victoria_orders
 
+        print("[INFO] fetching pending orders from Victoria/X-Net...", flush=True)
         orders_df = fetch_victoria_orders(headless=not args.headed)
         if orders_df is None:
             # runner.main() prints its own "[ERROR] ..." and returns None
             # on failure (e.g. a stale Victoria login or a transient
             # navigation error) instead of raising — nothing to register.
-            print("[ERROR] Victoria/X-Net order fetch failed (see error above). Nothing to register.")
+            print("[ERROR] Victoria/X-Net order fetch failed (see error above). Nothing to register.", flush=True)
             raise SystemExit(1)
-        print(f"[INFO] {len(orders_df)} orders fetched fresh from Victoria/X-Net")
+        print(f"[INFO] {len(orders_df)} orders fetched fresh from Victoria/X-Net", flush=True)
         DATA_DIR.mkdir(parents=True, exist_ok=True)
         orders_df.to_csv(CSV_PATH, index=False)
 
     if args.order:
         orders_df = orders_df[orders_df["order_number"] == args.order]
-        print(f"[INFO] filtered to order {args.order!r}: {len(orders_df)} row(s)")
+        print(f"[INFO] filtered to order {args.order!r}: {len(orders_df)} row(s)", flush=True)
     elif args.limit:
         orders_df = orders_df.head(args.limit)
-        print(f"[INFO] limited to first {args.limit} order(s)")
+        print(f"[INFO] limited to first {args.limit} order(s)", flush=True)
 
     if len(orders_df) == 0:
-        print("[INFO] nothing to register.")
+        print("[INFO] nothing to register.", flush=True)
     else:
         outcome = register_orders(orders_df, headless=not args.headed)
-        print(f"[INFO] {sum(1 for r in outcome.values() if r['success'])}/{len(outcome)} succeeded")
+        print(f"[INFO] {sum(1 for r in outcome.values() if r['success'])}/{len(outcome)} succeeded", flush=True)
         for order_number, result in outcome.items():
             if not result.get("success"):
-                print(f"[MANUAL REVIEW] {order_number}: {result.get('manual_review_reason')}")
+                print(f"[MANUAL REVIEW] {order_number}: {result.get('manual_review_reason')}", flush=True)

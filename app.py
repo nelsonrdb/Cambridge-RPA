@@ -62,7 +62,12 @@ def register(limit: Optional[int] = None, order: Optional[str] = None):
     every pending order at once:
       POST /register?order=AD226-0004   — only this one order_number
       POST /register?limit=1            — only the first N pending orders
+
+    Progress is printed to stdout throughout (visible live in Render's
+    Logs tab while the request is in flight — the HTTP response itself
+    only comes back once everything is done).
     """
+    print(f"[REGISTER] request received (order={order!r}, limit={limit!r})", flush=True)
     df = generate_csv()
     if order:
         df = df[df["order_number"] == order]
@@ -70,6 +75,8 @@ def register(limit: Optional[int] = None, order: Optional[str] = None):
         df = df.head(limit)
 
     if len(df) == 0:
+        print("[REGISTER] nothing to register", flush=True)
         return {"ok": True, "rows": 0}
     results = register_orders(df)
+    print(f"[REGISTER] done — {sum(1 for r in results.values() if r['success'])}/{len(results)} succeeded", flush=True)
     return {"ok": True, "rows": len(df), "results": results}
