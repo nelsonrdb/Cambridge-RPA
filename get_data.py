@@ -1,6 +1,7 @@
 from playwright.sync_api import TimeoutError as PWTimeoutError
 from time import time
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 BACK_BTN = 'button.btnListe[title*="Aller à la liste"]'
 ROWS_SEL = ".bc tbody tr[itemlb]:visible"  
@@ -13,6 +14,13 @@ XPATHS = {
     "XPATH_ONLINE_TUTOR": "//*[@id='champ_detail']/td[2]/div[2]/table/tbody/tr[last()]/td[2]", 
     "DT_CREATION": "//tr[@id='champ_dt_creation']//div[contains(@class,'affVal') and @p='dt_creation']", 
     "ORDER_NUMBER": '//*[@p="num_aff"]'}
+
+# X-Net article (velart_id column) of each order type handled automatically.
+LINGUASKILL_ARTICLE = "Inscriptions LINGUASKILL"
+EST_ARTICLE = "English Skills Test (EST)"
+HANDLED_ARTICLES = (LINGUASKILL_ARTICLE, EST_ARTICLE)
+
+PARIS = ZoneInfo("Europe/Paris")
 
 def parse_id(value, key):
     if value is None:
@@ -95,7 +103,7 @@ def parse_identity_block(text: str):
     }
     return res
 
-def scrape(page, timeout=0.5):
+def scrape(page, timeout=0.5, is_est=False):
     raw_data = {}
     timeout_ms = int(timeout * 1000)
 
@@ -116,13 +124,25 @@ def scrape(page, timeout=0.5):
     data["order_number"] = raw_data.get("ORDER_NUMBER").split("\n")[-1]
     identity_info = parse_identity_block(raw_data.get("ID") or "")
     data.update(identity_info)    
-    exam_detail = parse_exam_id_block(raw_data.get("EXAM_ID") or "")
-    data.update(exam_detail)
+    if is_est:
+        # EST has no exam date: the candidate gets ~3 months to take it
+        # from the day the order is processed, so the session is dated
+        # today (Paris time — the scheduled run is on UTC). The detail row
+        # that holds the exam date for Linguaskill is the preparation
+        # (online tutor) choice for EST.
+        now = datetime.now(PARIS)
+        data["exam_date"] = now.strftime("%d/%m/%Y")
+        data["exam_hour"] = now.strftime("%H:%M")
+        online_tutor_raw = raw_data.get("EXAM_ID")
+    else:
+        exam_detail = parse_exam_id_block(raw_data.get("EXAM_ID") or "")
+        data.update(exam_detail)
+        online_tutor_raw = raw_data.get("XPATH_ONLINE_TUTOR")
     data["email"] = raw_data.get("EMAIL")
     data["exam_type"] = raw_data.get("EXAM_TYPE")
     data["dt_creation"] = raw_data.get("DT_CREATION")
     data["linguaskill_type"] = raw_data.get("LINGUASKILL_TYPE")
-    data["online_tutor"] = is_online_tutor(raw_data.get("XPATH_ONLINE_TUTOR"))
+    data["online_tutor"] = is_online_tutor(online_tutor_raw)
     data["scrapping_time"] = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
     return data
 
@@ -162,9 +182,10 @@ def main(page):
             rows = page.locator(ROWS_SEL)
             row = rows.nth(i)
             row.wait_for(state="visible")
-            if row.locator("td[data-p='velart_id']").inner_text() == "Inscriptions LINGUASKILL":
+            article = row.locator("td[data-p='velart_id']").inner_text()
+            if article in HANDLED_ARTICLES:
                 row.click()
-                info = scrape(page) #traiter le cas ou c'est pas des PAS un LINGUASKILL GENERAL
+                info = scrape(page, is_est=(article == EST_ARTICLE))
                 data.append(info)
                 page.locator(BACK_BTN).click()
                 page.locator(ROWS_SEL).first.wait_for(state="visible")

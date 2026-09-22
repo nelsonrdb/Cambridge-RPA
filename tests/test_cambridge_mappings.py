@@ -2,7 +2,10 @@ import unittest
 
 import pandas as pd
 
-from cambridge.sessions import linguaskill_kind, GROUP_BY_KIND, normalize_exam_hour
+from cambridge.sessions import (
+    linguaskill_kind, GROUP_BY_KIND, normalize_exam_hour, product_of, group_for,
+    EST, LINGUASKILL, _parse_ddmmyyyy,
+)
 from cambridge.candidates import map_gender
 from cambridge.registration import _has_password_on_file, _is_france_only
 
@@ -34,6 +37,29 @@ class TestLinguaskillKind(unittest.TestCase):
     def test_empty(self):
         with self.assertRaises(ValueError):
             linguaskill_kind("")
+
+
+class TestProductGroup(unittest.TestCase):
+    def test_linguaskill_groups(self):
+        self.assertEqual(product_of("LINGUASKILL General"), LINGUASKILL)
+        self.assertEqual(group_for("LINGUASKILL General"), "New Linguaskill General Remote")
+        self.assertEqual(group_for("LINGUASKILL Business"), "New Linguaskill Business Remote")
+
+    def test_est_groups(self):
+        self.assertEqual(product_of("ENGLISH SKILLS TEST General"), EST)
+        self.assertEqual(group_for("ENGLISH SKILLS TEST General"), "EST General")
+        self.assertEqual(group_for("ENGLISH SKILLS TEST Business"), "EST for Business")
+
+    def test_unknown_product(self):
+        for raw in [None, "", "TOEIC General"]:
+            with self.assertRaises(ValueError):
+                product_of(raw)
+
+    def test_parse_creation_date(self):
+        from datetime import date
+        self.assertEqual(_parse_ddmmyyyy("22/09/2026 16:32"), date(2026, 9, 22))
+        self.assertIsNone(_parse_ddmmyyyy(None))
+        self.assertIsNone(_parse_ddmmyyyy("garbage"))
 
 
 class TestGenderMapping(unittest.TestCase):

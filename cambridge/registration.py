@@ -2,7 +2,7 @@ import pandas as pd
 from playwright.sync_api import sync_playwright
 
 from cambridge.auth import ensure_logged_in
-from cambridge.sessions import ensure_session_exists, open_session
+from cambridge.sessions import ensure_session_exists, open_session, product_of
 from cambridge.candidates import (
     find_existing_candidate,
     save_existing_candidate,
@@ -80,9 +80,25 @@ def _register(page, order: dict) -> dict:
             "manual_review_reason": "non_france_nationality_or_residence",
         }
 
-    session_name = order["session_name"]
+    # A missing session_name/skills_code means X-Net's exam_type or
+    # product label wasn't recognised by session_name.py — never guess.
+    session_name = order.get("session_name")
+    skills_code = order.get("skills_code")
+    if not isinstance(session_name, str) or not isinstance(skills_code, str):
+        _log(order_number, "skipped — unrecognised exam type/product (manual review)")
+        return {
+            "success": False,
+            "order_number": order_number,
+            "email": email,
+            "password": password,
+            "manual_review_reason": "unrecognised_exam_type_or_product",
+        }
+    product_of(order.get("linguaskill_type"))  # raises -> manual review
+
     _log(order_number, f"ensuring session exists: {session_name!r}")
-    ensure_session_exists(page, order)
+    session_name = ensure_session_exists(page, order)
+    if session_name != order["session_name"]:
+        _log(order_number, f"reusing EST session from an earlier run: {session_name!r}")
     _log(order_number, "opening session")
     open_session(page, session_name)
 

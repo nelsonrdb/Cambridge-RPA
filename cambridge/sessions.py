@@ -1,17 +1,32 @@
+import re
+from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
+
 from cambridge.auth import SESSIONS_URL
 
-# IMPORTANT: this institution registers Linguaskill candidates ONLY —
-# never "EST" (a different product on this site's Group dropdown, despite
-# both existing on the account). Confirmed explicitly by the user after a
-# real mis-registration (candidate wrongly created under "EST for
-# Business"): the Group must be "New Linguaskill General Remote" / "New
-# Linguaskill Business Remote". Cross-checked live against a candidate's
-# own prior, correct session: Invigilation Method "Remote - Record and
-# Review" (the New Linguaskill family's value) — not "EST/EST For School".
-GROUP_BY_KIND = {
-    "General": "New Linguaskill General Remote",
-    "Business": "New Linguaskill Business Remote",
+# Two products, each in General/Business, mapped to their own Group:
+#  - Linguaskill orders -> "New Linguaskill ... Remote". Never EST: a
+#    Linguaskill candidate was once wrongly registered under "EST for
+#    Business" — cross-checked live against a candidate's own prior correct
+#    session (Invigilation Method "Remote - Record and Review").
+#  - English Skills Test (EST) orders -> "EST General" / "EST for Business"
+#    (Invigilation Method auto-fills to "EST/EST For School"). Confirmed
+#    live 2026-09-22 — the site's option labels carry a trailing space,
+#    which select_option(label=...) tolerates.
+LINGUASKILL = "LINGUASKILL"
+EST = "EST"
+GROUP_BY_PRODUCT_KIND = {
+    (LINGUASKILL, "General"): "New Linguaskill General Remote",
+    (LINGUASKILL, "Business"): "New Linguaskill Business Remote",
+    (EST, "General"): "EST General",
+    (EST, "Business"): "EST for Business",
 }
+GROUP_BY_KIND = {
+    kind: group
+    for (product, kind), group in GROUP_BY_PRODUCT_KIND.items()
+    if product == LINGUASKILL
+}
+PARIS = ZoneInfo("Europe/Paris")
 VENUE = "REMOTE"
 
 # Order of the four possible test components as they appear on the site.
@@ -36,8 +51,22 @@ def normalize_exam_hour(exam_hour: str) -> str:
     return exam_hour
 
 
+def product_of(linguaskill_type: str) -> str:
+    """'LINGUASKILL General' -> LINGUASKILL, 'ENGLISH SKILLS TEST Business' -> EST."""
+    upper = (linguaskill_type or "").upper()
+    if "ENGLISH SKILLS TEST" in upper:
+        return EST
+    if "LINGUASKILL" in upper:
+        return LINGUASKILL
+    raise ValueError(f"Unrecognised product in linguaskill_type: {linguaskill_type!r}")
+
+
+def group_for(linguaskill_type: str) -> str:
+    return GROUP_BY_PRODUCT_KIND[(product_of(linguaskill_type), linguaskill_kind(linguaskill_type))]
+
+
 def linguaskill_kind(linguaskill_type: str) -> str:
-    """'LINGUASKILL General' / 'LINGUASKILL Business' -> 'General' / 'Business'."""
+    """'LINGUASKILL General' / 'ENGLISH SKILLS TEST Business' -> 'General' / 'Business'."""
     if not linguaskill_type:
         raise ValueError("linguaskill_type is empty")
     if "General" in linguaskill_type:
@@ -134,9 +163,13 @@ def create_session(page, order: dict):
 
     `order` must provide: linguaskill_type, exam_date (DD/MM/YYYY), exam_hour
     (HH:MM), skills_code (subset of "RLSW"), session_name.
+
+    EST has no exam date: the session starts one hour from now (Paris time
+    — same as Cambridge's own default, and never in the past on submit)
+    and Cambridge itself sets the end ~3 months later. exam_date/exam_hour are ignored.
     """
-    kind = linguaskill_kind(order["linguaskill_type"])
-    group = GROUP_BY_KIND[kind]
+    is_est = product_of(order["linguaskill_type"]) == EST
+    group = group_for(order["linguaskill_type"])
     skills_code = order["skills_code"]
     if not skills_code:
         raise ValueError(f"order {order.get('order_number')} has no skills_code")
@@ -180,12 +213,23 @@ def create_session(page, order: dict):
     base = "#ctl00_ContentPlaceHolder_createSession1_dtStartDateTime_"
     date_input = page.locator(base + "dpkDate_dateInput")
     time_input = page.locator(base + "dpkTime_dateInput")
-    date_input.fill(order["exam_date"])
+    if is_est:
+        start = datetime.now(PARIS) + timedelta(hours=1)
+        start_date, start_time = start.strftime("%d/%m/%Y"), start.strftime("%H:%M")
+    else:
+        start_date, start_time = order["exam_date"], normalize_exam_hour(order["exam_hour"])
+    date_input.fill(start_date)
     date_input.press("Tab")
     _settle(page)
-    time_input.fill(normalize_exam_hour(order["exam_hour"]))
+    time_input.fill(start_time)
     time_input.press("Tab")
     _settle(page)
+    if is_est:
+        # The EST form derives its end date (start + ~90 days) from the
+        # start — confirmed live. Never create an EST session without one.
+        end_input = page.locator("#ctl00_ContentPlaceHolder_createSession1_dtEndDateTime_dpkDate_dateInput")
+        if not end_input.input_value().strip():
+            raise RuntimeError("EST session form has no end date after setting the start date")
 
     page.get_by_role("link", name="Add Test Component").click()
     _settle(page)
@@ -219,9 +263,56 @@ def create_session(page, order: dict):
     )
 
 
-def ensure_session_exists(page, order: dict):
-    """Find the order's session, creating it if missing. Idempotent."""
+def _parse_ddmmyyyy(value):
+    match = re.match(r"\s*(\d{2}/\d{2}/\d{4})", str(value or ""))
+    return datetime.strptime(match.group(1), "%d/%m/%Y").date() if match else None
+
+
+def find_existing_est_session(page, order: dict):
+    """Return the name of an EST session already created for this order on
+    an earlier run, or None.
+
+    EST session names are dated with the day the order is processed, so a
+    retry on a later day (e.g. Cambridge succeeded but the X-Net status
+    update didn't) would otherwise compute a new name and register the
+    candidate twice. Any same-code session for this email dated on/after
+    the order's creation date can only belong to this order. More than one
+    is ambiguous and must not be guessed.
+    """
+    date_part, code, email = order["session_name"].split(" ", 2)
+    created = _parse_ddmmyyyy(order.get("dt_creation"))
+    if created is None:
+        return None
+
+    page.goto(SESSIONS_URL, wait_until="domcontentloaded")
+    _open_search_panel(page)
+    page.get_by_label("Session Name").fill(f"{code} {email}")
+    page.locator("#ctl00_ContentPlaceHolder_btnSearch").click()
+    _settle(page)
+
+    pattern = re.compile(rf"(\d{{2}}/\d{{2}}/\d{{4}}) {re.escape(code)} {re.escape(email)}", re.I)
+    names = set()
+    for text in page.get_by_role("link").all_inner_texts():
+        match = pattern.fullmatch((text.strip().splitlines() or [''])[0].strip())
+        if match and _parse_ddmmyyyy(match.group(1)) >= created:
+            names.add(match.group(0))
+    if len(names) > 1:
+        raise RuntimeError(f"ambiguous_existing_est_sessions: {sorted(names)}")
+    return names.pop() if names else None
+
+
+def ensure_session_exists(page, order: dict) -> str:
+    """Find the order's session, creating it if missing. Idempotent.
+
+    Returns the session name actually used — for EST this can be an
+    earlier run's session rather than order["session_name"].
+    """
     session_name = order["session_name"]
     if find_session(page, session_name) is not None:
-        return
+        return session_name
+    if product_of(order["linguaskill_type"]) == EST:
+        existing = find_existing_est_session(page, order)
+        if existing is not None:
+            return existing
     create_session(page, order)
+    return session_name

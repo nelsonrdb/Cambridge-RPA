@@ -60,5 +60,30 @@ class TestSessionNamingScheme(unittest.TestCase):
             self.assertEqual(skills, code)
 
 
+class TestESTSessionNaming(unittest.TestCase):
+    def test_est_labels_as_seen_on_xnet(self):
+        cases = [
+            ("ENGLISH SKILLS TEST General", "2 SKILLS - READING & LISTENING", "ESTG2S", "RL"),
+            ("ENGLISH SKILLS TEST Business", "4 SKILLS - READING & LISTENING + SPEAKING + WRITING", "ESTB4S", "RLSW"),
+            ("ENGLISH SKILLS TEST General", "3 SKILLS - READING & LISTENING + SPEAKING", "ESTG3S", "RLS"),
+            ("ENGLISH SKILLS TEST Business", "Writing Seul", "ESTBW", "W"),
+            ("ENGLISH SKILLS TEST Business", "Speaking & Writing", "ESTBSW", "SW"),
+            ("ENGLISH SKILLS TEST General", "Reading & Listening + Writing", "ESTGRLW", "RLW"),
+        ]
+        for linguaskill_type, exam_type, expected_code, expected_skills in cases:
+            name, skills = _session_name(linguaskill_type, exam_type)
+            self.assertEqual(name, f"01/01/2027 {expected_code} candidate@example.com")
+            self.assertEqual(skills, expected_skills)
+
+    def test_unknown_exam_type_gives_no_session_name(self):
+        name, skills = _session_name("ENGLISH SKILLS TEST General", "Something new")
+        self.assertTrue(pd.isna(name))
+        self.assertTrue(pd.isna(skills))
+
+    def test_unknown_product_gives_no_session_name(self):
+        name, _ = _session_name("SOMETHING Premium", "Writing Seul")
+        self.assertTrue(pd.isna(name))
+
+
 if __name__ == "__main__":
     unittest.main()
