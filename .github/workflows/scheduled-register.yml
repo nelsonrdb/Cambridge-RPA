@@ -1,0 +1,22 @@
+name: Scheduled Cambridge registration
+
+on:
+  schedule:
+    # GitHub Actions cron is UTC and does not follow daylight saving time.
+    # These are set for Europe/Paris in CEST (UTC+2, in effect roughly
+    # late March to late October). During CET (UTC+1, winter), both runs
+    # will fire about an hour later than local noon/midnight — shift by
+    # -1 hour here if that matters (09:00/21:00 UTC).
+    - cron: "0 10 * * *"  # ~12:00 Europe/Paris (noon)
+    - cron: "0 22 * * *"  # ~00:00 Europe/Paris (midnight)
+  workflow_dispatch: {} # allows a manual "Run workflow" trigger too
+
+jobs:
+  register:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Cambridge registration
+        run: |
+          curl -sS -X POST "https://cambridge-rpa.onrender.com/register" \
+            --max-time 1800 \
+            -w "\nHTTP status: %{http_code}\n"
