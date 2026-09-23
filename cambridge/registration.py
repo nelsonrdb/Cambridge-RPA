@@ -49,6 +49,14 @@ def _is_france_only(order: dict) -> bool:
     return nationality == "france" and residence == "france"
 
 
+def _exam_info(order: dict, est_validity) -> dict:
+    """What update_status.py writes about the exam in the X-Net comment:
+    the exam date/hour for Linguaskill, the validity window for EST."""
+    if est_validity:
+        return {"est_valid_from": est_validity[0], "est_valid_until": est_validity[1]}
+    return {"exam_date": order.get("exam_date"), "exam_hour": order.get("exam_hour")}
+
+
 def _log(order_number, message):
     print(f"[CAMBRIDGE] {order_number}: {message}", flush=True)
 
@@ -96,7 +104,7 @@ def _register(page, order: dict) -> dict:
     product_of(order.get("linguaskill_type"))  # raises -> manual review
 
     _log(order_number, f"ensuring session exists: {session_name!r}")
-    session_name = ensure_session_exists(page, order)
+    session_name, est_validity = ensure_session_exists(page, order)
     if session_name != order["session_name"]:
         _log(order_number, f"reusing EST session from an earlier run: {session_name!r}")
     _log(order_number, "opening session")
@@ -111,6 +119,7 @@ def _register(page, order: dict) -> dict:
             "password": password,
             "session_name": session_name,
             "confirmation": "already registered in this session — skipped duplicate registration",
+            **_exam_info(order, est_validity),
         }
 
     _log(order_number, "clicking Add Entries")
@@ -164,6 +173,7 @@ def _register(page, order: dict) -> dict:
         "password": password,
         "session_name": session_name,
         "confirmation": "candidate present in session entries",
+        **_exam_info(order, est_validity),
     }
 
 

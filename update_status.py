@@ -47,6 +47,24 @@ def manual_review_comment(reason) -> str:
     return f"Mis en MANUEL par l'automate : erreur technique — {first_line}"
 
 
+def _present(value) -> bool:
+    return isinstance(value, str) and value.strip() != ""
+
+
+def success_comment(info_dic) -> str:
+    lines = []
+    if _present(info_dic.get("est_valid_from")) and _present(info_dic.get("est_valid_until")):
+        lines.append(f"Test à passer entre le {info_dic['est_valid_from']} et le {info_dic['est_valid_until']}")
+    elif _present(info_dic.get("exam_date")) and _present(info_dic.get("exam_hour")):
+        lines.append(f"Date / Heure d'Examen - Le {info_dic['exam_date']} à {info_dic['exam_hour']}")
+    lines += [
+        f"Username : {info_dic['email']}",
+        f"Password : {info_dic['password']}",
+        "Institution : FR731",
+    ]
+    return "\n".join(lines)
+
+
 def set_status_and_comment(page, info_dic): 
     page.wait_for_timeout(1000)
     try:
@@ -64,12 +82,7 @@ def set_status_and_comment(page, info_dic):
         locator.select_option(label="MAIL A ENVOYER")
         textarea = page.locator('textarea[name="wfcmt"]')
 
-        textarea.fill(
-            f"Username : {info_dic["email"]}\n"
-            f"Password : {info_dic["password"]}\n"
-            f"Institution : FR731\n"
-            f"Session name : {info_dic.get("session_name", "")}"
-        )
+        textarea.fill(success_comment(info_dic))
     else:
         page.locator('select[name="velcmdwftrid"]').select_option('MANUEL')
         page.locator('textarea[name="wfcmt"]').fill(

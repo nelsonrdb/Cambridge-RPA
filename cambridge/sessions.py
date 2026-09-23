@@ -167,6 +167,9 @@ def create_session(page, order: dict):
     EST has no exam date: the session starts one hour from now (Paris time
     — same as Cambridge's own default, and never in the past on submit)
     and Cambridge itself sets the end ~3 months later. exam_date/exam_hour are ignored.
+
+    Returns the EST validity window (start_date, end_date) as read from the
+    form, or None for Linguaskill.
     """
     is_est = product_of(order["linguaskill_type"]) == EST
     group = group_for(order["linguaskill_type"])
@@ -228,8 +231,12 @@ def create_session(page, order: dict):
         # The EST form derives its end date (start + ~90 days) from the
         # start — confirmed live. Never create an EST session without one.
         end_input = page.locator("#ctl00_ContentPlaceHolder_createSession1_dtEndDateTime_dpkDate_dateInput")
-        if not end_input.input_value().strip():
+        end_date = end_input.input_value().strip()
+        if not end_date:
             raise RuntimeError("EST session form has no end date after setting the start date")
+        validity = (date_input.input_value().strip(), end_date)
+    else:
+        validity = None
 
     page.get_by_role("link", name="Add Test Component").click()
     _settle(page)
@@ -256,7 +263,7 @@ def create_session(page, order: dict):
     # before concluding creation actually failed.
     for attempt in range(3):
         if find_session(page, order["session_name"]) is not None:
-            return
+            return validity
         page.wait_for_timeout(1500)
     raise RuntimeError(
         f"Session creation for {order['session_name']!r} could not be confirmed"
@@ -301,18 +308,35 @@ def find_existing_est_session(page, order: dict):
     return names.pop() if names else None
 
 
-def ensure_session_exists(page, order: dict) -> str:
+# Cambridge sets an EST session's end date 90 days after its start
+# (confirmed live: start 22/09/2026 -> end 21/12/2026).
+EST_VALIDITY_DAYS = 90
+
+
+def est_validity_from_name(session_name: str):
+    """(start_date, end_date) of an EST session we didn't create in this
+    run, derived from the date its name starts with."""
+    start = _parse_ddmmyyyy(session_name)
+    if start is None:
+        return None
+    end = start + timedelta(days=EST_VALIDITY_DAYS)
+    return start.strftime("%d/%m/%Y"), end.strftime("%d/%m/%Y")
+
+
+def ensure_session_exists(page, order: dict):
     """Find the order's session, creating it if missing. Idempotent.
 
-    Returns the session name actually used — for EST this can be an
-    earlier run's session rather than order["session_name"].
+    Returns (session_name, validity): the session name actually used — for
+    EST this can be an earlier run's session rather than
+    order["session_name"] — and, for EST only, its (start_date, end_date).
     """
+    is_est = product_of(order["linguaskill_type"]) == EST
     session_name = order["session_name"]
     if find_session(page, session_name) is not None:
-        return session_name
-    if product_of(order["linguaskill_type"]) == EST:
+        return session_name, est_validity_from_name(session_name) if is_est else None
+    if is_est:
         existing = find_existing_est_session(page, order)
         if existing is not None:
-            return existing
-    create_session(page, order)
-    return session_name
+            return existing, est_validity_from_name(existing)
+    validity = create_session(page, order)
+    return session_name, validity
