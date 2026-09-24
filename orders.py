@@ -32,10 +32,14 @@ def fill_status_filter(page):
     sel.wait_for(state="visible", timeout=15000)
     sel.select_option(label="Réglée")
 
-def fill_status_workflow_filter(page):
+# Orders under either of these X-Net workflow statuses are picked up for
+# Cambridge registration.
+HANDLED_WORKFLOW_STATUSES = ("Code accès à envoyer", "Validé Manuellement")
+
+def fill_status_workflow_filter(page, status_label):
     sel = page.locator('div[xa-crit="velcmdwft_id"] select')
     sel.wait_for(state="visible", timeout=15000)
-    sel.select_option(label="Code accès à envoyer")
+    sel.select_option(label=status_label)
 
 def fill_date_filter(page, start_day, end_day):
     try:
@@ -80,11 +84,13 @@ def extract_data(context):#
     page.wait_for_timeout(500)
 
 
-    clear_all_filters(page)
-    fill_status_filter(page)
-    fill_status_workflow_filter(page)
-    apply_filters(page)
-    result = get_data(page)
+    result = []
+    for status_label in HANDLED_WORKFLOW_STATUSES:
+        clear_all_filters(page)
+        fill_status_filter(page)
+        fill_status_workflow_filter(page, status_label)
+        apply_filters(page)
+        result.extend(get_data(page))
 
     page.close()
     return result 
