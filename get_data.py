@@ -173,13 +173,49 @@ def set_statusWF(page):
 
 
     
+PLAYWRIGHT_DEFAULT_TIMEOUT_MS = 30_000
+
+
+def wait_for_row_count_stable(page, timeout_ms=15_000, interval_ms=500, stable_reads=3):
+    """Wait until the list's row count stops changing for a few reads."""
+    last, same, waited = None, 0, 0
+    while waited < timeout_ms:
+        count = page.locator(ROWS_SEL).count()
+        same = same + 1 if count == last else 1
+        if same >= stable_reads:
+            return count
+        last = count
+        page.wait_for_timeout(interval_ms)
+        waited += interval_ms
+    return last
+
+
 def main(page):
     page.set_default_timeout(5000)
+    try:
+        return _scrape_rows(page)
+    finally:
+        # Don't leak the 5s default to the caller: extract_data() runs
+        # another filter pass on this page afterwards, and X-Net's filter
+        # panel redraw can take longer than that.
+        page.set_default_timeout(PLAYWRIGHT_DEFAULT_TIMEOUT_MS)
+
+
+def _scrape_rows(page):
     data = []
     N = page.locator(ROWS_SEL).count()
     for i in range(N):
         try:
             rows = page.locator(ROWS_SEL)
+            # Re-check on every pass: the list is rebuilt each time we come
+            # back from an order, never wait on a row that no longer exists.
+            # (A list still rebuilding can look short for a moment, so wait
+            # for it to settle before concluding it really has fewer rows.)
+            if i >= rows.count():
+                current = wait_for_row_count_stable(page)
+                if i >= current:
+                    print(f"[{i}] list now has {current} rows (counted {N}) — stopping", flush=True)
+                    break
             row = rows.nth(i)
             row.wait_for(state="visible")
             article = row.locator("td[data-p='velart_id']").inner_text()
