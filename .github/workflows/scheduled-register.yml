@@ -2,14 +2,19 @@ name: Scheduled Cambridge registration
 
 on:
   schedule:
-    # GitHub Actions cron is UTC and does not follow daylight saving time.
-    # These are set for Europe/Paris in CEST (UTC+2, in effect roughly
-    # late March to late October). During CET (UTC+1, winter), both runs
-    # will fire about an hour later than local noon/midnight — shift by
-    # -1 hour here if that matters (09:00/21:00 UTC).
-    - cron: "0 10 * * *"  # ~12:00 Europe/Paris (noon)
-    - cron: "0 22 * * *"  # ~00:00 Europe/Paris (midnight)
+    # Every 3 hours, so each run handles a small batch (less memory
+    # pressure and latency on Render than two big daily batches).
+    # GitHub Actions cron is UTC: 00, 03, ..., 21 UTC = 02, 05, ..., 23
+    # Europe/Paris in summer (CEST), one hour earlier in winter (CET).
+    # GitHub may start scheduled runs a few minutes late.
+    - cron: "0 */3 * * *"
   workflow_dispatch: {} # allows a manual "Run workflow" trigger too
+
+# Never run two batches at once (e.g. a slow run overlapping a manual one):
+# a second run waits for the first instead of racing it on Cambridge.
+concurrency:
+  group: cambridge-register
+  cancel-in-progress: false
 
 jobs:
   register:
