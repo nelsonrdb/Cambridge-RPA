@@ -32,10 +32,15 @@ CHROMIUM_ARGS = [
 # keeps each Metrica page (already heavy ASP.NET WebForms) much lighter.
 # CSS is kept: visibility checks rely on it.
 _BLOCKED_RESOURCES = {"image", "media", "font"}
+# Third-party telemetry (Google Analytics/Tag Manager, Application
+# Insights) fires on every page and keeps the network busy for nothing.
+_BLOCKED_HOSTS = ("google-analytics.com", "googletagmanager.com", "visualstudio.com", "applicationinsights")
 
 
 def _block_heavy_resources(route):
-    if route.request.resource_type in _BLOCKED_RESOURCES:
+    if route.request.resource_type in _BLOCKED_RESOURCES or any(
+        host in route.request.url for host in _BLOCKED_HOSTS
+    ):
         route.abort()
     else:
         route.continue_()

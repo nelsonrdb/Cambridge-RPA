@@ -1,3 +1,7 @@
+from playwright.sync_api import TimeoutError as PWTimeoutError
+
+from cambridge.sessions import _settle
+
 GENDER_MAP = {
     "m": "m",
     "male": "m",
@@ -49,6 +53,21 @@ _GENDER_ID = 'select[id$="Gender"]'
 _ID_NUMBER_ID = 'input[id$="identitydocumentnumber"]'
 _NATIONALITY_ID = 'select[id$="Nationality"]'
 _SINGLE_SAVE_ID = _PREFIX + "btnAddSingleSave"
+_RESULTS_GRID_ID = _PREFIX + "grdSelectUsers"
+_NO_MATCH_TEXT = "There are no matching students"
+
+
+def click_and_wait_for_page(page, locator):
+    """Click something that reloads the whole page and wait for the new one.
+
+    Confirmed live: Add Entries, the "Search Existing"/"Single candidate
+    Entry" tabs and the Search button are all full-page form posts. Wait
+    for that navigation instead of "networkidle": the site's background
+    telemetry can keep the network busy, and on Render networkidle then
+    never came within 30s (26-2415 failed that way in Search Existing).
+    """
+    with page.expect_navigation(wait_until="domcontentloaded", timeout=60_000):
+        locator.click()
 
 
 def find_existing_candidate(page, email: str):
@@ -60,11 +79,20 @@ def find_existing_candidate(page, email: str):
       - raises RuntimeError if the search is ambiguous (more than one
         exact match) — this must not be guessed away.
     """
-    page.get_by_role("link", name="Search Existing").click()
-    page.wait_for_load_state("networkidle")
+    click_and_wait_for_page(page, page.get_by_role("link", name="Search Existing"))
     page.locator(_SEARCH_BOX_ID).fill(email)
-    page.locator(_SEARCH_BTN_ID).click()
-    page.wait_for_load_state("networkidle")
+    click_and_wait_for_page(page, page.locator(_SEARCH_BTN_ID))
+
+    # "No row matched" is only trustworthy once the results are really on
+    # screen — reading an unfinished page as "no match" would create a
+    # duplicate Cambridge account. Require the results grid or the site's
+    # own no-match message.
+    try:
+        page.locator(_RESULTS_GRID_ID).or_(page.get_by_text(_NO_MATCH_TEXT)).first.wait_for(
+            state="visible", timeout=15_000
+        )
+    except PWTimeoutError:
+        raise RuntimeError("'Search Existing' results did not load — cannot tell whether the candidate exists")
 
     rows = page.locator("tr").filter(has_text=email)
     count = rows.count()
@@ -87,7 +115,7 @@ def save_existing_candidate(page, checkbox):
     # click via JS instead, which fires the same onclick handler.
     checkbox.evaluate("el => el.click()")
     page.locator(_ADD_EXISTING_SAVE_ID).click()
-    page.wait_for_load_state("networkidle")
+    _settle(page)  # tolerant wait; verify_registration() checks the outcome
 
 
 def fill_single_candidate_entry(page, order: dict):
@@ -106,8 +134,8 @@ def fill_single_candidate_entry(page, order: dict):
     day, month, year = order["date_of_birth"].split("/")
     day, month = day.zfill(2), month.zfill(2)  # option values are "01".."31" / "01".."12"
 
-    page.get_by_role("link", name="Single candidate Entry").click()
-    page.wait_for_load_state("networkidle")
+    click_and_wait_for_page(page, page.get_by_role("link", name="Single candidate Entry"))
+    page.locator(_USERNAME_ID).wait_for(state="visible", timeout=15_000)
 
     page.locator(_USERNAME_ID).fill(order["email"])
     page.locator(_PASSWORD_ID).fill(order["password"])
@@ -124,4 +152,4 @@ def fill_single_candidate_entry(page, order: dict):
     page.locator(_NATIONALITY_ID).select_option(label=order["nationality"])
 
     page.locator(_SINGLE_SAVE_ID).click()
-    page.wait_for_load_state("networkidle")
+    _settle(page)  # tolerant wait; verify_registration() checks the outcome

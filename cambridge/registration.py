@@ -1,9 +1,11 @@
 import pandas as pd
 from playwright.sync_api import sync_playwright
+from playwright.sync_api import TimeoutError as PWTimeoutError
 
 from cambridge.auth import ensure_logged_in
 from cambridge.sessions import ensure_session_exists, open_session, product_of
 from cambridge.candidates import (
+    click_and_wait_for_page,
     find_existing_candidate,
     save_existing_candidate,
     fill_single_candidate_entry,
@@ -21,8 +23,9 @@ def _has_password_on_file(order: dict) -> bool:
 
 def verify_registration(page, email: str):
     """Confirm the candidate now appears in the session's entry list."""
-    row = page.get_by_role("link", name=email, exact=True)
-    if row.count() == 0:
+    try:
+        page.get_by_role("link", name=email, exact=True).first.wait_for(state="visible", timeout=30_000)
+    except PWTimeoutError:
         raise RuntimeError(f"{email!r} not found in session entries after save")
 
 
@@ -135,8 +138,7 @@ def _register(page, order: dict) -> dict:
         }
 
     _log(order_number, "clicking Add Entries")
-    page.get_by_role("button", name="Add Entries").click()
-    page.wait_for_load_state("networkidle")
+    click_and_wait_for_page(page, page.get_by_role("button", name="Add Entries"))
 
     # Seen live: clicking "Add Entries" can itself be refused up front with
     # "This action cannot be performed as one or many test components has
