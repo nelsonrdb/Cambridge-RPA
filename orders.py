@@ -79,8 +79,10 @@ def apply_filters(page):
     previous list (e.g. 200 unfiltered rows, or the previous status's
     rows) stays on screen for a moment after it resolves, and get_data
     would then count rows that are about to disappear."""
-    old_first_row = page.locator(ROWS_SEL).first
-    old_handle = old_first_row.element_handle() if old_first_row.count() else None
+    # query_selector returns immediately: Locator.element_handle() would
+    # wait (30s) for a visible row, and seen live on Render after a fresh
+    # login the list was mid-redraw here, with no visible row at all.
+    old_handle = page.query_selector(ROWS_SEL)
 
     btn = page.locator(APPLY_FILTER_BTN).first
     btn.wait_for(state="visible", timeout=10_000)
