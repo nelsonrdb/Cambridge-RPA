@@ -103,6 +103,22 @@ def _safe_title(page, retries: int = 5, delay_ms: int = 500) -> str:
             page.wait_for_timeout(delay_ms)
 
 
+def _check_radio(page, name: str, attempts: int = 3):
+    """Check an off-screen styled radio by clicking its visible label, and
+    make sure it *stays* checked. Seen live (2026-09-25) on "Unlimited
+    capacity": the radio's own autopostback comes back with it unchecked
+    after the first click, and only a second click sticks — Create Session
+    then failed with "You need to specify a session size"."""
+    radio = page.get_by_role("radio", name=name)
+    for _ in range(attempts):
+        if radio.is_checked():
+            return
+        page.locator(f"label[for='{radio.get_attribute('id')}']").click()
+        _settle(page)
+    if not radio.is_checked():
+        raise RuntimeError(f"Radio {name!r} would not stay checked on the Add Session form")
+
+
 def _open_search_panel(page):
     # id "showSearch2" confirmed live: the icon-only button (no accessible
     # name) that reveals the Session Name / Test / Venue / Client filters.
@@ -193,20 +209,14 @@ def create_session(page, order: dict):
     # The native radio input itself renders off-screen (a styled label is
     # shown instead), so Playwright can never click the input directly —
     # click its visible label text instead.
-    my_institution = page.get_by_role("radio", name="My Institution")
-    if not my_institution.is_checked():
-        page.locator(f"label[for='{my_institution.get_attribute('id')}']").click()
-        _settle(page)
+    _check_radio(page, "My Institution")
 
     page.locator("#ctl00_ContentPlaceHolder_createSession1_ddlVenue").select_option(
         label=VENUE
     )
     _settle(page)
 
-    unlimited = page.get_by_role("radio", name="Unlimited capacity")
-    if not unlimited.is_checked():
-        page.locator(f"label[for='{unlimited.get_attribute('id')}']").click()
-        _settle(page)
+    _check_radio(page, "Unlimited capacity")
 
     # Telerik RadDateInput/RadTimePicker widgets: the visible text input is
     # the "_dateInput" child of the "_dpkDate"/"_dpkTime" picker (confirmed
@@ -252,6 +262,9 @@ def create_session(page, order: dict):
             _settle(page)
 
     page.get_by_label("Session Name").fill(order["session_name"])
+    # Re-assert just before submitting: a later postback could reset them.
+    _check_radio(page, "My Institution")
+    _check_radio(page, "Unlimited capacity")
     page.get_by_role("button", name="Create Session").click()
     _settle(page)
 
