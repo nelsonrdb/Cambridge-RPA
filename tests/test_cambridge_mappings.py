@@ -7,7 +7,7 @@ from cambridge.sessions import (
     EST, LINGUASKILL, _parse_ddmmyyyy,
 )
 from cambridge.candidates import map_gender
-from cambridge.registration import _has_password_on_file, _is_france_only
+from cambridge.registration import _has_password_on_file, _is_france_only, _needs_nationality_check
 
 
 class TestNormalizeExamHour(unittest.TestCase):
@@ -109,6 +109,24 @@ class TestFranceOnlyFilter(unittest.TestCase):
         self.assertFalse(_is_france_only({"nationality": "France"}))
         self.assertFalse(_is_france_only({"nationality": None, "country_of_residence": None}))
 
+
+
+class TestNationalityCheck(unittest.TestCase):
+    FOREIGN = {"nationality": "Burkina Faso", "country_of_residence": "France"}
+
+    def test_foreign_candidate_awaiting_access_code_needs_check(self):
+        self.assertTrue(_needs_nationality_check({**self.FOREIGN, "xnet_workflow_status": "Code accès à envoyer"}))
+
+    def test_foreign_candidate_manually_validated_is_registered(self):
+        self.assertFalse(_needs_nationality_check({**self.FOREIGN, "xnet_workflow_status": "Validé Manuellement"}))
+
+    def test_france_candidate_never_needs_check(self):
+        france = {"nationality": "France", "country_of_residence": "France"}
+        self.assertFalse(_needs_nationality_check({**france, "xnet_workflow_status": "Code accès à envoyer"}))
+
+    def test_unknown_status_keeps_the_check(self):
+        # e.g. an older orders CSV without the status column
+        self.assertTrue(_needs_nationality_check(self.FOREIGN))
 
 if __name__ == "__main__":
     unittest.main()

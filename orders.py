@@ -33,8 +33,11 @@ def fill_status_filter(page):
     sel.select_option(label="Réglée", timeout=15000)
 
 # Orders under either of these X-Net workflow statuses are picked up for
-# Cambridge registration.
-HANDLED_WORKFLOW_STATUSES = ("Code accès à envoyer", "Validé Manuellement")
+# Cambridge registration. "Validé Manuellement" means a person already
+# checked the order (e.g. a non-France candidate), so it is registered
+# without the France/France restriction — see cambridge/registration.py.
+MANUALLY_VALIDATED_STATUS = "Validé Manuellement"
+HANDLED_WORKFLOW_STATUSES = ("Code accès à envoyer", MANUALLY_VALIDATED_STATUS)
 
 def fill_status_workflow_filter(page, status_label):
     # Selecting "Réglée" just before makes X-Net redraw the whole filter
@@ -114,7 +117,10 @@ def extract_data(context):#
         fill_status_filter(page)
         fill_status_workflow_filter(page, status_label)
         apply_filters(page)
-        result.extend(get_data(page))
+        rows = get_data(page)
+        for row in rows:
+            row["xnet_workflow_status"] = status_label
+        result.extend(rows)
 
     page.close()
     return result 

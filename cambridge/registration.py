@@ -52,6 +52,22 @@ def _is_france_only(order: dict) -> bool:
     return nationality == "france" and residence == "france"
 
 
+# X-Net workflow status set by a person after checking the order by hand
+# (orders.py MANUALLY_VALIDATED_STATUS).
+MANUALLY_VALIDATED_STATUS = "Validé Manuellement"
+
+
+def _is_manually_validated(order: dict) -> bool:
+    return str(order.get("xnet_workflow_status") or "").strip() == MANUALLY_VALIDATED_STATUS
+
+
+def _needs_nationality_check(order: dict) -> bool:
+    """Non-France candidates are checked by hand first: they go to manual
+    review, and once a person sets the order to "Validé Manuellement" the
+    automation registers them like anyone else (business rule, 2026-09-25)."""
+    return not _is_france_only(order) and not _is_manually_validated(order)
+
+
 def _exam_info(order: dict, est_validity) -> dict:
     """What update_status.py writes about the exam in the X-Net comment:
     the exam date/hour for Linguaskill, the validity window for EST."""
@@ -93,7 +109,7 @@ def _register(page, order: dict) -> dict:
             "manual_review_reason": "entry_code_candidate",
         }
 
-    if not _is_france_only(order):
+    if _needs_nationality_check(order):
         _log(order_number, "skipped — nationality/residence is not France (manual review)")
         return {
             "success": False,

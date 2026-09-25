@@ -17,7 +17,7 @@ def go_to_commandes(page):
 # reasons carry details after a known prefix (e.g. the ambiguous sessions).
 MANUAL_REASONS = [
     ("entry_code_candidate", "Entry code détecté dans l'historique du client (code XXXXX-XXXXX ou 'entrypoints') — à inscrire à la main."),
-    ("non_france_nationality_or_residence", "Nationalité ou pays de résidence différent de France — seuls les candidats France/France sont inscrits automatiquement."),
+    ("non_france_nationality_or_residence", "Nationalité ou pays de résidence différent de France — à vérifier, puis passer la commande en « Validé Manuellement » pour que l'automate l'inscrive."),
     ("unrecognised_exam_type_or_product", "Formule d'examen ou produit (Linguaskill/EST, General/Business) non reconnu — impossible de déterminer la session."),
     ("Unrecognised product", "Produit non reconnu (ni Linguaskill ni EST)."),
     ("Unrecognised linguaskill_type", "Type General/Business non reconnu."),
