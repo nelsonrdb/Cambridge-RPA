@@ -57,6 +57,18 @@ def _exam_info(order: dict, est_validity) -> dict:
     return {"exam_date": order.get("exam_date"), "exam_hour": order.get("exam_hour")}
 
 
+def _memory_usage() -> str:
+    """Container memory in use (Linux cgroup; empty elsewhere), logged per
+    order so a creeping OOM is visible in Render's logs before it hits."""
+    for path in ("/sys/fs/cgroup/memory.current", "/sys/fs/cgroup/memory/memory.usage_in_bytes"):
+        try:
+            with open(path) as f:
+                return f" (mem {int(f.read()) // (1024 * 1024)} MB)"
+        except (OSError, ValueError):
+            continue
+    return ""
+
+
 def _log(order_number, message):
     print(f"[CAMBRIDGE] {order_number}: {message}", flush=True)
 
@@ -250,7 +262,15 @@ def register_orders(orders: list[dict], headless: bool = True) -> dict:
         try:
             for i, order in enumerate(orders, start=1):
                 order_number = order.get("order_number")
-                print(f"[CAMBRIDGE] --- order {i}/{total}: {order_number} ---", flush=True)
+                print(f"[CAMBRIDGE] --- order {i}/{total}: {order_number} ---{_memory_usage()}", flush=True)
+                # A fresh tab per order: one long-lived tab across a whole
+                # batch kept growing (heavy ASP.NET pages/postbacks) until
+                # Render OOM-killed the container. The context — and so the
+                # login cookies — is kept, so no re-login is needed. Safe
+                # because every order starts with its own page.goto().
+                if i > 1:
+                    page.close()
+                    page = context.new_page()
                 try:
                     results[order_number] = _register(page, order)
                 except Exception as exc:

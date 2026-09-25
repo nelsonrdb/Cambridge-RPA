@@ -18,18 +18,41 @@ PASSWORD = os.getenv("CAMBRIDGE_PASSWORD")
 
 VIEWPORT = {"width": 1600, "height": 1000}
 
+# Render kills the whole container (no traceback, just a restart) when it
+# exceeds its memory limit, and Chromium is by far the biggest consumer.
+# --disable-dev-shm-usage: Docker's /dev/shm is tiny, Chromium otherwise
+# spills shared memory in ways that count against the container.
+CHROMIUM_ARGS = [
+    "--disable-dev-shm-usage",
+    "--disable-gpu",
+    "--disable-extensions",
+]
+
+# Nothing in the flow depends on images, fonts or media; skipping them
+# keeps each Metrica page (already heavy ASP.NET WebForms) much lighter.
+# CSS is kept: visibility checks rely on it.
+_BLOCKED_RESOURCES = {"image", "media", "font"}
+
+
+def _block_heavy_resources(route):
+    if route.request.resource_type in _BLOCKED_RESOURCES:
+        route.abort()
+    else:
+        route.continue_()
+
 
 def open_context(p, headless: bool = True):
     # "--start-maximized" + viewport=None only maximizes a real window in
     # headed mode; headless has no window to maximize, which left elements
     # positioned outside a near-empty viewport. Always set an explicit
     # viewport instead so layout is consistent in both modes.
-    launch_args = ["--start-maximized"] if not headless else []
+    launch_args = CHROMIUM_ARGS + (["--start-maximized"] if not headless else [])
     browser = p.chromium.launch(headless=headless, args=launch_args)
     if os.path.exists(STATE_PATH):
         context = browser.new_context(storage_state=STATE_PATH, viewport=VIEWPORT)
     else:
         context = browser.new_context(viewport=VIEWPORT)
+    context.route("**/*", _block_heavy_resources)
     page = context.new_page()
     return browser, context, page
 

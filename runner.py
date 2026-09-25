@@ -17,7 +17,6 @@ def main(headless=True):
                 df = create_dataframe(data, passwords)
 
                 print(f"[INFO] {len(df)} commandes trouvées")
-                print(df.to_string())
 
                 return df
             else : 
